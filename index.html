@@ -467,12 +467,13 @@
     .rl-needle{position:absolute;left:50%;top:0;bottom:0;width:3px;margin-left:-1.5px;background:linear-gradient(180deg,#d4f833,rgba(212,248,51,.45) 50%,#d4f833);z-index:12;pointer-events:none;box-shadow:0 0 14px rgba(212,248,51,.85)}
     .rl-needle::before{content:"";position:absolute;left:50%;top:1px;transform:translateX(-50%);border-left:10px solid transparent;border-right:10px solid transparent;border-top:14px solid #d4f833;filter:drop-shadow(0 0 8px rgba(212,248,51,.95));animation:needleIdle 1.8s ease-in-out infinite}
     .rl-needle::after{content:"";position:absolute;left:50%;bottom:1px;transform:translateX(-50%);border-left:8px solid transparent;border-right:8px solid transparent;border-bottom:11px solid #d4f833;filter:drop-shadow(0 0 6px rgba(212,248,51,.85))}
-    .spinning .rl-needle::before{animation:needleTick .13s ease-in-out infinite}
-    .landed .rl-needle{background:#ffffff;box-shadow:0 0 22px #d4f833,0 0 36px rgba(212,248,51,.75)}
-    .landed .rl-needle::before{animation:needleHit .55s cubic-bezier(.2,1.4,.4,1) forwards}
-    @keyframes needleIdle{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(3px)}}
-    @keyframes needleTick{0%,100%{transform:translateX(-50%) rotate(0deg)}50%{transform:translateX(-50%) rotate(-12deg) translateY(2px)}}
-    @keyframes needleHit{0%{transform:translateX(-50%) scale(1.35) translateY(4px)}100%{transform:translateX(-50%) scale(1) translateY(0)}}
+    .spinning .rl-needle{box-shadow:0 0 18px rgba(212,248,51,.95)}
+    .spinning .rl-needle::before{animation:needleSpinGlow .4s ease-in-out infinite}
+    .landed .rl-needle{background:#ffffff;box-shadow:0 0 24px #d4f833,0 0 40px rgba(212,248,51,.85)}
+    .landed .rl-needle::before{animation:needleHit .45s cubic-bezier(.2,1.3,.4,1) forwards}
+    @keyframes needleIdle{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(2px)}}
+    @keyframes needleSpinGlow{0%,100%{transform:translateX(-50%) scale(1);filter:drop-shadow(0 0 8px rgba(212,248,51,.95))}50%{transform:translateX(-50%) scale(1.12);filter:drop-shadow(0 0 14px #d4f833)}}
+    @keyframes needleHit{0%{transform:translateX(-50%) scale(1.3)}100%{transform:translateX(-50%) scale(1)}}
     .rl-track{display:flex;gap:8px;will-change:transform}
     .rl-card{width:68px;height:76px;flex-shrink:0;border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:20px;border:1px solid rgba(255,255,255,.12);box-shadow:inset 0 1px 0 rgba(255,255,255,.14),0 4px 12px rgba(0,0,0,.4);transition:transform .3s ease,box-shadow .3s ease,border-color .3s ease}
     .rl-card.landed-hit{transform:scale(1.09);border:2px solid #d4f833!important;box-shadow:0 0 26px rgba(212,248,51,.75),inset 0 0 12px rgba(255,255,255,.28);z-index:4}
@@ -495,6 +496,41 @@
     .cs-item.r-rare{border-bottom-color:#7c5cff;background:linear-gradient(180deg,rgba(124,92,255,.16),#131622)}
     .cs-item.r-epic{border-bottom-color:#f43f5e;background:linear-gradient(180deg,rgba(244,63,94,.18),#131622)}
     .cs-item.r-legend{border-bottom-color:#d4f833;background:linear-gradient(180deg,rgba(212,248,51,.22),#181c14);box-shadow:inset 0 0 18px rgba(212,248,51,.18)}
+
+    /* ===== 14. Scratch Cards (Premium Ticket) ===== */
+    .sc-ticket{position:relative;width:100%;max-width:390px;border-radius:20px;padding:16px;background:linear-gradient(155deg,#1d2236 0%,#121522 60%,#0d1019 100%);border:1.5px solid rgba(255,255,255,.12);box-shadow:0 24px 50px -14px rgba(0,0,0,.8),inset 0 1px 0 rgba(255,255,255,.1);overflow:hidden;user-select:none}
+    .sc-ticket::before,.sc-ticket::after{content:"";position:absolute;top:50%;width:20px;height:20px;border-radius:9999px;background:#141722;border:1.5px solid rgba(255,255,255,.1);transform:translateY(-50%);z-index:6}
+    .sc-ticket::before{left:-11px}
+    .sc-ticket::after{right:-11px}
+    .sc-ticket.t-sky{border-color:rgba(56,189,248,.42);box-shadow:0 20px 44px -14px rgba(56,189,248,.22)}
+    .sc-ticket.t-violet{border-color:rgba(124,92,255,.5);box-shadow:0 20px 44px -14px rgba(124,92,255,.28)}
+    .sc-ticket.t-rose{border-color:rgba(244,63,94,.5);box-shadow:0 20px 44px -14px rgba(244,63,94,.26)}
+    .sc-ticket.t-gold{border-color:rgba(212,248,51,.58);box-shadow:0 20px 48px -12px rgba(212,248,51,.32)}
+    .sc-slots{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+    .sc-slot{position:relative;aspect-ratio:1;border-radius:14px;overflow:hidden;background:linear-gradient(180deg,#1a1f31,#10131e);border:1.5px solid rgba(255,255,255,.08);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;transition:transform .18s ease,border-color .22s ease,box-shadow .22s ease,opacity .25s ease}
+    .sc-slot.can-pick{cursor:pointer}
+    .sc-slot.can-pick:hover{transform:translateY(-2px);border-color:rgba(212,248,51,.65)}
+    .sc-slot.picked{border-color:rgba(255,255,255,.22)}
+    .sc-slot.win-slot{border-color:#d4f833!important;background:radial-gradient(circle at 50% 35%,rgba(212,248,51,.26),#121622 78%);box-shadow:0 0 24px rgba(212,248,51,.48);transform:scale(1.04);z-index:2}
+    .sc-slot.dim-slot{opacity:.42;filter:saturate(.5)}
+    .sc-foil{position:absolute;inset:0;z-index:4;display:flex;flex-direction:column;align-items:center;justify-content:center;background:linear-gradient(135deg,#3e4663 0%,#5b6589 32%,#343b54 62%,#4d5678 100%);transition:transform .34s cubic-bezier(.2,.9,.3,1),opacity .28s ease}
+    .sc-foil::before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(125deg,rgba(255,255,255,.09) 0 8px,transparent 8px 18px)}
+    .sc-slot.can-pick:hover .sc-foil{filter:brightness(1.12)}
+    .sc-foil.scratched{opacity:0;transform:scale(1.18) rotate(6deg);pointer-events:none}
+
+    /* ===== 15. Chicken Road (Canvas Stage) ===== */
+    .chk-canvas-wrap{position:relative;width:100%;height:260px;border-radius:16px;overflow:hidden;background:#0c0e14;border:1px solid rgba(255,255,255,.1);box-shadow:inset 0 0 32px rgba(0,0,0,.6)}
+    @media (min-width:640px){.chk-canvas-wrap{height:320px}}
+    #chkCanvas{width:100%;height:100%;display:block;cursor:pointer;touch-action:manipulation}
+
+    /* ===== 16. Sulfur Reactor (Exclusive) ===== */
+    .rx-stage{position:relative;width:100%;height:300px;border-radius:18px;overflow:hidden;background:#080a10;border:1px solid rgba(212,248,51,.18);box-shadow:inset 0 0 48px rgba(0,0,0,.85),0 18px 42px -16px rgba(0,0,0,.8)}
+    @media (min-width:640px){.rx-stage{height:380px}}
+    #rxCanvas{width:100%;height:100%;display:block}
+    .rx-charge-btn{position:relative;overflow:hidden;border-radius:12px;padding:10px 12px;text-align:left;transition:transform .14s ease,border-color .18s ease,background .18s ease,opacity .18s ease}
+    .rx-charge-btn:not(:disabled):hover{transform:translateY(-1px)}
+    .rx-charge-btn:not(:disabled):active{transform:scale(.97)}
+    .rx-charge-btn:disabled{opacity:.38;cursor:not-allowed}
 
     /* ===== Мобильный адаптив (игры, модалки, тач-интерфейс) ===== */
     body:has(dialog[open]) {
@@ -707,6 +743,10 @@
           <svg class="w-4 h-4 shrink-0 text-sky" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
           <span class="side-label truncate">Аккаунт</span>
         </button>
+        <button id="sidePfBtn" class="w-full flex items-center gap-3 px-3 py-2 rounded-xl text-muted hover:text-white hover:bg-panel/70 font-medium text-sm transition">
+          <svg class="w-4 h-4 shrink-0 text-emerald" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3l7 4v5c0 5-3.5 8.5-7 9-3.5-.5-7-4-7-9V7l7-4z"/><path stroke-linecap="round" stroke-linejoin="round" d="M9.5 12.5l1.8 1.8 3.7-4"/></svg>
+          <span class="side-label truncate">Честность (PF)</span>
+        </button>
       </div>
     </div>
 
@@ -790,7 +830,7 @@
           <img src="Gemini_Generated_Image_ls4r6mls4r6mls4r.jpg" alt="SULFUR Originals" class="promo-art">
           <div class="promo-scrim"></div>
           <div class="relative z-10 max-w-[70%] sm:max-w-[58%]">
-            <span class="inline-flex items-center px-2.5 py-0.5 rounded-md bg-violet/25 backdrop-blur-xs text-[11px] font-semibold text-[#c4b5fd] mb-2.5">RTP 98% · 13 игр</span>
+            <span class="inline-flex items-center px-2.5 py-0.5 rounded-md bg-violet/25 backdrop-blur-xs text-[11px] font-semibold text-[#c4b5fd] mb-2.5">RTP 98% · 16 игр</span>
             <h2 class="font-display font-bold text-xl tracking-tight text-white drop-shadow-sm">SULFUR ORIGINALS</h2>
             <p class="text-xs text-slate-300/85 mt-1 leading-relaxed">Crash, Plinko, Mines, Dice, Keno, Limbo и другие игры</p>
           </div>
@@ -932,7 +972,7 @@
         <h3 class="font-display font-bold text-lg text-white">Демо-кошелёк</h3>
         <button data-close class="w-8 h-8 rounded-lg bg-panel hover:bg-panel2 text-muted hover:text-white flex items-center justify-center">✕</button>
       </div>
-      <p class="text-xs text-muted mb-4">Пополните виртуальный баланс для тестирования всех 13 игр SULFUR Originals.</p>
+      <p class="text-xs text-muted mb-4">Пополните виртуальный баланс для тестирования всех 16 игр SULFUR Originals.</p>
       <div class="grid grid-cols-3 gap-2 mb-4">
         <button data-topup="500" class="py-2.5 rounded-xl bg-panel hover:bg-panel2 b-subtle font-display font-bold text-sm text-white transition">+500 ₽</button>
         <button data-topup="1000" class="py-2.5 rounded-xl bg-panel hover:bg-panel2 b-subtle font-display font-bold text-sm text-white transition">+1 000 ₽</button>
@@ -1141,6 +1181,47 @@
           <div id="winPopAmt" class="text-sm mt-1">+100 ₽</div>
         </div>
       </div>
+      <!-- LIVE STATS FLOATING WIDGET (Stake style) -->
+      <div id="liveStatsBox" hidden class="absolute right-4 top-16 z-40 w-[268px] max-w-[90vw] rounded-2xl bg-surface/95 backdrop-blur-md border border-white/15 shadow-[0_20px_50px_rgba(0,0,0,0.75)] select-none overflow-hidden">
+        <div id="lsDragHandle" class="px-3.5 py-2.5 bg-panel/90 border-b border-white/[0.08] flex items-center justify-between cursor-grab active:cursor-grabbing touch-none">
+          <div class="flex items-center gap-2">
+            <svg class="w-3.5 h-3.5 text-sulfur" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 17l6-6 4 4 8-8"/></svg>
+            <span class="font-display font-bold text-xs text-white">Live Stats</span>
+          </div>
+          <div class="flex items-center gap-1">
+            <button id="lsResetBtn" type="button" title="Сбросить сессию" class="w-6 h-6 rounded-md bg-base hover:bg-panel2 text-muted hover:text-white text-[11px] flex items-center justify-center transition">↺</button>
+            <button id="lsCloseBtn" type="button" title="Скрыть" class="w-6 h-6 rounded-md bg-base hover:bg-panel2 text-muted hover:text-white text-[11px] flex items-center justify-center transition">✕</button>
+          </div>
+        </div>
+        <div class="p-3 space-y-2.5">
+          <div class="grid grid-cols-2 gap-2">
+            <div class="rounded-xl bg-base b-subtle px-2.5 py-2">
+              <div class="text-[10px] text-muted">Профит</div>
+              <div id="lsProfit" class="font-display font-bold text-sm text-emerald tabular-nums">0 ₽</div>
+            </div>
+            <div class="rounded-xl bg-base b-subtle px-2.5 py-2">
+              <div class="text-[10px] text-muted">Оборот</div>
+              <div id="lsWager" class="font-display font-bold text-sm text-white tabular-nums">0 ₽</div>
+            </div>
+          </div>
+          <div class="rounded-xl bg-base b-subtle p-2 relative">
+            <svg id="lsSvg" viewBox="0 0 230 88" class="w-full h-[88px] block overflow-visible">
+              <defs>
+                <linearGradient id="lsGradPos" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#22c55e" stop-opacity="0.35"/><stop offset="100%" stop-color="#22c55e" stop-opacity="0"/></linearGradient>
+                <linearGradient id="lsGradNeg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#f43f5e" stop-opacity="0.35"/><stop offset="100%" stop-color="#f43f5e" stop-opacity="0"/></linearGradient>
+              </defs>
+              <line id="lsZero" x1="0" y1="44" x2="230" y2="44" stroke="rgba(255,255,255,0.12)" stroke-dasharray="3 3" stroke-width="1"/>
+              <path id="lsArea" fill="url(#lsGradPos)"/>
+              <path id="lsLine" fill="none" stroke="#22c55e" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+              <circle id="lsDot" cx="0" cy="44" r="3.2" fill="#22c55e" hidden/>
+            </svg>
+          </div>
+          <div class="flex items-center justify-between text-[11px] px-1">
+            <span class="text-muted">Побед: <b id="lsWins" class="text-emerald tabular-nums">0</b></span>
+            <span class="text-muted">Поражений: <b id="lsLosses" class="text-rose tabular-nums">0</b></span>
+          </div>
+        </div>
+      </div>
       <!-- Top Game Header -->
       <div class="h-14 px-3 sm:px-5 bg-panel/90 border-b border-white/[0.07] flex items-center justify-between gap-2 sm:gap-3 shrink-0">
         <div class="flex items-center gap-2 sm:gap-3 min-w-0">
@@ -1153,6 +1234,8 @@
           </div>
         </div>
         <div class="flex items-center gap-1.5 sm:gap-3 shrink-0">
+          <button id="openLiveStatsBtn" type="button" title="Live Stats (статистика сессии)" class="px-2 sm:px-2.5 h-8 rounded-lg bg-base hover:bg-panel2 b-subtle text-[11px] font-semibold text-sulfur flex items-center gap-1 transition"><svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 17l6-6 4 4 8-8"/><path stroke-linecap="round" stroke-linejoin="round" d="M17 7h4v4"/></svg><span class="hidden sm:inline">Live Stats</span></button>
+          <button id="openPfGameBtn" type="button" title="Проверить честность (Provably Fair)" class="px-2 sm:px-2.5 h-8 rounded-lg bg-base hover:bg-panel2 b-subtle text-[11px] font-semibold text-emerald flex items-center gap-1 transition"><svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3l7 4v5c0 5-3.5 8.5-7 9-3.5-.5-7-4-7-9V7l7-4z"/><path stroke-linecap="round" stroke-linejoin="round" d="M9.5 12.5l1.8 1.8 3.7-4"/></svg><span class="hidden sm:inline">Честность</span></button>
           <button id="sfxBtn" type="button" class="w-8 h-8 rounded-lg bg-base hover:bg-panel2 b-subtle text-sm flex items-center justify-center transition" aria-label="Звук">🔊</button>
           <div class="px-2.5 sm:px-3 py-1 rounded-lg bg-base b-subtle text-xs text-muted whitespace-nowrap">
             <span class="hidden sm:inline">Баланс: </span><span id="gmBal" class="font-display font-bold text-white tabular-nums">1 000</span> ₽
@@ -1202,6 +1285,7 @@
               <div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
                 <div id="crMult" class="font-display font-bold text-5xl sm:text-6xl text-white tracking-tight tabular-nums">1.00x</div>
                 <div id="crSub" class="text-xs font-semibold text-muted mt-2">Ожидание старта</div>
+                <div id="crHash" class="text-[10px] font-mono text-muted/70 mt-2 px-2.5 py-0.5 rounded-md bg-panel/70 b-subtle">Hash: —</div>
               </div>
             </div>
           </div>
@@ -1561,9 +1645,24 @@
           </div>
         </div>
 
-        <!-- 13. CASES -->
+        <!-- 13. CASES + CASE BATTLES 1v1 -->
         <div class="game-pane" data-game="cases">
           <div class="p-5 bg-panel/50 border-b md:border-b-0 md:border-r border-white/[0.07] flex flex-col gap-3.5">
+            <div>
+              <label class="block text-xs font-medium text-muted mb-1.5">Режим</label>
+              <div class="grid grid-cols-2 gap-1.5 p-1 rounded-xl bg-base b-subtle">
+                <button id="csModeSolo" type="button" class="py-2 rounded-lg text-xs font-bold bg-panel2 text-white transition">Соло</button>
+                <button id="csModeBattle" type="button" class="py-2 rounded-lg text-xs font-bold text-muted hover:text-white transition">⚔️ Баттл 1v1</button>
+              </div>
+            </div>
+            <div id="cbRoundsWrap" hidden>
+              <label class="block text-xs font-medium text-muted mb-1.5">Количество кейсов (раундов)</label>
+              <div id="cbRounds" class="grid grid-cols-3 gap-1.5">
+                <button type="button" data-cbr="1" class="py-2 rounded-xl bg-panel2 border border-sulfur/60 text-sulfur text-xs font-bold transition">1 кейс</button>
+                <button type="button" data-cbr="2" class="py-2 rounded-xl bg-base b-subtle text-muted text-xs font-bold transition">2 кейса</button>
+                <button type="button" data-cbr="3" class="py-2 rounded-xl bg-base b-subtle text-muted text-xs font-bold transition">3 кейса</button>
+              </div>
+            </div>
             <div>
               <label class="block text-xs font-medium text-muted mb-2">Выберите кейс</label>
               <div id="csSelect" class="space-y-2"></div>
@@ -1576,20 +1675,53 @@
             </div>
           </div>
           <div class="p-3.5 sm:p-5 flex flex-col justify-center gap-4 min-h-[265px] md:min-h-[400px]">
-            <div class="cs-viewport">
-              <div class="rl-needle"></div>
-              <div id="csTrack" class="cs-track"></div>
+            <!-- SOLO VIEWPORT -->
+            <div id="csSoloWrap" class="space-y-4">
+              <div class="cs-viewport">
+                <div class="rl-needle"></div>
+                <div id="csTrack" class="cs-track"></div>
+              </div>
+              <div id="csDropBox" hidden class="rounded-xl bg-panel b-subtle p-3.5 flex items-center justify-between gap-3">
+                <div class="flex items-center gap-3 min-w-0">
+                  <div id="csDropIcon" class="w-10 h-10 rounded-lg bg-base b-subtle flex items-center justify-center shrink-0"></div>
+                  <div class="min-w-0">
+                    <div id="csDropName" class="font-display font-bold text-sm text-white truncate">Item</div>
+                    <div id="csDropRarity" class="text-[11px] text-muted">Rarity</div>
+                  </div>
+                </div>
+                <div id="csDropVal" class="font-display font-bold text-lg text-sulfur shrink-0 tabular-nums">+0 ₽</div>
+              </div>
             </div>
-            <div id="csDropBox" hidden class="rounded-xl bg-panel b-subtle p-3.5 flex items-center justify-between gap-3">
-              <div class="flex items-center gap-3 min-w-0">
-                <div id="csDropIcon" class="w-10 h-10 rounded-lg bg-base b-subtle flex items-center justify-center shrink-0"></div>
-                <div class="min-w-0">
-                  <div id="csDropName" class="font-display font-bold text-sm text-white truncate">Item</div>
-                  <div id="csDropRarity" class="text-[11px] text-muted">Rarity</div>
+
+            <!-- BATTLE 1v1 VIEWPORTS -->
+            <div id="csBattleWrap" hidden class="space-y-3">
+              <div class="flex items-center justify-between gap-2 text-xs">
+                <span class="font-bold text-white flex items-center gap-1.5">⚔️ Case Battle 1v1 <span id="cbRoundBadge" class="px-2 py-0.5 rounded-md bg-violet/20 text-[#c4b5fd] text-[10px] font-bold">Раунд 1 / 1</span></span>
+                <span class="text-muted text-[11px]">Победитель забирает всё</span>
+              </div>
+              <div class="space-y-1.5">
+                <div class="flex items-center justify-between text-xs px-1">
+                  <span class="font-bold text-sulfur">Вы</span>
+                  <span id="cbMyTotal" class="font-display font-bold text-white tabular-nums">0 ₽</span>
+                </div>
+                <div class="cs-viewport !py-3">
+                  <div class="rl-needle"></div>
+                  <div id="cbMyTrack" class="cs-track"></div>
                 </div>
               </div>
-              <div id="csDropVal" class="font-display font-bold text-lg text-sulfur shrink-0 tabular-nums">+0 ₽</div>
+              <div class="space-y-1.5">
+                <div class="flex items-center justify-between text-xs px-1">
+                  <span id="cbBotName" class="font-bold text-rose">Бот</span>
+                  <span id="cbBotTotal" class="font-display font-bold text-white tabular-nums">0 ₽</span>
+                </div>
+                <div class="cs-viewport !py-3">
+                  <div class="rl-needle"></div>
+                  <div id="cbBotTrack" class="cs-track"></div>
+                </div>
+              </div>
+              <div id="cbResultBox" hidden class="rounded-xl p-3 text-center font-display font-bold text-sm b-subtle"></div>
             </div>
+
             <div>
               <div class="text-[11px] font-semibold uppercase tracking-wider text-muted mb-2">Содержимое кейса</div>
               <div id="csLoot" class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-7 gap-2"></div>
@@ -1597,7 +1729,247 @@
           </div>
         </div>
 
+        <!-- 14. SCRATCH CARDS (4-Pick Ticket) -->
+        <div class="game-pane" data-game="scratch">
+          <div class="p-5 bg-panel/50 border-b md:border-b-0 md:border-r border-white/[0.07] flex flex-col gap-3.5">
+            <div>
+              <label class="block text-xs font-medium text-muted mb-2">Выберите билет</label>
+              <div id="scTierList" class="space-y-1.5"></div>
+            </div>
+            <button id="scBuyBtn" class="w-full py-3.5 rounded-xl bg-sulfur hover:bg-[#e1ff57] disabled:opacity-40 text-base font-bold text-sm transition active:scale-95">Купить билет за 100 ₽</button>
+            <button id="scAutoBtn" disabled hidden class="w-full py-3 rounded-xl bg-violet hover:bg-[#8c6eff] disabled:opacity-40 text-white font-bold text-sm transition active:scale-95">Открыть случайно (4)</button>
+            <p id="scMsg" class="text-xs text-muted leading-relaxed">Выберите билет и откройте ровно 4 слота. Совпадут 3 одинаковых — забираете приз!</p>
+            <div class="mt-auto pt-1">
+              <div class="text-[11px] text-muted mb-1.5 font-medium">Последние билеты</div>
+              <div id="scHist" class="flex flex-wrap gap-1.5 min-h-[24px]"></div>
+            </div>
+          </div>
+          <div class="p-4 sm:p-5 flex flex-col items-center justify-center gap-3.5 min-h-[320px] md:min-h-[430px]">
+            <div id="scTicket" class="sc-ticket t-sky">
+              <div class="flex items-center justify-between gap-2 pb-3 mb-3 border-b border-dashed border-white/15">
+                <div>
+                  <div class="text-[10px] font-bold uppercase tracking-widest text-muted">SULFUR TICKET</div>
+                  <div id="scTicketTitle" class="font-display font-bold text-base text-white">Starter · 100 ₽</div>
+                </div>
+                <div class="text-right">
+                  <div class="text-[10px] text-muted">Открыто слотов</div>
+                  <div id="scPicksLbl" class="font-display font-bold text-sm text-sulfur tabular-nums">0 / 4</div>
+                </div>
+              </div>
+              <div id="scSlots" class="sc-slots"></div>
+              <div id="scBanner" hidden class="mt-3 rounded-xl p-2.5 text-center font-display font-bold text-xs sm:text-sm border"></div>
+            </div>
+            <div class="w-full max-w-[390px]">
+              <div class="text-[10px] font-semibold uppercase tracking-wider text-muted mb-1.5">Призы билета (за 3 одинаковых · 4 = x2)</div>
+              <div id="scPrizeStrip" class="grid grid-cols-5 gap-1.5"></div>
+            </div>
+          </div>
+        </div>
 
+        <!-- 15. CHICKEN ROAD (Custom Canvas) -->
+        <div class="game-pane" data-game="chicken">
+          <div class="p-5 bg-panel/50 border-b md:border-b-0 md:border-r border-white/[0.07] flex flex-col gap-3.5">
+            <div>
+              <label class="block text-xs font-medium text-muted mb-1.5">Ставка, ₽</label>
+              <div class="flex gap-1.5">
+                <input id="chkBet" type="number" min="1" value="50" class="flex-1 min-w-0 px-3 py-2.5 rounded-xl bg-base b-subtle text-sm font-semibold text-white focus:outline-none focus:border-sulfur">
+                <button type="button" data-half="chkBet" class="px-3 rounded-xl bg-panel2 hover:bg-white/10 text-xs font-bold text-slate-200">½</button>
+                <button type="button" data-dbl="chkBet" class="px-3 rounded-xl bg-panel2 hover:bg-white/10 text-xs font-bold text-slate-200">2×</button>
+              </div>
+            </div>
+            <div>
+              <label class="block text-xs font-medium text-muted mb-1.5">Сложность трассы</label>
+              <select id="chkDiff" class="w-full px-3 py-2.5 rounded-xl bg-base b-subtle text-sm font-semibold text-white focus:outline-none focus:border-sulfur">
+                <option value="easy">Лёгкая (шанс 85% / полоса)</option>
+                <option value="med" selected>Средняя (шанс 72% / полоса)</option>
+                <option value="hard">Сложная (шанс 55% / полоса)</option>
+                <option value="insane">Хардкор (шанс 38% / полоса)</option>
+              </select>
+            </div>
+            <button id="chkPlayBtn" class="w-full py-3.5 rounded-xl bg-sulfur hover:bg-[#e1ff57] disabled:opacity-40 text-base font-bold text-sm transition active:scale-95">Начать переход</button>
+            <button id="chkCashBtn" disabled hidden class="w-full py-3 rounded-xl bg-emerald hover:bg-emerald/90 disabled:opacity-40 text-base font-bold text-sm transition active:scale-95">Забрать</button>
+            <p id="chkMsg" class="text-xs text-muted leading-relaxed">Нажмите «Начать переход» — курочка будет прыгать через полосы с трафиком!</p>
+            <div class="mt-auto pt-1">
+              <div class="text-[11px] text-muted mb-1.5 font-medium">История забегов</div>
+              <div id="chkHist" class="flex flex-wrap gap-1.5 min-h-[24px]"></div>
+            </div>
+          </div>
+          <div class="p-3.5 sm:p-5 flex flex-col justify-center gap-3.5 min-h-[280px] md:min-h-[410px]">
+            <div class="flex items-center justify-between gap-2 px-1">
+              <span class="text-xs font-semibold text-muted">Полоса: <b id="chkStepLbl" class="text-white">0</b> / 10</span>
+              <div id="chkMultLbl" class="font-display font-bold text-2xl sm:text-3xl text-white tabular-nums">x1.00</div>
+            </div>
+            <div id="chkStage" class="chk-canvas-wrap">
+              <canvas id="chkCanvas"></canvas>
+            </div>
+            <div class="text-[11px] text-muted text-center">Кликайте по дороге или жмите кнопку, чтобы курочка прыгнула на следующую полосу</div>
+          </div>
+        </div>
+
+        <!-- 16. SULFUR REACTOR (EXCLUSIVE) -->
+        <div class="game-pane" data-game="reactor">
+          <div class="p-5 bg-panel/50 border-b md:border-b-0 md:border-r border-white/[0.07] flex flex-col gap-3">
+            <div>
+              <label class="block text-xs font-medium text-muted mb-1.5">Ставка, ₽</label>
+              <div class="flex gap-1.5">
+                <input id="rxBet" type="number" min="1" value="50" class="flex-1 min-w-0 px-3 py-2.5 rounded-xl bg-base b-subtle text-sm font-semibold text-white focus:outline-none focus:border-sulfur">
+                <button type="button" data-half="rxBet" class="px-3 rounded-xl bg-panel2 hover:bg-white/10 text-xs font-bold text-slate-200">½</button>
+                <button type="button" data-dbl="rxBet" class="px-3 rounded-xl bg-panel2 hover:bg-white/10 text-xs font-bold text-slate-200">2×</button>
+              </div>
+            </div>
+
+            <button id="rxStartBtn" class="w-full py-3.5 rounded-xl bg-sulfur hover:bg-[#e1ff57] disabled:opacity-40 text-base font-bold text-sm transition active:scale-95">Запустить реактор</button>
+
+            <div id="rxActions" class="space-y-2">
+              <div class="text-[11px] font-semibold text-muted uppercase tracking-wider">Подать заряд в ядро</div>
+              <button id="rxPulseBtn" type="button" disabled class="rx-charge-btn w-full bg-base hover:bg-panel2 border border-sulfur/35 hover:border-sulfur/80 flex items-center justify-between gap-2">
+                <div>
+                  <div class="text-xs font-bold text-sulfur flex items-center gap-1.5">
+                    <span class="w-2 h-2 rounded-full bg-sulfur"></span>Импульс
+                  </div>
+                  <div class="text-[10px] text-muted mt-0.5">Стабильный · шанс 86%</div>
+                </div>
+                <span class="px-2 py-1 rounded-lg bg-sulfur/15 font-display font-bold text-xs text-sulfur tabular-nums">×1.14</span>
+              </button>
+
+              <button id="rxBoostBtn" type="button" disabled class="rx-charge-btn w-full bg-base hover:bg-panel2 border border-violet/40 hover:border-violet/90 flex items-center justify-between gap-2">
+                <div>
+                  <div class="text-xs font-bold text-[#c4b5fd] flex items-center gap-1.5">
+                    <span class="w-2 h-2 rounded-full bg-violet"></span>Форсаж
+                  </div>
+                  <div class="text-[10px] text-muted mt-0.5">Ускорение · шанс 62%</div>
+                </div>
+                <span class="px-2 py-1 rounded-lg bg-violet/20 font-display font-bold text-xs text-[#c4b5fd] tabular-nums">×1.58</span>
+              </button>
+
+              <button id="rxOverBtn" type="button" disabled class="rx-charge-btn w-full bg-base hover:bg-panel2 border border-rose/40 hover:border-rose/90 flex items-center justify-between gap-2">
+                <div>
+                  <div class="text-xs font-bold text-rose flex items-center gap-1.5">
+                    <span class="w-2 h-2 rounded-full bg-rose"></span>Сверхзаряд
+                  </div>
+                  <div class="text-[10px] text-muted mt-0.5">Критический · шанс 34%</div>
+                </div>
+                <span class="px-2 py-1 rounded-lg bg-rose/20 font-display font-bold text-xs text-rose tabular-nums">×2.88</span>
+              </button>
+            </div>
+
+            <button id="rxCashBtn" disabled hidden class="w-full py-3 rounded-xl bg-emerald hover:bg-emerald/90 disabled:opacity-40 text-base font-bold text-sm transition active:scale-95">Забрать</button>
+
+            <p id="rxMsg" class="text-xs text-muted leading-relaxed">Разгоняйте ядро реактора SULFUR и сбрасывайте энергию до перегрузки!</p>
+
+            <div class="mt-auto pt-1">
+              <div class="text-[11px] text-muted mb-1.5 font-medium">Последние запуски</div>
+              <div id="rxHist" class="flex flex-wrap gap-1.5 min-h-[24px]"></div>
+            </div>
+          </div>
+
+          <div class="p-3.5 sm:p-5 flex flex-col justify-center gap-3 min-h-[320px] md:min-h-[430px]">
+            <div class="flex items-center justify-between gap-2 px-1">
+              <div class="flex items-center gap-2">
+                <span id="rxStatusDot" class="w-2 h-2 rounded-full bg-slate-500"></span>
+                <span id="rxStatusLbl" class="text-xs font-semibold text-muted uppercase tracking-wider">Режим ожидания</span>
+              </div>
+              <span class="text-xs text-muted">Зарядов: <b id="rxStepsLbl" class="text-white tabular-nums">0</b></span>
+            </div>
+            <div id="rxStage" class="rx-stage">
+              <canvas id="rxCanvas"></canvas>
+            </div>
+            <div class="flex items-center justify-between text-[11px] text-muted px-1">
+              <span>След. Импульс: <b id="rxNextP" class="text-sulfur tabular-nums">x1.14</b></span>
+              <span>Форсаж: <b id="rxNextB" class="text-[#c4b5fd] tabular-nums">x1.58</b></span>
+              <span>Сверхзаряд: <b id="rxNextO" class="text-rose tabular-nums">x2.88</b></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- PROVABLY FAIR MODAL -->
+  <dialog id="pfModal">
+    <div class="w-[640px] max-w-[95vw] max-h-[90dvh] rounded-2xl bg-surface b-subtle shadow-2xl flex flex-col overflow-hidden">
+      <div class="px-5 sm:px-6 py-4 bg-panel/80 border-b border-white/[0.07] flex items-center justify-between shrink-0">
+        <div class="flex items-center gap-2.5">
+          <span class="w-8 h-8 rounded-lg bg-emerald/15 text-emerald flex items-center justify-center">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3l7 4v5c0 5-3.5 8.5-7 9-3.5-.5-7-4-7-9V7l7-4z"/><path stroke-linecap="round" stroke-linejoin="round" d="M9.5 12.5l1.8 1.8 3.7-4"/></svg>
+          </span>
+          <div>
+            <h3 class="font-display font-bold text-base sm:text-lg text-white leading-tight">Проверить честность (Provably Fair)</h3>
+            <p class="text-[11px] text-muted">HMAC-SHA256 · Web Crypto API (crypto.subtle)</p>
+          </div>
+        </div>
+        <button data-close class="w-8 h-8 rounded-lg bg-base hover:bg-panel2 text-muted hover:text-white flex items-center justify-center">✕</button>
+      </div>
+
+      <div class="p-4 sm:p-6 overflow-y-auto space-y-5">
+        <!-- Active Seeds -->
+        <div class="rounded-2xl bg-panel b-subtle p-4 space-y-3">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold text-white">Активная пара сидов</span>
+            <span class="px-2 py-0.5 rounded-md bg-emerald/15 text-emerald text-[11px] font-bold">Nonce: <span id="pfNonceDisp">0</span></span>
+          </div>
+          <div>
+            <label class="block text-[11px] text-muted mb-1">Хеш серверного сида (SHA-256, известен до игры)</label>
+            <input id="pfServerHash" type="text" readonly class="w-full px-3 py-2 rounded-xl bg-base b-subtle text-xs font-mono text-slate-300 select-all">
+          </div>
+          <div>
+            <label class="block text-[11px] text-muted mb-1">Клиентский сид (можете задать свой)</label>
+            <div class="flex gap-2">
+              <input id="pfClientInput" type="text" maxlength="48" class="flex-1 min-w-0 px-3 py-2 rounded-xl bg-base b-subtle text-xs font-mono text-white focus:outline-none focus:border-sulfur">
+              <button id="pfSaveClientBtn" type="button" class="px-3.5 py-2 rounded-xl bg-panel2 hover:bg-white/10 text-xs font-bold text-white transition">Сохранить</button>
+            </div>
+          </div>
+          <div class="flex flex-wrap items-center justify-between gap-2 pt-1">
+            <p class="text-[11px] text-muted">Смена сида раскроет прошлый серверный сид для проверки всех ставок.</p>
+            <button id="pfRotateBtn" type="button" class="px-3.5 py-2 rounded-xl bg-sulfur hover:bg-[#e1ff57] text-base font-bold text-xs transition active:scale-95">Сменить сид сервера</button>
+          </div>
+          <div id="pfPrevBox" hidden class="rounded-xl bg-base b-subtle p-3 space-y-1">
+            <div class="text-[11px] font-semibold text-emerald">Раскрытый прошлый серверный сид:</div>
+            <div id="pfPrevSeed" class="text-[11px] font-mono text-white break-all select-all"></div>
+          </div>
+        </div>
+
+        <!-- Verifier -->
+        <div class="rounded-2xl bg-panel b-subtle p-4 space-y-3">
+          <div class="text-xs font-bold text-white">Калькулятор проверки раунда</div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+            <div>
+              <label class="block text-[11px] text-muted mb-1">Серверный сид (раскрытый)</label>
+              <input id="pfVerServer" type="text" placeholder="Вставьте раскрытый server seed" class="w-full px-3 py-2 rounded-xl bg-base b-subtle text-xs font-mono text-white focus:outline-none focus:border-sulfur">
+            </div>
+            <div>
+              <label class="block text-[11px] text-muted mb-1">Клиентский сид</label>
+              <input id="pfVerClient" type="text" placeholder="client seed" class="w-full px-3 py-2 rounded-xl bg-base b-subtle text-xs font-mono text-white focus:outline-none focus:border-sulfur">
+            </div>
+          </div>
+          <div class="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
+            <div>
+              <label class="block text-[11px] text-muted mb-1">Nonce (номер ставки)</label>
+              <input id="pfVerNonce" type="number" min="0" value="0" class="w-full px-3 py-2 rounded-xl bg-base b-subtle text-xs font-mono text-white focus:outline-none focus:border-sulfur">
+            </div>
+            <div>
+              <label class="block text-[11px] text-muted mb-1">Игра</label>
+              <select id="pfVerGame" class="w-full px-3 py-2 rounded-xl bg-base b-subtle text-xs font-semibold text-white focus:outline-none focus:border-sulfur">
+                <option value="crash">Crash</option>
+                <option value="dice">Dice</option>
+                <option value="limbo">Limbo</option>
+                <option value="coin">Coin Flip</option>
+                <option value="roulette">Roulette</option>
+                <option value="cases">Cases</option>
+              </select>
+            </div>
+            <div class="col-span-2 sm:col-span-1 flex items-end">
+              <button id="pfVerifyBtn" type="button" class="w-full py-2 rounded-xl bg-violet hover:bg-[#8c6eff] text-white font-bold text-xs transition">Проверить</button>
+            </div>
+          </div>
+          <div id="pfVerOut" hidden class="rounded-xl bg-base b-subtle p-3 text-xs space-y-1"></div>
+        </div>
+
+        <!-- Recent Verified Rounds -->
+        <div class="space-y-2">
+          <div class="text-xs font-bold text-muted uppercase tracking-wider">Последние раунды</div>
+          <div id="pfHistList" class="space-y-1.5 max-h-[210px] overflow-y-auto pr-1"></div>
+        </div>
       </div>
     </div>
   </dialog>
@@ -1611,6 +1983,139 @@
       const fmt = n => Number(n).toLocaleString('ru-RU', { maximumFractionDigits: 2 });
       const fmtInt = n => Math.round(n).toLocaleString('ru-RU');
       const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+      /* ================= PROVABLY FAIR (HMAC-SHA256 via crypto.subtle) ================= */
+      const PF = (() => {
+        const enc = new TextEncoder();
+        const hex = buf => Array.from(new Uint8Array(buf), b => b.toString(16).padStart(2, '0')).join('');
+        function randHex(bytes = 32) {
+          const a = new Uint8Array(bytes);
+          crypto.getRandomValues(a);
+          return hex(a);
+        }
+        async function sha256(str) {
+          const buf = await crypto.subtle.digest('SHA-256', enc.encode(str));
+          return hex(buf);
+        }
+        async function hmacHex(keyStr, msgStr) {
+          const key = await crypto.subtle.importKey('raw', enc.encode(keyStr), { name: 'HMAC', hash: 'SHA-256' }, false, ['sign']);
+          const sig = await crypto.subtle.sign('HMAC', key, enc.encode(msgStr));
+          return hex(sig);
+        }
+        async function hmacFloat(serverSeed, clientSeed, nonce, cursor = 0) {
+          const h = await hmacHex(serverSeed, `${clientSeed}:${nonce}:${cursor}`);
+          const int32 = parseInt(h.slice(0, 8), 16);
+          return { float: int32 / 4294967296, hash: h };
+        }
+
+        const STORE_PF = 'sulfur_pf_v1';
+        let st = null;
+        try { st = JSON.parse(localStorage.getItem(STORE_PF) || 'null'); } catch (e) {}
+        if (!st || !st.serverSeed) {
+          st = { serverSeed: randHex(32), serverSeedHash: '', clientSeed: randHex(8), nonce: 0, prevServerSeed: '', history: [] };
+        }
+        let buf = [];
+
+        function save() {
+          try { localStorage.setItem(STORE_PF, JSON.stringify(st)); } catch (e) {}
+        }
+
+        async function init() {
+          if (!st.serverSeedHash) {
+            st.serverSeedHash = await sha256(st.serverSeed);
+            save();
+          }
+          renderUI();
+        }
+
+        function crashFromFloat(u) {
+          if (u < 0.04) return 1.00;
+          return Math.min(100, Math.max(1.01, Math.floor((0.96 / (1 - u)) * 100) / 100));
+        }
+
+        async function roll(game, count = 1, labelFn = null) {
+          const nonce = st.nonce++;
+          const floats = [];
+          let firstHash = '';
+          for (let c = 0; c < count; c++) {
+            const r = await hmacFloat(st.serverSeed, st.clientSeed, nonce, c);
+            if (c === 0) firstHash = r.hash;
+            floats.push(r.float);
+          }
+          buf = floats.slice();
+          const rec = {
+            game,
+            nonce,
+            clientSeed: st.clientSeed,
+            serverSeedHash: st.serverSeedHash,
+            serverSeed: null,
+            float: floats[0],
+            hash: firstHash,
+            result: labelFn ? labelFn(floats[0]) : ''
+          };
+          st.history.unshift(rec);
+          if (st.history.length > 30) st.history.pop();
+          save();
+          renderUI();
+          return { floats, nonce, hash: firstHash, rec };
+        }
+
+        function next() {
+          if (buf.length) return buf.shift();
+          const a = new Uint32Array(1);
+          crypto.getRandomValues(a);
+          return a[0] / 4294967296;
+        }
+
+        async function rotateServerSeed() {
+          const oldSeed = st.serverSeed;
+          const oldHash = st.serverSeedHash;
+          st.history.forEach(h => { if (h.serverSeedHash === oldHash && !h.serverSeed) h.serverSeed = oldSeed; });
+          st.prevServerSeed = oldSeed;
+          st.serverSeed = randHex(32);
+          st.serverSeedHash = await sha256(st.serverSeed);
+          st.nonce = 0;
+          save();
+          renderUI();
+          return oldSeed;
+        }
+
+        function setClientSeed(val) {
+          const clean = (val || '').trim().slice(0, 48);
+          if (!clean) return false;
+          st.clientSeed = clean;
+          st.nonce = 0;
+          save();
+          renderUI();
+          return true;
+        }
+
+        function renderUI() {
+          const hEl = $('pfServerHash');
+          if (!hEl) return;
+          hEl.value = st.serverSeedHash || '...';
+          if (document.activeElement !== $('pfClientInput')) $('pfClientInput').value = st.clientSeed;
+          $('pfNonceDisp').textContent = st.nonce;
+          if (st.prevServerSeed) {
+            $('pfPrevBox').hidden = false;
+            $('pfPrevSeed').textContent = st.prevServerSeed;
+          }
+          const list = $('pfHistList');
+          if (list) {
+            list.innerHTML = st.history.length ? st.history.map((h, i) => `
+              <div class="rounded-xl bg-base b-subtle px-3 py-2 flex items-center justify-between gap-2 text-[11px]">
+                <div class="min-w-0">
+                  <div class="font-semibold text-white truncate">${h.game} <span class="text-muted font-normal">#${h.nonce}</span> ${h.result ? `<span class="text-sulfur ml-1">${h.result}</span>` : ''}</div>
+                  <div class="text-[10px] font-mono text-muted truncate">Hash: ${h.hash.slice(0, 18)}… · ${h.serverSeed ? '<span class="text-emerald">сид раскрыт</span>' : 'активный сид'}</div>
+                </div>
+                <button type="button" data-pf-fill="${i}" class="px-2.5 py-1 rounded-lg bg-panel2 hover:bg-white/10 text-[10px] font-bold text-white shrink-0">Проверить</button>
+              </div>`).join('') : '<div class="text-xs text-muted py-3 text-center">Сделайте ставку, чтобы увидеть историю раундов.</div>';
+          }
+        }
+
+        return { init, roll, next, rotateServerSeed, setClientSeed, hmacFloat, sha256, crashFromFloat, renderUI, get state() { return st; } };
+      })();
+      const rng = () => PF.next();
 
       /* ================= SFX (WebAudio, без файлов) ================= */
       const SFX = (() => {
@@ -1998,6 +2503,7 @@
           stats.bets += 1;
           if (mult > stats.maxMult) stats.maxMult = +mult;
           stats.netProfit = +(stats.netProfit + (payout - bet)).toFixed(2);
+          if (typeof LS !== 'undefined') LS.record(bet, payout);
           updateAccountUI();
           saveProgress();
           if (gameModal.open) {
@@ -2119,6 +2625,45 @@
             <rect x="54" y="54" width="22" height="18" rx="4" fill="#d4f833"/>
             <circle cx="65" cy="63" r="4" fill="#0c0e14"/>
             <path d="M46 42 V30 Q65 18 84 30 V42" fill="none" stroke="#a78bfa" stroke-width="4" stroke-linecap="round"/>
+          </svg>`
+        },
+        {
+          id: 'scratch', name: 'Scratch', cat: 'orig', online: 1094, color: 'text-amber-300',
+          icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" class="w-full h-full"><rect x="3" y="5" width="18" height="14" rx="2.5" fill="currentColor" fill-opacity="0.18"/><path d="M7 15l4-6 3 4 3-4"/></svg>`,
+          img: 'Gemini_Generated_Image_5lckt85lckt85lck.jpg',
+          svg: `<svg viewBox="0 0 130 120" class="w-[82%] h-auto drop-shadow-[0_6px_18px_rgba(212,248,51,0.35)]">
+            <rect x="16" y="22" width="98" height="76" rx="12" fill="#1c2030" stroke="#d4f833" stroke-width="3"/>
+            <rect x="26" y="34" width="24" height="24" rx="6" fill="#2b314a"/><text x="38" y="52" text-anchor="middle" font-size="16">💎</text>
+            <rect x="53" y="34" width="24" height="24" rx="6" fill="#2b314a"/><text x="65" y="52" text-anchor="middle" font-size="16">💎</text>
+            <rect x="80" y="34" width="24" height="24" rx="6" fill="#d4f833"/><text x="92" y="52" text-anchor="middle" font-size="16">👑</text>
+            <path d="M26 76 Q65 62 104 78" stroke="#a78bfa" stroke-width="7" stroke-linecap="round" fill="none"/>
+          </svg>`
+        },
+        {
+          id: 'chicken', name: 'Chicken Road', cat: 'orig', online: 1475, color: 'text-emerald',
+          icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" class="w-full h-full"><path d="M5 19L9 5M19 19L15 5M12 7v2M12 12v2M12 17v2"/></svg>`,
+          img: 'Gemini_Generated_Image_7l2u337l2u337l2u.jpg',
+          svg: `<svg viewBox="0 0 130 120" class="w-[82%] h-auto drop-shadow-[0_6px_18px_rgba(34,197,94,0.35)]">
+            <rect x="16" y="26" width="98" height="68" rx="12" fill="#171c2b" stroke="#22c55e" stroke-width="2.8"/>
+            <line x1="48" y1="26" x2="48" y2="94" stroke="#fff" stroke-opacity="0.2" stroke-dasharray="6 6" stroke-width="2"/>
+            <line x1="82" y1="26" x2="82" y2="94" stroke="#fff" stroke-opacity="0.2" stroke-dasharray="6 6" stroke-width="2"/>
+            <text x="32" y="68" text-anchor="middle" font-size="26">🐔</text>
+            <text x="98" y="68" text-anchor="middle" font-size="24">🏎️</text>
+            <rect x="52" y="48" width="26" height="20" rx="5" fill="#d4f833"/><text x="65" y="62" text-anchor="middle" fill="#0c0e14" font-family="Space Grotesk" font-weight="700" font-size="11">x3.2</text>
+          </svg>`
+        },
+        {
+          id: 'reactor', name: 'Sulfur Reactor', cat: 'orig', online: 2340, color: 'text-sulfur',
+          icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" class="w-full h-full"><circle cx="12" cy="12" r="3" fill="currentColor"/><ellipse cx="12" cy="12" rx="9" ry="4" transform="rotate(35 12 12)"/><ellipse cx="12" cy="12" rx="9" ry="4" transform="rotate(-35 12 12)"/></svg>`,
+          img: '',
+          svg: `<svg viewBox="0 0 130 120" class="w-[84%] h-auto drop-shadow-[0_6px_22px_rgba(212,248,51,0.45)]">
+            <rect x="34" y="14" width="62" height="92" rx="16" fill="#101524" stroke="#d4f833" stroke-width="3"/>
+            <rect x="44" y="24" width="42" height="72" rx="10" fill="#182233" stroke="#7c5cff" stroke-width="2"/>
+            <path d="M46 72 Q65 64 84 72 L84 92 Q65 96 46 92 Z" fill="#d4f833" opacity="0.85"/>
+            <circle cx="65" cy="52" r="14" fill="#d4f833" opacity="0.28"/>
+            <circle cx="65" cy="52" r="8" fill="#d4f833"/>
+            <ellipse cx="65" cy="52" rx="22" ry="8" fill="none" stroke="#c4b5fd" stroke-width="2" transform="rotate(-24 65 52)"/>
+            <ellipse cx="65" cy="52" rx="22" ry="8" fill="none" stroke="#d4f833" stroke-width="2" transform="rotate(24 65 52)"/>
           </svg>`
         }
       ];
@@ -2516,6 +3061,9 @@
         if (id === 'tower') towerReset();
         if (id === 'roulette') rlInitTrack();
         if (id === 'cases') csRenderSelector();
+        if (id === 'scratch') scInit();
+        if (id === 'chicken') chkReset();
+        if (id === 'reactor') rxReset();
 
         const scroller = gameModal.querySelector('.overflow-y-auto');
         if (scroller) scroller.scrollTop = 0;
@@ -2536,77 +3084,168 @@
         }
       });
 
-      /* ================= 1. CRASH ================= */
-      let cr = { state: 'idle', bet: 0, t0: 0, crashAt: 2, raf: 0, pts: [], hist: [] };
-      function crashResetUI() {
-        if (cr.state === 'run') return;
+      /* ================= 1. LIVE CRASH (RTP ~96%, 1.00x instant crash) ================= */
+      let cr = {
+        phase: 'wait', // wait | run | crashed
+        bet: 0, queuedBet: 0, cashed: false, auto: 0,
+        t0: 0, waitEnd: 0, crashAt: 1.00, hash: '',
+        raf: 0, pts: [], hist: [], loopOn: false
+      };
+      function crUpdateBtn() {
+        const btn = $('crBtn');
+        if (cr.phase === 'wait') {
+          if (cr.bet > 0) {
+            btn.textContent = `Ставка принята (${fmt(cr.bet)} ₽)`;
+            btn.className = 'w-full py-3.5 rounded-xl bg-panel2 text-sulfur font-bold text-sm transition';
+            btn.disabled = true;
+          } else {
+            btn.textContent = 'Поставить';
+            btn.className = 'w-full py-3.5 rounded-xl bg-sulfur hover:bg-[#e1ff57] text-base font-bold text-sm transition active:scale-95';
+            btn.disabled = false;
+          }
+        } else if (cr.phase === 'run') {
+          if (cr.bet > 0 && !cr.cashed) {
+            btn.className = 'w-full py-3.5 rounded-xl bg-emerald hover:bg-emerald/90 text-base font-bold text-sm transition active:scale-95';
+            btn.disabled = false;
+          } else if (cr.queuedBet > 0) {
+            btn.textContent = `В очереди на след. раунд (${fmt(cr.queuedBet)} ₽)`;
+            btn.className = 'w-full py-3.5 rounded-xl bg-panel2 text-sulfur font-bold text-sm transition';
+            btn.disabled = true;
+          } else {
+            btn.textContent = 'На след. раунд';
+            btn.className = 'w-full py-3.5 rounded-xl bg-violet hover:bg-[#8c6eff] text-white font-bold text-sm transition active:scale-95';
+            btn.disabled = false;
+          }
+        } else {
+          if (cr.queuedBet > 0) {
+            btn.textContent = `В очереди на след. раунд (${fmt(cr.queuedBet)} ₽)`;
+            btn.className = 'w-full py-3.5 rounded-xl bg-panel2 text-sulfur font-bold text-sm transition';
+            btn.disabled = true;
+          } else {
+            btn.textContent = 'На след. раунд';
+            btn.className = 'w-full py-3.5 rounded-xl bg-violet hover:bg-[#8c6eff] text-white font-bold text-sm transition active:scale-95';
+            btn.disabled = false;
+          }
+        }
+      }
+      function crRenderHist() {
+        $('crHist').innerHTML = cr.hist.map(h => `<span class="px-2 py-0.5 rounded-md text-[11px] font-bold ${h >= 2 ? 'bg-emerald/15 text-emerald' : h === 1 ? 'bg-rose/25 text-rose' : 'bg-panel2 text-slate-300'}">${h.toFixed(2)}x</span>`).join('');
+      }
+      function crCashout(curM) {
+        if (cr.phase !== 'run' || cr.bet <= 0 || cr.cashed) return;
+        let m = curM;
+        if (cr.auto > 1 && m > cr.auto) m = cr.auto;
+        const win = +(cr.bet * m).toFixed(2);
+        cr.cashed = true;
+        bal += win; updateBalanceUI();
+        SFX.cash();
+        $('crMsg').textContent = `Вы забрали на ${m.toFixed(2)}x · +${fmt(win)} ₽`;
+        pushFeed('Crash', 'Вы', cr.bet, m, win, true);
+        crUpdateBtn();
+      }
+      async function crStartRound() {
+        cr.phase = 'wait';
+        cr.cashed = false;
+        cr.bet = cr.queuedBet;
+        cr.queuedBet = 0;
+        cr.pts = [];
+        cr.waitEnd = performance.now() + 4200;
+        const r = await PF.roll('Crash', 1, u => PF.crashFromFloat(u).toFixed(2) + 'x');
+        cr.crashAt = PF.crashFromFloat(r.floats[0]);
+        cr.hash = r.hash;
+        $('crHash').textContent = `Hash: ${cr.hash.slice(0, 16)}… · #${r.nonce}`;
         $('crLine').setAttribute('d', 'M0 290 L500 290');
         $('crArea').setAttribute('d', '');
-        $('crMult').textContent = '1.00x';
         $('crMult').className = 'font-display font-bold text-5xl sm:text-6xl text-white tracking-tight tabular-nums';
-        $('crSub').textContent = 'Нажмите «Ставка» для старта раунда';
-        $('crBtn').textContent = 'Ставка';
-        $('crBtn').className = 'w-full py-3.5 rounded-xl bg-sulfur hover:bg-[#e1ff57] text-base font-bold text-sm transition active:scale-95';
+        if (cr.bet > 0) $('crMsg').textContent = `Ставка ${fmt(cr.bet)} ₽ в игре!`;
+        crUpdateBtn();
       }
-      function crashTick(now) {
-        const ms = now - cr.t0;
-        const m = Math.pow(1.04, ms / 100);
-        if (cr.auto > 1 && cr.auto < cr.crashAt && m >= cr.auto) { $('crBtn').click(); return; }
-        if (m >= cr.crashAt) {
-          cr.state = 'idle';
-          $('crMult').textContent = cr.crashAt.toFixed(2) + 'x';
-          $('crMult').className = 'font-display font-bold text-5xl sm:text-6xl text-rose tracking-tight tabular-nums';
-          $('crSub').textContent = 'Краш!'; SFX.boom();
-          $('crMsg').textContent = `Краш на ${cr.crashAt.toFixed(2)}x · −${fmt(cr.bet)} ₽`;
-          $('crBtn').textContent = 'Ставка';
-          $('crBtn').className = 'w-full py-3.5 rounded-xl bg-sulfur hover:bg-[#e1ff57] text-base font-bold text-sm transition active:scale-95';
-          cr.hist.unshift([false, cr.crashAt]);
-          cr.hist = cr.hist.slice(0, 8);
-          $('crHist').innerHTML = cr.hist.map(h => `<span class="px-2 py-0.5 rounded-md text-[11px] font-bold ${h[0] ? 'bg-emerald/15 text-emerald' : 'bg-rose/15 text-rose'}">${h[1].toFixed(2)}x</span>`).join('');
-          pushFeed('Crash', 'Вы', cr.bet, 0, 0, true);
-          return;
+      function crLoop(now) {
+        if (!cr.loopOn) return;
+        if (cr.phase === 'wait') {
+          const left = Math.max(0, cr.waitEnd - now);
+          $('crMult').textContent = (left / 1000).toFixed(1) + 's';
+          $('crSub').textContent = 'Приём ставок...';
+          if (left <= 0) {
+            cr.phase = 'run';
+            cr.t0 = now;
+            cr.auto = Math.max(0, +$('crAuto').value || 0);
+            if (cr.bet > 0) SFX.start();
+            crUpdateBtn();
+            if (cr.crashAt <= 1.00) {
+              crDoCrash(now);
+            }
+          }
+        } else if (cr.phase === 'run') {
+          const ms = now - cr.t0;
+          const m = Math.pow(1.045, ms / 100);
+          if (cr.bet > 0 && !cr.cashed && cr.auto >= 1.01 && cr.auto < cr.crashAt && m >= cr.auto) {
+            crCashout(cr.auto);
+          }
+          if (m >= cr.crashAt) {
+            crDoCrash(now);
+          } else {
+            $('crMult').textContent = m.toFixed(2) + 'x';
+            $('crSub').textContent = cr.cashed ? 'Вы забрали выигрыш!' : 'Полёт...';
+            if (activeGameId === 'crash' && gameModal.open && cr.bet > 0 && !cr.cashed) SFX.crashTone(m);
+            if (cr.bet > 0 && !cr.cashed) $('crBtn').textContent = `Забрать ${fmt(+(cr.bet * m).toFixed(2))} ₽`;
+            cr.pts.push([ms, m]);
+            const maxM = Math.max(m, 1.8), maxT = Math.max(ms, 2600);
+            const d = cr.pts.map(([a, b], i) => `${i ? 'L' : 'M'}${(a / maxT * 490 + 5).toFixed(1)} ${(290 - (b - 1) / (maxM - 1) * 250).toFixed(1)}`).join(' ');
+            $('crLine').setAttribute('d', d);
+            const last = cr.pts[cr.pts.length - 1];
+            $('crArea').setAttribute('d', d + ` L${(last[0] / maxT * 490 + 5).toFixed(1)} 300 L5 300 Z`);
+          }
+        } else if (cr.phase === 'crashed') {
+          if (now >= cr.waitEnd) crStartRound();
         }
-        $('crMult').textContent = m.toFixed(2) + 'x'; SFX.crashTone(m);
-        $('crBtn').textContent = `Забрать ${fmt(+(cr.bet * m).toFixed(2))} ₽`;
-        cr.pts.push([ms, m]);
-        const maxM = Math.max(m, 1.8), maxT = Math.max(ms, 2600);
-        const d = cr.pts.map(([a, b], i) => `${i ? 'L' : 'M'}${(a / maxT * 490 + 5).toFixed(1)} ${(290 - (b - 1) / (maxM - 1) * 250).toFixed(1)}`).join(' ');
-        $('crLine').setAttribute('d', d);
-        const last = cr.pts[cr.pts.length - 1];
-        $('crArea').setAttribute('d', d + ` L${(last[0] / maxT * 490 + 5).toFixed(1)} 300 L5 300 Z`);
-        cr.raf = requestAnimationFrame(crashTick);
+        cr.raf = requestAnimationFrame(crLoop);
+      }
+      function crDoCrash(now) {
+        cr.phase = 'crashed';
+        cr.waitEnd = now + 2400;
+        $('crMult').textContent = cr.crashAt.toFixed(2) + 'x';
+        $('crMult').className = 'font-display font-bold text-5xl sm:text-6xl text-rose tracking-tight tabular-nums';
+        $('crSub').textContent = cr.crashAt <= 1.00 ? 'Мгновенный краш 1.00x!' : 'Краш!';
+        if (activeGameId === 'crash' && gameModal.open) SFX.boom();
+        if (cr.bet > 0 && !cr.cashed) {
+          $('crMsg').textContent = `Краш на ${cr.crashAt.toFixed(2)}x · −${fmt(cr.bet)} ₽`;
+          pushFeed('Crash', 'Вы', cr.bet, 0, 0, true);
+        }
+        cr.bet = 0;
+        cr.hist.unshift(cr.crashAt);
+        cr.hist = cr.hist.slice(0, 10);
+        crRenderHist();
+        crUpdateBtn();
+      }
+      function crashResetUI() {
+        if (!cr.loopOn) {
+          cr.loopOn = true;
+          crStartRound();
+          cr.raf = requestAnimationFrame(crLoop);
+        }
+        crUpdateBtn();
       }
       $('crBtn').addEventListener('click', () => {
-        if (cr.state === 'idle') {
-          const bet = Math.floor(+$('crBet').value);
-          if (!(bet >= 1)) return ($('crMsg').textContent = 'Ставка от 1 ₽');
-          if (bet > bal) return ($('crMsg').textContent = 'Недостаточно демо-баланса');
-          bal -= bet; addWager(bet); updateBalanceUI();
-          cr.state = 'run'; cr.bet = bet; cr.t0 = performance.now(); cr.pts = [];
-          cr.auto = Math.max(0, +$('crAuto').value || 0); SFX.start();
-          cr.crashAt = Math.min(25, Math.max(1.12, 0.97 / (1 - Math.random())));
-          $('crMult').className = 'font-display font-bold text-5xl sm:text-6xl text-white tracking-tight tabular-nums';
-          $('crSub').textContent = 'Полёт...';
-          $('crMsg').textContent = 'Заберите выигрыш до краша!';
-          $('crBtn').className = 'w-full py-3.5 rounded-xl bg-emerald hover:bg-emerald/90 text-base font-bold text-sm transition active:scale-95';
-          cr.raf = requestAnimationFrame(crashTick);
-        } else if (cr.state === 'run') {
-          cancelAnimationFrame(cr.raf);
-          let m = Math.pow(1.04, (performance.now() - cr.t0) / 100);
-          if (cr.auto > 1 && m > cr.auto) m = cr.auto;
-          const win = +(cr.bet * m).toFixed(2);
-          bal += win; updateBalanceUI();
-          cr.state = 'idle';
-          $('crMult').className = 'font-display font-bold text-5xl sm:text-6xl text-emerald tracking-tight tabular-nums';
-          $('crSub').textContent = `Вы забрали на ${m.toFixed(2)}x`; SFX.cash();
-          $('crMsg').textContent = `Выигрыш +${fmt(win)} ₽`;
-          $('crBtn').textContent = 'Ставка';
-          $('crBtn').className = 'w-full py-3.5 rounded-xl bg-sulfur hover:bg-[#e1ff57] text-base font-bold text-sm transition active:scale-95';
-          cr.hist.unshift([true, m]);
-          cr.hist = cr.hist.slice(0, 8);
-          $('crHist').innerHTML = cr.hist.map(h => `<span class="px-2 py-0.5 rounded-md text-[11px] font-bold ${h[0] ? 'bg-emerald/15 text-emerald' : 'bg-rose/15 text-rose'}">${h[1].toFixed(2)}x</span>`).join('');
-          pushFeed('Crash', 'Вы', cr.bet, m, win, true);
+        if (cr.phase === 'run' && cr.bet > 0 && !cr.cashed) {
+          const m = Math.pow(1.045, (performance.now() - cr.t0) / 100);
+          crCashout(m);
+          return;
         }
+        const bet = Math.floor(+$('crBet').value);
+        if (!(bet >= 1)) return ($('crMsg').textContent = 'Ставка от 1 ₽');
+        if (bet > bal) return ($('crMsg').textContent = 'Недостаточно демо-баланса');
+        bal -= bet; addWager(bet); updateBalanceUI();
+        SFX.click();
+        if (cr.phase === 'wait') {
+          cr.bet = bet;
+          cr.auto = Math.max(0, +$('crAuto').value || 0);
+          $('crMsg').textContent = `Ставка ${fmt(bet)} ₽ принята на текущий раунд`;
+        } else {
+          cr.queuedBet = bet;
+          $('crMsg').textContent = `Ставка ${fmt(bet)} ₽ в очереди на следующий раунд`;
+        }
+        crUpdateBtn();
       });
 
       /* ================= 2. DICE ================= */
@@ -2619,14 +3258,15 @@
       }
       $('dcRange').addEventListener('input', dcUpd);
       dcUpd();
-      $('dcBtn').addEventListener('click', () => {
+      $('dcBtn').addEventListener('click', async () => {
         if (dcBusy) return;
         const bet = Math.floor(+$('dcBet').value), c = +$('dcRange').value;
         if (!(bet >= 1)) return ($('dcMsg').textContent = 'Ставка от 1 ₽');
         if (bet > bal) return ($('dcMsg').textContent = 'Недостаточно демо-баланса');
         bal -= bet; addWager(bet); updateBalanceUI();
         dcBusy = true; SFX.rattle();
-        const r = Math.random() * 100, win = r < c, t0 = performance.now();
+        const pf = await PF.roll('Dice', 1, u => (u * 100).toFixed(2));
+        const r = pf.floats[0] * 100, win = r < c, t0 = performance.now();
         $('dcPin').style.left = `calc(${r}% - 3px)`;
         $('dcVal').className = 'font-display font-bold text-6xl sm:text-7xl text-center text-white tabular-nums';
         (function anim(now) {
@@ -2680,13 +3320,16 @@
         M.on = false; $('mnCount').disabled = $('mnBet').disabled = false;
         $('mnBtn').disabled = false; $('mnBtn').textContent = 'Новая игра';
       }
-      $('mnBtn').addEventListener('click', () => {
+      $('mnBtn').addEventListener('click', async () => {
         if (M.on) return minesEnd(true);
         const bet = Math.floor(+$('mnBet').value), m = +$('mnCount').value;
         if (!(bet >= 1)) return ($('mnMsg').textContent = 'Ставка от 1 ₽');
         if (bet > bal) return ($('mnMsg').textContent = 'Недостаточно демо-баланса');
         bal -= bet; addWager(bet); updateBalanceUI();
-        const mines = new Set(); while (mines.size < m) mines.add(Math.floor(Math.random() * 25));
+        await PF.roll('Mines', 25, () => m + ' мин');
+        const pool = Array.from({ length: 25 }, (_, i) => i);
+        for (let i = 24; i > 0; i--) { const j = Math.floor(rng() * (i + 1)); [pool[i], pool[j]] = [pool[j], pool[i]]; }
+        const mines = new Set(pool.slice(0, m));
         M = { on: true, bet, m, mines, k: 0 };
         $('mnGrid').querySelectorAll('.mine-tile').forEach(t => { t.className = 'mine-tile'; t.textContent = ''; t.disabled = false; });
         $('mnCount').disabled = $('mnBet').disabled = true;
@@ -2792,7 +3435,7 @@
         const coin = $('cfCoin'); coin.classList.add(res ? 'glow-b' : 'glow-y');
         setTimeout(() => coin.classList.remove('glow-b', 'glow-y'), 1100);
       }
-      $('cfBtn').addEventListener('click', () => {
+      $('cfBtn').addEventListener('click', async () => {
         if (cfBusy) return;
         if (!cf.on) {
           const bet = Math.floor(+$('cfBet').value);
@@ -2805,7 +3448,8 @@
         }
         cfBusy = true; $('cfBtn').disabled = true; $('cfCash').disabled = true; $('cfBet').disabled = true;
         $('cfMsg').textContent = 'Монета в воздухе...';
-        const res = Math.random() < 0.5 ? 0 : 1, D = 1750;
+        const pf = await PF.roll('Coin Flip', 1, u => u < 0.5 ? 'Молния' : 'Алмаз');
+        const res = pf.floats[0] < 0.5 ? 0 : 1, D = 1750;
         cfRot += 1800 + (((res * 180 - cfRot) % 360) + 360) % 360;
         const arc = $('cfArc'); arc.classList.remove('cf-idle');
         const coinEl = $('cfCoin'); coinEl.classList.remove('cf-peek');
@@ -2859,7 +3503,7 @@
       function newShoe() {
         shoe = [];
         for (let k = 0; k < 4; k++) for (let s = 0; s < 4; s++) for (let r = 0; r < 13; r++) shoe.push([r, s]);
-        for (let i = shoe.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [shoe[i], shoe[j]] = [shoe[j], shoe[i]]; }
+        for (let i = shoe.length - 1; i > 0; i--) { const j = Math.floor(rng() * (i + 1)); [shoe[i], shoe[j]] = [shoe[j], shoe[i]]; }
       }
       const deal1 = () => { if (shoe.length < 20) newShoe(); return shoe.pop(); };
       function score(h) { let s = 0, a = 0; h.forEach(c => { if (c[0] === 0) { a++; s += 11; } else s += c[0] >= 9 ? 10 : c[0] + 1; }); while (s > 21 && a) { s -= 10; a--; } return s; }
@@ -3070,7 +3714,8 @@
         lock(true);
         const n = S.sel.size; S.T = kenoTable(n, +$('knRisk').value);
         S.pool = Array.from({ length: 40 }, (_, i) => i + 1);
-        for (let i = 39; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [S.pool[i], S.pool[j]] = [S.pool[j], S.pool[i]]; }
+        await PF.roll('Keno', 40, () => K.sel.size + ' чисел');
+        for (let i = 39; i > 0; i--) { const j = Math.floor(rng() * (i + 1)); [S.pool[i], S.pool[j]] = [S.pool[j], S.pool[i]]; }
         S.pool = S.pool.slice(0, 10);
         let hits = 0;
         for (const v of S.pool) {
@@ -3104,7 +3749,7 @@
       }
       $('lmTarget').addEventListener('input', limboUpd);
       $('lmBet').addEventListener('input', limboUpd);
-      $('lmBtn').addEventListener('click', () => {
+      $('lmBtn').addEventListener('click', async () => {
         if (lmBusy) return;
         const bet = Math.floor(+$('lmBet').value), t = lmTarget();
         if (!(bet >= 1)) return ($('lmMsg').textContent = 'Ставка от 1 ₽');
@@ -3112,7 +3757,8 @@
         bal -= bet; addWager(bet); updateBalanceUI();
         lmBusy = true; $('lmBtn').disabled = true; SFX.sweep(650);
         $('lmVal').className = 'font-display font-bold text-6xl sm:text-7xl text-white tabular-nums';
-        const res = Math.max(1, Math.floor(98 / (1 - Math.random())) / 100);
+        const pf = await PF.roll('Limbo', 1, u => Math.max(1, Math.floor(98 / (1 - u)) / 100).toFixed(2) + 'x');
+        const res = Math.max(1, Math.floor(98 / (1 - pf.floats[0])) / 100);
         const L = Math.log(res), D = 650, t0 = performance.now();
         (function anim(now) {
           const k = Math.min(1, (now - t0) / D), e = 1 - Math.pow(1 - k, 3);
@@ -3133,7 +3779,7 @@
 
       /* ================= 8. HI-LO ================= */
       let H = { on: false, busy: false, bet: 0, mult: 1, cur: null, k: 0, el: null };
-      const hrank = c => c[0] + 1, hP = r => ({ hi: (14 - r) / 13, lo: r / 13 }), rndCard = () => [Math.floor(Math.random() * 13), Math.floor(Math.random() * 4)];
+      const hrank = c => c[0] + 1, hP = r => ({ hi: (14 - r) / 13, lo: r / 13 }), rndCard = () => [Math.floor(rng() * 13), Math.floor(rng() * 4)];
       function hlBtns() {
         const on = H.on && !H.busy;
         if (!H.cur) {
@@ -3240,14 +3886,15 @@
         $('whMsg').textContent = 'Выберите ставку и вращайте колесо.';
       }
       $('whRisk').addEventListener('change', wheelBuild);
-      $('whBtn').addEventListener('click', () => {
+      $('whBtn').addEventListener('click', async () => {
         if (wBusy) return;
         const bet = Math.floor(+$('whBet').value);
         if (!(bet >= 1)) return ($('whMsg').textContent = 'Ставка от 1 ₽');
         if (bet > bal) return ($('whMsg').textContent = 'Недостаточно демо-баланса');
         bal -= bet; addWager(bet); updateBalanceUI();
         wBusy = true; $('whBtn').disabled = $('whRisk').disabled = $('whBet').disabled = true; $('whMsg').textContent = 'Вращаем...'; SFX.wheel(4200);
-        const i = Math.floor(Math.random() * 20), mult = wSeg[i];
+        const pf = await PF.roll('Wheel', 1, u => 'x' + wSeg[Math.floor(u * 20)]);
+        const i = Math.floor(pf.floats[0] * 20), mult = wSeg[i];
         const target = (360 - (i * 18 + 9) + (Math.random() * 8 - 4) + 360) % 360;
         wRot += 1800 + ((target - wRot % 360) + 360) % 360;
         $('wheelRot').style.transform = `rotate(${wRot}deg)`;
@@ -3489,20 +4136,21 @@
       $('plRisk').addEventListener('change', () => { plDraw(); });
       $('plRows').addEventListener('change', () => { plDraw(); });
 
-      $('plBtn').addEventListener('click', () => {
+      $('plBtn').addEventListener('click', async () => {
         const bet = Math.floor(+$('plBet').value);
         if (!(bet >= 1)) return ($('plMsg').textContent = 'Ставка от 1 ₽');
         if (bet > bal) return ($('plMsg').textContent = 'Недостаточно демо-баланса');
         bal -= bet; addWager(bet); updateBalanceUI();
 
         const cfg = plGetConfig();
+        await PF.roll('Plinko', cfg.rows, () => cfg.rows + ' рядов');
         const dirs = [];
         let rights = 0;
         const nodes = [{ colOffset: 0, c: 1 }];
         let curOffset = 0;
         let curColIdx = 1;
         for (let r = 0; r < cfg.rows; r++) {
-          const goRight = Math.random() < 0.5 ? 1 : 0;
+          const goRight = rng() < 0.5 ? 1 : 0;
           dirs.push(goRight);
           rights += goRight;
           curOffset += goRight ? 0.5 : -0.5;
@@ -3608,17 +4256,18 @@
         $('twBtn').className = 'w-full py-3.5 rounded-xl bg-sulfur hover:bg-[#e1ff57] disabled:opacity-40 text-base font-bold text-sm transition active:scale-95';
       }
       $('twDiff').addEventListener('change', () => { if (!TW.on) towerReset(); });
-      $('twBtn').addEventListener('click', () => {
+      $('twBtn').addEventListener('click', async () => {
         if (TW.on) return towerEnd(true);
         const bet = Math.floor(+$('twBet').value);
         if (!(bet >= 1)) return ($('twMsg').textContent = 'Ставка от 1 ₽');
         if (bet > bal) return ($('twMsg').textContent = 'Недостаточно демо-баланса');
         bal -= bet; addWager(bet); updateBalanceUI(); SFX.start();
         const diff = $('twDiff').value, cfg = TW_CFG[diff];
+        await PF.roll('Tower', TW_FLOORS * cfg.cols, () => $('twDiff').value);
         const bombs = [];
         for (let r = 0; r < TW_ROWS; r++) {
           const s = new Set();
-          while (s.size < cfg.bombs) s.add(Math.floor(Math.random() * cfg.cols));
+          while (s.size < cfg.bombs) s.add(Math.floor(rng() * cfg.cols));
           bombs.push(s);
         }
         TW = { on: true, bet, diff, floor: 0, bombs };
@@ -3706,7 +4355,7 @@
           x.className = `py-2.5 rounded-xl text-xs font-bold transition ${on ? styles[rlPick] : 'bg-base b-subtle text-muted'}`;
         });
       });
-      $('rlBtn').addEventListener('click', () => {
+      $('rlBtn').addEventListener('click', async () => {
         if (rlBusy) return;
         const bet = Math.floor(+$('rlBet').value);
         if (!(bet >= 1)) return ($('rlMsg').textContent = 'Ставка от 1 ₽');
@@ -3718,7 +4367,8 @@
         $('rlResBadge').className = 'px-3 py-1 rounded-lg bg-panel b-subtle font-display font-bold text-xs text-sulfur';
 
         // Build fresh 75-item strip with target at index 56
-        const winIdx = Math.floor(Math.random() * RL_ORDER.length);
+        const pf = await PF.roll('Roulette', 1, u => '#' + RL_ORDER[Math.floor(u * RL_ORDER.length)].n);
+        const winIdx = Math.floor(pf.floats[0] * RL_ORDER.length);
         const winItem = RL_ORDER[winIdx];
         const targetPos = 56;
         const strip = [];
@@ -3787,44 +4437,45 @@
         {
           id: 'starter', name: 'Sulfur Starter', price: 100, tag: 'До 1 500 ₽', accent: 'text-sky',
           items: [
-            { name: 'Пусто',       val: 0,    w: 22,  r: 'empty',    rl: 'Ничего',      ic: 'empty' },
-            { name: 'Жетон',       val: 40,   w: 24,  r: 'common',   rl: 'Обычный',     ic: 'chip' },
-            { name: 'Искра',       val: 85,   w: 21,  r: 'uncommon', rl: 'Необычный',   ic: 'volt' },
-            { name: 'Энергокуб',   val: 150,  w: 16,  r: 'rare',     rl: 'Редкий',      ic: 'cube' },
-            { name: 'Рубин',       val: 300,  w: 10.5,r: 'epic',     rl: 'Эпический',   ic: 'ruby' },
-            { name: 'Корона',      val: 700,  w: 4.8, r: 'legend',   rl: 'Легендарный', ic: 'crown' },
-            { name: 'Ядро SULFUR', val: 1500, w: 1.7, r: 'legend',   rl: 'Мифический',  ic: 'core' }
+            { name: 'Пусто',       val: 0,    w: 30,   r: 'empty',    rl: 'Ничего',      ic: 'empty' },
+            { name: 'Жетон',       val: 35,   w: 29,   r: 'common',   rl: 'Обычный',     ic: 'chip' },
+            { name: 'Искра',       val: 80,   w: 20,   r: 'uncommon', rl: 'Необычный',   ic: 'volt' },
+            { name: 'Энергокуб',   val: 140,  w: 12,   r: 'rare',     rl: 'Редкий',      ic: 'cube' },
+            { name: 'Рубин',       val: 280,  w: 5.8,  r: 'epic',     rl: 'Эпический',   ic: 'ruby' },
+            { name: 'Корона',      val: 650,  w: 2.2,  r: 'legend',   rl: 'Легендарный', ic: 'crown' },
+            { name: 'Ядро SULFUR', val: 1500, w: 1.0,  r: 'legend',   rl: 'Мифический',  ic: 'core' }
           ]
         },
         {
-          id: 'cyber', name: 'Cyber Vault', price: 500, tag: 'До 8 000 ₽', accent: 'text-[#c4b5fd]',
+          id: 'cyber', name: 'Cyber Vault', price: 500, tag: 'До 7 500 ₽', accent: 'text-[#c4b5fd]',
           items: [
-            { name: 'Пусто',       val: 0,    w: 22,  r: 'empty',    rl: 'Ничего',      ic: 'empty' },
-            { name: 'Микрочип',    val: 200,  w: 24,  r: 'common',   rl: 'Обычный',     ic: 'chip' },
-            { name: 'Разряд',      val: 420,  w: 21,  r: 'uncommon', rl: 'Необычный',   ic: 'volt' },
-            { name: 'Неон-куб',    val: 780,  w: 16,  r: 'rare',     rl: 'Редкий',      ic: 'cube' },
-            { name: 'Кибер-рубин', val: 1550, w: 10.5,r: 'epic',     rl: 'Эпический',   ic: 'ruby' },
-            { name: 'VIP Корона',  val: 3500, w: 4.8, r: 'legend',   rl: 'Легендарный', ic: 'crown' },
-            { name: 'Мега-ядро',   val: 8000, w: 1.7, r: 'legend',   rl: 'Мифический',  ic: 'core' }
+            { name: 'Пусто',       val: 0,    w: 30,   r: 'empty',    rl: 'Ничего',      ic: 'empty' },
+            { name: 'Микрочип',    val: 175,  w: 29,   r: 'common',   rl: 'Обычный',     ic: 'chip' },
+            { name: 'Разряд',      val: 400,  w: 20,   r: 'uncommon', rl: 'Необычный',   ic: 'volt' },
+            { name: 'Неон-куб',    val: 700,  w: 12,   r: 'rare',     rl: 'Редкий',      ic: 'cube' },
+            { name: 'Кибер-рубин', val: 1400, w: 5.8,  r: 'epic',     rl: 'Эпический',   ic: 'ruby' },
+            { name: 'VIP Корона',  val: 3250, w: 2.2,  r: 'legend',   rl: 'Легендарный', ic: 'crown' },
+            { name: 'Мега-ядро',   val: 7500, w: 1.0,  r: 'legend',   rl: 'Мифический',  ic: 'core' }
           ]
         },
         {
-          id: 'vip', name: 'Diamond VIP', price: 2500, tag: 'До 50 000 ₽', accent: 'text-sulfur',
+          id: 'vip', name: 'Diamond VIP', price: 2500, tag: 'До 37 500 ₽', accent: 'text-sulfur',
           items: [
-            { name: 'Пусто',       val: 0,     w: 24,  r: 'empty',    rl: 'Ничего',      ic: 'empty' },
-            { name: 'Слиток',      val: 1000,  w: 23,  r: 'common',   rl: 'Обычный',     ic: 'chip' },
-            { name: 'Молния Pro',  val: 2100,  w: 20,  r: 'uncommon', rl: 'Необычный',   ic: 'volt' },
-            { name: 'Гиперкуб',    val: 3900,  w: 16,  r: 'rare',     rl: 'Редкий',      ic: 'cube' },
-            { name: 'Алый алмаз',  val: 8000,  w: 10.5,r: 'epic',     rl: 'Эпический',   ic: 'ruby' },
-            { name: 'Тиара VIP',   val: 18500, w: 4.8, r: 'legend',   rl: 'Легендарный', ic: 'crown' },
-            { name: 'SULFUR MAX',  val: 50000, w: 1.7, r: 'legend',   rl: 'Мифический',  ic: 'core' }
+            { name: 'Пусто',       val: 0,     w: 31,   r: 'empty',    rl: 'Ничего',      ic: 'empty' },
+            { name: 'Слиток',      val: 850,   w: 28.5, r: 'common',   rl: 'Обычный',     ic: 'chip' },
+            { name: 'Молния Pro',  val: 1950,  w: 19.5, r: 'uncommon', rl: 'Необычный',   ic: 'volt' },
+            { name: 'Гиперкуб',    val: 3500,  w: 12,   r: 'rare',     rl: 'Редкий',      ic: 'cube' },
+            { name: 'Алый алмаз',  val: 7000,  w: 5.8,  r: 'epic',     rl: 'Эпический',   ic: 'ruby' },
+            { name: 'Тиара VIP',   val: 16000, w: 2.2,  r: 'legend',   rl: 'Легендарный', ic: 'crown' },
+            { name: 'SULFUR MAX',  val: 37500, w: 1.0,  r: 'legend',   rl: 'Мифический',  ic: 'core' }
           ]
         }
       ];
-      let csIdx = 0, csBusy = false, csHist = [];
-      function csPickDrop(box) {
+      let csIdx = 0, csBusy = false, csHist = [], csMode = 'solo', cbRounds = 1;
+      const CB_BOTS = ['SulfurBot', 'CyberWolf', 'NeonAce', 'VortexAI', 'ApexBot'];
+      function csPickDrop(box, u = null) {
         const total = box.items.reduce((s, it) => s + it.w, 0);
-        let r = Math.random() * total;
+        let r = (u === null ? rng() : u) * total;
         for (const it of box.items) { r -= it.w; if (r <= 0) return it; }
         return box.items[0];
       }
@@ -3832,6 +4483,34 @@
         const valCls = it.val === 0 ? 'text-rose/80' : 'text-sulfur';
         const valTxt = it.val === 0 ? '0 ₽' : `${fmtInt(it.val)} ₽`;
         return `<div class="cs-item r-${it.r}">${CS_ICONS[it.ic]}<div class="text-[11px] font-semibold ${it.val === 0 ? 'text-muted' : 'text-white'} truncate w-full">${it.name}</div><div class="font-display font-bold text-xs ${valCls} tabular-nums">${valTxt}</div></div>`;
+      }
+      function csResetTrack(trackEl, box) {
+        const preview = Array.from({ length: 14 }, () => csPickDrop(box));
+        const vp = trackEl.parentElement;
+        vp.classList.remove('spinning', 'landed');
+        trackEl.style.transition = 'none';
+        trackEl.style.transform = 'translateX(-40px)';
+        trackEl.innerHTML = preview.map(csItemCardHTML).join('');
+      }
+      function csSpinTrack(trackEl, box, winItem, dur = 3400) {
+        const targetPos = 38;
+        const strip = Array.from({ length: 52 }, (_, i) => i === targetPos ? winItem : csPickDrop(box));
+        const vp = trackEl.parentElement;
+        vp.classList.remove('landed');
+        vp.classList.add('spinning');
+        trackEl.style.transition = 'none';
+        trackEl.style.transform = 'translateX(0px)';
+        trackEl.innerHTML = strip.map(csItemCardHTML).join('');
+        requestAnimationFrame(() => requestAnimationFrame(() => {
+          const hitEl = trackEl.children[targetPos];
+          const vpW = vp.clientWidth || 500;
+          const cardCenter = hitEl ? (hitEl.offsetLeft + hitEl.offsetWidth / 2) : (targetPos * 118 + 54);
+          const safeJitter = (rng() - 0.5) * ((hitEl ? hitEl.offsetWidth : 108) * 0.22);
+          const finalX = cardCenter - vpW / 2 + safeJitter;
+          trackEl.style.transition = `transform ${(dur / 1000).toFixed(2)}s cubic-bezier(0.08, 0.85, 0.14, 1)`;
+          trackEl.style.transform = `translateX(${-finalX.toFixed(1)}px)`;
+        }));
+        return targetPos;
       }
       function csRenderSelector() {
         const box = CASES_DATA[csIdx];
@@ -3843,7 +4522,14 @@
             </div>
             <span class="px-2.5 py-1 rounded-lg bg-base b-subtle font-display font-bold text-xs text-white tabular-nums">${fmtInt(c.price)} ₽</span>
           </button>`).join('');
-        $('csBtn').textContent = `Открыть за ${fmtInt(box.price)} ₽`;
+        const isBattle = csMode === 'battle';
+        $('csModeSolo').className = `py-2 rounded-lg text-xs font-bold transition ${!isBattle ? 'bg-panel2 text-white' : 'text-muted hover:text-white'}`;
+        $('csModeBattle').className = `py-2 rounded-lg text-xs font-bold transition ${isBattle ? 'bg-violet text-white' : 'text-muted hover:text-white'}`;
+        $('cbRoundsWrap').hidden = !isBattle;
+        $('csSoloWrap').hidden = isBattle;
+        $('csBattleWrap').hidden = !isBattle;
+        const totalCost = isBattle ? box.price * cbRounds : box.price;
+        $('csBtn').textContent = isBattle ? `⚔️ Баттл 1v1 · ${fmtInt(totalCost)} ₽` : `Открыть за ${fmtInt(box.price)} ₽`;
         $('csLoot').innerHTML = box.items.map(it => {
           const bCol = it.r === 'legend' ? 'border-b-sulfur' : it.r === 'epic' ? 'border-b-rose' : it.r === 'rare' ? 'border-b-violet' : it.r === 'uncommon' ? 'border-b-sky' : it.r === 'empty' ? 'border-b-slate-700' : 'border-b-slate-500';
           return `
@@ -3855,53 +4541,116 @@
           </div>`;
         }).join('');
         if (!csBusy) {
-          const preview = Array.from({ length: 14 }, () => csPickDrop(box));
-          const vp = $('csTrack').parentElement;
-          vp.classList.remove('spinning', 'landed');
-          $('csTrack').style.transition = 'none';
-          $('csTrack').style.transform = 'translateX(-40px)';
-          $('csTrack').innerHTML = preview.map(csItemCardHTML).join('');
+          csResetTrack($('csTrack'), box);
+          csResetTrack($('cbMyTrack'), box);
+          csResetTrack($('cbBotTrack'), box);
+          $('cbRoundBadge').textContent = `Раунд 1 / ${cbRounds}`;
+          $('cbMyTotal').textContent = '0 ₽';
+          $('cbBotTotal').textContent = '0 ₽';
+          $('cbResultBox').hidden = true;
         }
       }
+      $('csModeSolo').addEventListener('click', () => { if (csBusy) return; csMode = 'solo'; SFX.click(); csRenderSelector(); });
+      $('csModeBattle').addEventListener('click', () => { if (csBusy) return; csMode = 'battle'; SFX.click(); csRenderSelector(); });
+      $('cbRounds').addEventListener('click', e => {
+        const b = e.target.closest('button[data-cbr]'); if (!b || csBusy) return;
+        cbRounds = +b.dataset.cbr; SFX.click();
+        $('cbRounds').querySelectorAll('button').forEach(x => {
+          const on = +x.dataset.cbr === cbRounds;
+          x.className = `py-2 rounded-xl text-xs font-bold transition ${on ? 'bg-panel2 border border-sulfur/60 text-sulfur' : 'bg-base b-subtle text-muted'}`;
+        });
+        csRenderSelector();
+      });
       $('csSelect').addEventListener('click', e => {
         const b = e.target.closest('button[data-cs]'); if (!b || csBusy) return;
         csIdx = +b.dataset.cs; SFX.click();
         $('csDropBox').hidden = true;
         csRenderSelector();
       });
-      $('csBtn').addEventListener('click', () => {
+      $('csBtn').addEventListener('click', async () => {
         if (csBusy) return;
-        const box = CASES_DATA[csIdx], price = box.price;
+        const box = CASES_DATA[csIdx];
+        if (csMode === 'battle') {
+          const totalCost = box.price * cbRounds;
+          if (totalCost > bal) return ($('csMsg').textContent = 'Недостаточно демо-баланса');
+          bal -= totalCost; addWager(totalCost); updateBalanceUI();
+          csBusy = true; $('csBtn').disabled = true; $('cbResultBox').hidden = true;
+          const botName = CB_BOTS[Math.floor(rng() * CB_BOTS.length)];
+          $('cbBotName').textContent = botName + ' (Бот)';
+          let mySum = 0, botSum = 0;
+          $('cbMyTotal').textContent = '0 ₽';
+          $('cbBotTotal').textContent = '0 ₽';
+
+          for (let r = 1; r <= cbRounds; r++) {
+            $('cbRoundBadge').textContent = `Раунд ${r} / ${cbRounds}`;
+            $('csMsg').textContent = `Баттл против ${botName} · Раунд ${r} из ${cbRounds}...`;
+            const pf = await PF.roll('Case Battle', 2, u => csPickDrop(box, u).name);
+            const myIt = csPickDrop(box, pf.floats[0]);
+            const botIt = csPickDrop(box, pf.floats[1]);
+            SFX.wheel(3200);
+            const t1 = csSpinTrack($('cbMyTrack'), box, myIt, 3200);
+            const t2 = csSpinTrack($('cbBotTrack'), box, botIt, 3200);
+            await sleep(3350);
+            $('cbMyTrack').parentElement.classList.remove('spinning');
+            $('cbMyTrack').parentElement.classList.add('landed');
+            $('cbBotTrack').parentElement.classList.remove('spinning');
+            $('cbBotTrack').parentElement.classList.add('landed');
+            if ($('cbMyTrack').children[t1]) $('cbMyTrack').children[t1].classList.add('landed-hit');
+            if ($('cbBotTrack').children[t2]) $('cbBotTrack').children[t2].classList.add('landed-hit');
+            mySum += myIt.val;
+            botSum += botIt.val;
+            $('cbMyTotal').textContent = `${fmtInt(mySum)} ₽`;
+            $('cbBotTotal').textContent = `${fmtInt(botSum)} ₽`;
+            SFX.tick(r);
+            if (r < cbRounds) await sleep(850);
+          }
+
+          const pot = mySum + botSum;
+          let payout = 0, resTxt = '', resCls = '';
+          if (mySum > botSum) {
+            payout = pot;
+            bal += payout; updateBalanceUI();
+            resTxt = `🏆 ПОБЕДА! Вы забрали оба дропа: +${fmtInt(payout)} ₽`;
+            resCls = 'bg-emerald/15 border-emerald/40 text-emerald';
+            $('csMsg').textContent = `Вы победили ${botName} (${fmtInt(mySum)} ₽ vs ${fmtInt(botSum)} ₽)!`;
+          } else if (mySum < botSum) {
+            payout = 0;
+            resTxt = `💀 ПОРАЖЕНИЕ · ${botName} забрал банк (${fmtInt(pot)} ₽)`;
+            resCls = 'bg-rose/15 border-rose/40 text-rose';
+            $('csMsg').textContent = `${botName} выиграл баттл (${fmtInt(botSum)} ₽ vs ${fmtInt(mySum)} ₽).`;
+          } else {
+            payout = totalCost;
+            bal += payout; updateBalanceUI();
+            resTxt = `🤝 НИЧЬЯ (${fmtInt(mySum)} ₽) · Возврат ${fmtInt(totalCost)} ₽`;
+            resCls = 'bg-panel2 border-white/15 text-white';
+            $('csMsg').textContent = 'Ничья! Ставка возвращена на баланс.';
+          }
+          $('cbResultBox').hidden = false;
+          $('cbResultBox').className = `rounded-xl p-3 text-center font-display font-bold text-sm border ${resCls}`;
+          $('cbResultBox').textContent = resTxt;
+
+          const mult = +(payout / totalCost).toFixed(2);
+          csHist.unshift({ name: 'Battle', val: payout, win: payout >= totalCost, empty: payout === 0 });
+          csHist = csHist.slice(0, 6);
+          $('csHist').innerHTML = csHist.map(h => `<span class="px-2 py-0.5 rounded-md text-[11px] font-bold ${h.empty ? 'bg-rose/15 text-rose' : h.win ? 'bg-emerald/15 text-emerald' : 'bg-panel2 text-muted'}">${h.empty ? '0 ₽' : fmtInt(h.val) + ' ₽'}</span>`).join('');
+          pushFeed('Case Battle', 'Вы', totalCost, mult, payout, true);
+          csBusy = false; $('csBtn').disabled = false;
+          return;
+        }
+
+        const price = box.price;
         if (price > bal) return ($('csMsg').textContent = 'Недостаточно демо-баланса');
         bal -= price; addWager(price); updateBalanceUI();
         csBusy = true; $('csBtn').disabled = true; $('csDropBox').hidden = true;
         $('csMsg').textContent = `Открываем ${box.name}...`;
 
-        const winItem = csPickDrop(box);
-        const targetPos = 42;
-        const strip = Array.from({ length: 56 }, (_, i) => i === targetPos ? winItem : csPickDrop(box));
-        const track = $('csTrack');
-        const vp = track.parentElement;
-        vp.classList.remove('landed');
-        vp.classList.add('spinning');
-        track.style.transition = 'none';
-        track.style.transform = 'translateX(0px)';
-        track.innerHTML = strip.map(csItemCardHTML).join('');
-        void track.offsetWidth;
-
-        const firstCard = track.firstElementChild;
-        const cardW = firstCard ? firstCard.getBoundingClientRect().width : 108;
-        const gap = 10;
-        const step = cardW + gap;
-        const vpW = vp.clientWidth || 500;
-        const jitter = (Math.random() - 0.5) * (cardW * 0.42);
-        const finalX = targetPos * step + cardW / 2 - vpW / 2 + jitter;
-
+        const pf = await PF.roll('Cases', 1, u => csPickDrop(box, u).name);
+        const winItem = csPickDrop(box, pf.floats[0]);
         SFX.wheel(4200);
-        track.style.transition = 'transform 4.2s cubic-bezier(0.1, 0.84, 0.14, 1)';
-        track.style.transform = `translateX(${-finalX.toFixed(1)}px)`;
+        const targetPos = csSpinTrack($('csTrack'), box, winItem, 4200);
 
         setTimeout(() => {
+          const track = $('csTrack'), vp = track.parentElement;
           vp.classList.remove('spinning');
           vp.classList.add('landed');
           const hitEl = track.children[targetPos];
@@ -3924,12 +4673,1411 @@
 
           pushFeed('Cases', 'Вы', price, mult, winItem.val, true);
           csBusy = false; $('csBtn').disabled = false;
-        }, 4300);
+        }, 4350);
       });
+
+      /* ================= LIVE STATS WIDGET (Stake style) ================= */
+      const LS = (() => {
+        let profit = 0, wager = 0, wins = 0, losses = 0, pts = [0];
+        function render() {
+          $('lsProfit').textContent = (profit >= 0 ? '+' : '−') + fmt(Math.abs(profit)) + ' ₽';
+          $('lsProfit').className = `font-display font-bold text-sm tabular-nums ${profit >= 0 ? 'text-emerald' : 'text-rose'}`;
+          $('lsWager').textContent = fmt(wager) + ' ₽';
+          $('lsWins').textContent = wins;
+          $('lsLosses').textContent = losses;
+
+          const W = 230, H = 88, pad = 8;
+          const minV = Math.min(0, ...pts), maxV = Math.max(0, ...pts);
+          const span = Math.max(10, maxV - minV);
+          const yOf = v => H - pad - ((v - minV) / span) * (H - pad * 2);
+          const zeroY = yOf(0);
+          $('lsZero').setAttribute('y1', zeroY.toFixed(1));
+          $('lsZero').setAttribute('y2', zeroY.toFixed(1));
+
+          if (pts.length < 2) {
+            $('lsLine').setAttribute('d', `M0 ${zeroY.toFixed(1)} L${W} ${zeroY.toFixed(1)}`);
+            $('lsArea').setAttribute('d', '');
+            $('lsDot').hidden = true;
+            return;
+          }
+          const coords = pts.map((v, i) => [((i / (pts.length - 1)) * W), yOf(v)]);
+          const d = coords.map(([x, y], i) => `${i ? 'L' : 'M'}${x.toFixed(1)} ${y.toFixed(1)}`).join(' ');
+          const last = coords[coords.length - 1];
+          const pos = profit >= 0;
+          const col = pos ? '#22c55e' : '#f43f5e';
+          $('lsLine').setAttribute('d', d);
+          $('lsLine').setAttribute('stroke', col);
+          $('lsArea').setAttribute('d', `${d} L${last[0].toFixed(1)} ${zeroY.toFixed(1)} L0 ${zeroY.toFixed(1)} Z`);
+          $('lsArea').setAttribute('fill', pos ? 'url(#lsGradPos)' : 'url(#lsGradNeg)');
+          $('lsDot').hidden = false;
+          $('lsDot').setAttribute('cx', last[0].toFixed(1));
+          $('lsDot').setAttribute('cy', last[1].toFixed(1));
+          $('lsDot').setAttribute('fill', col);
+        }
+        function record(bet, payout) {
+          wager = +(wager + bet).toFixed(2);
+          const delta = +(payout - bet).toFixed(2);
+          profit = +(profit + delta).toFixed(2);
+          if (payout > bet) wins++;
+          else if (payout < bet) losses++;
+          pts.push(profit);
+          if (pts.length > 60) pts.shift();
+          render();
+        }
+        function reset() {
+          profit = 0; wager = 0; wins = 0; losses = 0; pts = [0];
+          render();
+        }
+        // Dragging via Pointer Events
+        const box = $('liveStatsBox'), handle = $('lsDragHandle');
+        let dragging = false, sx = 0, sy = 0, ox = 0, oy = 0;
+        handle.addEventListener('pointerdown', e => {
+          if (e.target.closest('button')) return;
+          dragging = true;
+          handle.setPointerCapture(e.pointerId);
+          const pr = box.offsetParent.getBoundingClientRect();
+          const br = box.getBoundingClientRect();
+          ox = br.left - pr.left;
+          oy = br.top - pr.top;
+          sx = e.clientX; sy = e.clientY;
+          box.style.right = 'auto';
+          box.style.left = ox + 'px';
+          box.style.top = oy + 'px';
+        });
+        handle.addEventListener('pointermove', e => {
+          if (!dragging) return;
+          const pr = box.offsetParent.getBoundingClientRect();
+          const nx = Math.max(6, Math.min(pr.width - box.offsetWidth - 6, ox + (e.clientX - sx)));
+          const ny = Math.max(6, Math.min(pr.height - box.offsetHeight - 6, oy + (e.clientY - sy)));
+          box.style.left = nx + 'px';
+          box.style.top = ny + 'px';
+        });
+        handle.addEventListener('pointerup', () => { dragging = false; });
+        $('openLiveStatsBtn').addEventListener('click', () => {
+          box.hidden = !box.hidden;
+          if (!box.hidden) render();
+          SFX.click();
+        });
+        $('lsCloseBtn').addEventListener('click', () => { box.hidden = true; SFX.click(); });
+        $('lsResetBtn').addEventListener('click', () => { reset(); SFX.click(); });
+        render();
+        return { record, reset, render };
+      })();
+
+      /* ================= 14. SCRATCH CARDS (Ticket Tiers + 4-Pick) ================= */
+      const SC_TIERS = [
+        { id: 'starter', name: 'Starter Ticket', price: 100,  tag: 'До 5 000 ₽',   cls: 't-sky',    accent: 'text-sky' },
+        { id: 'cyber',   name: 'Cyber Ticket',   price: 500,  tag: 'До 25 000 ₽',  cls: 't-violet', accent: 'text-[#c4b5fd]' },
+        { id: 'ruby',    name: 'Ruby Ticket',    price: 1500, tag: 'До 75 000 ₽',  cls: 't-rose',   accent: 'text-rose' },
+        { id: 'vip',     name: 'VIP Gold Ticket',price: 5000, tag: 'До 250 000 ₽', cls: 't-gold',   accent: 'text-sulfur' }
+      ];
+      const SC_PRIZES = [
+        { id: 'chip',  name: 'Жетон',  mult: 1.5, ic: 'chip',  col: 'text-slate-300' },
+        { id: 'volt',  name: 'Искра',  mult: 2.5, ic: 'volt',  col: 'text-sky' },
+        { id: 'cube',  name: 'Куб',    mult: 5,   ic: 'cube',  col: 'text-[#c4b5fd]' },
+        { id: 'ruby',  name: 'Рубин',  mult: 12,  ic: 'ruby',  col: 'text-rose' },
+        { id: 'crown', name: 'Корона', mult: 25,  ic: 'crown', col: 'text-sulfur' }
+      ];
+      let SC = { tierIdx: 0, active: false, settled: false, bet: 0, cells: [], picked: new Set(), hist: [] };
+
+      function scRenderSidebar() {
+        const t = SC_TIERS[SC.tierIdx];
+        $('scTierList').innerHTML = SC_TIERS.map((tr, i) => `
+          <button type="button" data-sct="${i}" class="w-full px-3 py-2 rounded-xl flex items-center justify-between gap-2 text-left transition ${i === SC.tierIdx ? 'bg-panel2 border border-sulfur/60' : 'bg-base b-subtle hover:bg-panel2/60'}">
+            <div>
+              <div class="text-xs font-bold text-white">${tr.name}</div>
+              <div class="text-[10px] ${tr.accent} font-semibold">${tr.tag}</div>
+            </div>
+            <span class="px-2 py-0.5 rounded-md bg-base b-subtle font-display font-bold text-xs text-white tabular-nums">${fmtInt(tr.price)} ₽</span>
+          </button>`).join('');
+        $('scTicket').className = `sc-ticket ${t.cls}`;
+        $('scTicketTitle').textContent = `${t.name} · ${fmtInt(t.price)} ₽`;
+        $('scBuyBtn').textContent = `Купить билет за ${fmtInt(t.price)} ₽`;
+        $('scPrizeStrip').innerHTML = SC_PRIZES.map(p => `
+          <div class="rounded-lg bg-base b-subtle p-1.5 flex flex-col items-center gap-0.5 text-center">
+            <div class="scale-[0.65] -my-2">${CS_ICONS[p.ic]}</div>
+            <div class="font-display font-bold text-[10px] ${p.col} tabular-nums">${fmtInt(t.price * p.mult)} ₽</div>
+          </div>`).join('');
+      }
+
+      function scInit() {
+        scRenderSidebar();
+        if (SC.active) return;
+        $('scPicksLbl').textContent = '0 / 4';
+        $('scBanner').hidden = true;
+        $('scAutoBtn').hidden = true;
+        $('scAutoBtn').disabled = true;
+        $('scSlots').innerHTML = Array.from({ length: 9 }, (_, i) => `
+          <div class="sc-slot">
+            <div class="sc-foil">
+              <span class="font-display font-bold text-xs text-white/75 tracking-wider">SULFUR</span>
+              <span class="text-[9px] text-white/45 mt-0.5">#${i + 1}</span>
+            </div>
+          </div>`).join('');
+      }
+
+      function scBuildBoard() {
+        // Seed board with 1 primary cluster of 4-5 matching symbols so player hunts for 3+ in 4 picks
+        const weights = [44, 28, 16, 9, 3];
+        let total = weights.reduce((a, b) => a + b, 0);
+        let r = rng() * total, mainIdx = 0;
+        for (let i = 0; i < weights.length; i++) { r -= weights[i]; if (r <= 0) { mainIdx = i; break; } }
+        const mainSym = SC_PRIZES[mainIdx];
+        const mainCount = rng() < 0.55 ? 5 : 4;
+        const cells = [];
+        for (let i = 0; i < mainCount; i++) cells.push(mainSym);
+        const others = SC_PRIZES.filter((_, i) => i !== mainIdx);
+        const used = {};
+        while (cells.length < 9) {
+          const o = others[Math.floor(rng() * others.length)];
+          if ((used[o.id] || 0) < 2) {
+            used[o.id] = (used[o.id] || 0) + 1;
+            cells.push(o);
+          }
+        }
+        for (let i = cells.length - 1; i > 0; i--) {
+          const j = Math.floor(rng() * (i + 1));
+          [cells[i], cells[j]] = [cells[j], cells[i]];
+        }
+        return cells;
+      }
+
+      function scFinish() {
+        if (!SC.active || SC.settled) return;
+        SC.settled = true;
+        SC.active = false;
+        $('scBuyBtn').disabled = false;
+        $('scAutoBtn').hidden = true;
+        $('scAutoBtn').disabled = true;
+
+        // Count matches strictly among the 4 picked slots
+        const counts = {};
+        SC.picked.forEach(idx => {
+          const id = SC.cells[idx].id;
+          counts[id] = (counts[id] || 0) + 1;
+        });
+        let winSym = null, winCount = 0;
+        for (const [id, cnt] of Object.entries(counts)) {
+          if (cnt >= 3) {
+            winSym = SC_PRIZES.find(p => p.id === id);
+            winCount = cnt;
+            break;
+          }
+        }
+
+        const mult = winSym ? (winCount === 4 ? winSym.mult * 2 : winSym.mult) : 0;
+        const payout = +(SC.bet * mult).toFixed(2);
+
+        // Reveal unpicked slots dimmed, highlight winning slots
+        $('scSlots').querySelectorAll('.sc-slot').forEach((slotEl, i) => {
+          slotEl.classList.remove('can-pick');
+          const foil = slotEl.querySelector('.sc-foil');
+          if (foil) foil.classList.add('scratched');
+          if (!SC.picked.has(i)) slotEl.classList.add('dim-slot');
+          else if (winSym && SC.cells[i].id === winSym.id) slotEl.classList.add('win-slot');
+        });
+
+        if (winSym) {
+          bal += payout; updateBalanceUI();
+          $('scBanner').hidden = false;
+          $('scBanner').className = 'mt-3 rounded-xl p-2.5 text-center font-display font-bold text-xs sm:text-sm border bg-emerald/15 border-emerald/45 text-emerald';
+          $('scBanner').textContent = `${winCount}× ${winSym.name} · +${fmtInt(payout)} ₽ (x${mult})`;
+          $('scMsg').textContent = `Совпало ${winCount} одинаковых! Выигрыш +${fmtInt(payout)} ₽.`;
+        } else {
+          $('scBanner').hidden = false;
+          $('scBanner').className = 'mt-3 rounded-xl p-2.5 text-center font-display font-bold text-xs sm:text-sm border bg-rose/15 border-rose/35 text-rose';
+          $('scBanner').textContent = 'Совпадений (3 из 4) нет · 0 ₽';
+          $('scMsg').textContent = 'Дроп не совпал — попробуйте другой билет.';
+        }
+
+        SC.hist.unshift({ val: payout, win: payout > 0 });
+        SC.hist = SC.hist.slice(0, 6);
+        $('scHist').innerHTML = SC.hist.map(h => `<span class="px-2 py-0.5 rounded-md text-[11px] font-bold ${h.win ? 'bg-emerald/15 text-emerald' : 'bg-panel2 text-muted'}">${h.win ? '+' + fmtInt(h.val) + ' ₽' : '0 ₽'}</span>`).join('');
+        pushFeed('Scratch', 'Вы', SC.bet, mult, payout, true);
+      }
+
+      function scPickSlot(idx) {
+        if (!SC.active || SC.settled || SC.picked.has(idx) || SC.picked.size >= 4) return;
+        SC.picked.add(idx);
+        const slotEl = $('scSlots').children[idx];
+        if (slotEl) {
+          slotEl.classList.remove('can-pick');
+          slotEl.classList.add('picked');
+          const foil = slotEl.querySelector('.sc-foil');
+          if (foil) foil.classList.add('scratched');
+        }
+        SFX.gem(SC.picked.size);
+        $('scPicksLbl').textContent = `${SC.picked.size} / 4`;
+        if (SC.picked.size >= 4) {
+          setTimeout(scFinish, 320);
+        }
+      }
+
+      function scSettleInstant() {
+        if (!SC.active || SC.settled) return;
+        const left = Array.from({ length: 9 }, (_, i) => i).filter(i => !SC.picked.has(i));
+        while (SC.picked.size < 4 && left.length) SC.picked.add(left.shift());
+        scFinish();
+      }
+
+      $('scTierList').addEventListener('click', e => {
+        const b = e.target.closest('button[data-sct]');
+        if (!b || SC.active) return;
+        SC.tierIdx = +b.dataset.sct;
+        SFX.click();
+        scInit();
+      });
+      $('scSlots').addEventListener('click', e => {
+        const slot = e.target.closest('.sc-slot[data-idx]');
+        if (slot) scPickSlot(+slot.dataset.idx);
+      });
+      $('scAutoBtn').addEventListener('click', async () => {
+        if (!SC.active || SC.settled) return;
+        $('scAutoBtn').disabled = true;
+        const pool = Array.from({ length: 9 }, (_, i) => i).filter(i => !SC.picked.has(i));
+        for (let i = pool.length - 1; i > 0; i--) { const j = Math.floor(rng() * (i + 1)); [pool[i], pool[j]] = [pool[j], pool[i]]; }
+        while (SC.picked.size < 4 && pool.length && SC.active) {
+          scPickSlot(pool.shift());
+          await sleep(170);
+        }
+      });
+      $('scBuyBtn').addEventListener('click', async () => {
+        if (SC.active) return;
+        const t = SC_TIERS[SC.tierIdx];
+        if (t.price > bal) return ($('scMsg').textContent = 'Недостаточно демо-баланса');
+        bal -= t.price; addWager(t.price); updateBalanceUI();
+        SFX.start();
+
+        await PF.roll('Scratch', 20, () => t.name);
+        const cells = scBuildBoard();
+        SC = { ...SC, active: true, settled: false, bet: t.price, cells, picked: new Set() };
+
+        $('scSlots').innerHTML = cells.map((p, i) => `
+          <div data-idx="${i}" class="sc-slot can-pick">
+            <div class="scale-90">${CS_ICONS[p.ic]}</div>
+            <div class="font-display font-bold text-[11px] ${p.col} tabular-nums">${fmtInt(t.price * p.mult)} ₽</div>
+            <div class="sc-foil">
+              <span class="font-display font-bold text-[11px] text-white/85 tracking-wider">Стереть</span>
+              <span class="text-[9px] text-sulfur/90 mt-0.5">#${i + 1}</span>
+            </div>
+          </div>`).join('');
+        $('scPicksLbl').textContent = '0 / 4';
+        $('scBanner').hidden = true;
+        $('scBuyBtn').disabled = true;
+        $('scAutoBtn').hidden = false;
+        $('scAutoBtn').disabled = false;
+        $('scMsg').textContent = 'Откройте любые 4 слота на билете!';
+      });
+
+      /* ================= 15. CHICKEN ROAD (Custom 2D Canvas Art & Animation) ================= */
+      const CHK_DIFFS = {
+        easy:   { p: 0.85, mults: [1.14, 1.34, 1.58, 1.86, 2.19, 2.57, 3.03, 3.56, 4.19, 4.93] },
+        med:    { p: 0.72, mults: [1.35, 1.87, 2.60, 3.61, 5.01, 6.96, 9.67, 13.4, 18.6, 25.9] },
+        hard:   { p: 0.55, mults: [1.76, 3.21, 5.83, 10.6, 19.3, 35.1, 63.8, 116,  211,  383] },
+        insane: { p: 0.38, mults: [2.55, 6.72, 17.7, 46.5, 122,  322,  847,  2230, 5868, 15442] }
+      };
+      const CHK_CAR_COLS = ['#f43f5e', '#38bdf8', '#a855f7', '#f59e0b', '#ec4899'];
+      let CHK = {
+        on: false, bet: 0, step: 0, diff: 'med', crashStep: 0, hist: [],
+        camX: 0, targetCamX: 0,
+        jump: null, // { from, to, t0, dur, willCrash }
+        cars: [], feathers: [], raf: 0, running: false
+      };
+
+      function chkInitCars() {
+        CHK.cars = [];
+        for (let lane = 1; lane <= 10; lane++) {
+          CHK.cars.push({
+            lane,
+            y: -120 - (lane * 73) % 260,
+            speed: 145 + (lane % 4) * 38,
+            color: CHK_CAR_COLS[lane % CHK_CAR_COLS.length],
+            killer: false
+          });
+        }
+      }
+
+      function chkDrawChicken(ctx, x, y, jumpT, dead) {
+        if (dead) return;
+        const arc = jumpT > 0 ? Math.sin(jumpT * Math.PI) : 0;
+        const bob = jumpT === 0 ? Math.sin(performance.now() / 220) * 2.2 : 0;
+        const cy = y - arc * 38 + bob;
+        const sx = jumpT > 0 ? 1 - arc * 0.08 : 1;
+        const sy = jumpT > 0 ? 1 + arc * 0.12 : 1;
+
+        // Ground shadow
+        ctx.save();
+        ctx.fillStyle = 'rgba(0,0,0,0.45)';
+        ctx.beginPath();
+        ctx.ellipse(x, y + 18, 18 * (1 - arc * 0.35), 7 * (1 - arc * 0.35), 0, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+
+        ctx.save();
+        ctx.translate(x, cy);
+        ctx.scale(sx, sy);
+
+        // Little orange feet
+        ctx.strokeStyle = '#f97316';
+        ctx.lineWidth = 3;
+        ctx.lineCap = 'round';
+        ctx.beginPath();
+        ctx.moveTo(-6, 12); ctx.lineTo(-6, 19); ctx.moveTo(-9, 19); ctx.lineTo(-3, 19);
+        ctx.moveTo(6, 12);  ctx.lineTo(6, 19);  ctx.moveTo(3, 19);  ctx.lineTo(9, 19);
+        ctx.stroke();
+
+        // Tail feathers
+        ctx.fillStyle = '#e2e8f0';
+        ctx.beginPath();
+        ctx.moveTo(-14, 0);
+        ctx.quadraticCurveTo(-24, -10, -21, 4);
+        ctx.quadraticCurveTo(-23, 10, -13, 8);
+        ctx.closePath();
+        ctx.fill();
+
+        // Plump body
+        const bg = ctx.createRadialGradient(-4, -6, 4, 0, 2, 20);
+        bg.addColorStop(0, '#ffffff');
+        bg.addColorStop(1, '#dbe4f0');
+        ctx.fillStyle = bg;
+        ctx.beginPath();
+        ctx.ellipse(0, 2, 16, 14, 0, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.strokeStyle = 'rgba(15,23,42,0.35)';
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+
+        // Wing (flaps on jump)
+        ctx.save();
+        ctx.translate(-3, 2);
+        ctx.rotate(arc > 0 ? -0.65 * Math.sin(jumpT * Math.PI * 3) : 0.1);
+        ctx.fillStyle = '#cbd5e1';
+        ctx.beginPath();
+        ctx.ellipse(0, 0, 9, 5.5, -0.2, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+
+        // Head
+        ctx.fillStyle = '#ffffff';
+        ctx.beginPath();
+        ctx.arc(8, -11, 10.5, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.strokeStyle = 'rgba(15,23,42,0.28)';
+        ctx.lineWidth = 1.2;
+        ctx.stroke();
+
+        // Red comb on top
+        ctx.fillStyle = '#f43f5e';
+        ctx.beginPath();
+        ctx.arc(4, -21, 3.8, 0, Math.PI * 2);
+        ctx.arc(8.5, -22.5, 4.2, 0, Math.PI * 2);
+        ctx.arc(13, -20.5, 3.4, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Orange beak
+        ctx.fillStyle = '#fb923c';
+        ctx.beginPath();
+        ctx.moveTo(17, -13);
+        ctx.lineTo(25, -10);
+        ctx.lineTo(17, -7);
+        ctx.closePath();
+        ctx.fill();
+
+        // Red wattle
+        ctx.fillStyle = '#f43f5e';
+        ctx.beginPath();
+        ctx.ellipse(17, -5.5, 2.4, 3.2, 0.2, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Expressive eye
+        ctx.fillStyle = '#0f172a';
+        ctx.beginPath();
+        ctx.arc(12.5, -12.5, jumpT > 0 ? 2.6 : 2.1, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = '#ffffff';
+        ctx.beginPath();
+        ctx.arc(13.2, -13.2, 0.8, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.restore();
+      }
+
+      function chkDrawCar(ctx, cx, y, color) {
+        const w = 36, h = 66;
+        ctx.save();
+        ctx.translate(cx, y);
+
+        // Headlight beams (downward)
+        const beam = ctx.createLinearGradient(0, h / 2, 0, h / 2 + 46);
+        beam.addColorStop(0, 'rgba(254,240,138,0.42)');
+        beam.addColorStop(1, 'rgba(254,240,138,0)');
+        ctx.fillStyle = beam;
+        ctx.beginPath();
+        ctx.moveTo(-w / 2 + 4, h / 2 - 2); ctx.lineTo(-w / 2 - 8, h / 2 + 46); ctx.lineTo(-2, h / 2 + 46); ctx.lineTo(-4, h / 2 - 2);
+        ctx.moveTo(4, h / 2 - 2); ctx.lineTo(2, h / 2 + 46); ctx.lineTo(w / 2 + 8, h / 2 + 46); ctx.lineTo(w / 2 - 4, h / 2 - 2);
+        ctx.fill();
+
+        // Shadow
+        ctx.fillStyle = 'rgba(0,0,0,0.45)';
+        ctx.beginPath();
+        ctx.roundRect(-w / 2 + 3, -h / 2 + 5, w, h, 10);
+        ctx.fill();
+
+        // Chassis
+        ctx.fillStyle = color;
+        ctx.beginPath();
+        ctx.roundRect(-w / 2, -h / 2, w, h, 10);
+        ctx.fill();
+        ctx.strokeStyle = 'rgba(255,255,255,0.28)';
+        ctx.lineWidth = 1.4;
+        ctx.stroke();
+
+        // Roof & windshields
+        ctx.fillStyle = '#0f172a';
+        ctx.beginPath();
+        ctx.roundRect(-w / 2 + 5, -h / 2 + 12, w - 10, h - 24, 6);
+        ctx.fill();
+        ctx.fillStyle = 'rgba(255,255,255,0.16)';
+        ctx.beginPath();
+        ctx.roundRect(-w / 2 + 7, -h / 2 + 18, w - 14, 16, 4);
+        ctx.fill();
+
+        // Headlights & Taillights
+        ctx.fillStyle = '#fef08a';
+        ctx.fillRect(-w / 2 + 4, h / 2 - 4, 8, 3);
+        ctx.fillRect(w / 2 - 12, h / 2 - 4, 8, 3);
+        ctx.fillStyle = '#ff2a55';
+        ctx.fillRect(-w / 2 + 5, -h / 2 + 1, 8, 3);
+        ctx.fillRect(w / 2 - 13, -h / 2 + 1, 8, 3);
+
+        ctx.restore();
+      }
+
+      function chkFrame(now) {
+        if (!CHK.running) return;
+        const cv = $('chkCanvas'), st = $('chkStage');
+        if (!cv || !st) return;
+        const dpr = window.devicePixelRatio || 1;
+        const W = st.clientWidth || 600, H = st.clientHeight || 300;
+        if (cv.width !== Math.round(W * dpr) || cv.height !== Math.round(H * dpr)) {
+          cv.width = Math.round(W * dpr);
+          cv.height = Math.round(H * dpr);
+        }
+        const ctx = cv.getContext('2d');
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+        const laneW = 92, startW = 86;
+        const totalW = startW + 10 * laneW + 90;
+        const laneCenter = idx => idx === 0 ? startW / 2 : startW + (idx - 0.5) * laneW;
+
+        // Smooth camera follow
+        let focusStep = CHK.step;
+        let jumpT = 0;
+        if (CHK.jump) {
+          jumpT = Math.min(1, (now - CHK.jump.t0) / CHK.jump.dur);
+          focusStep = CHK.jump.from + (CHK.jump.to - CHK.jump.from) * jumpT;
+          if (jumpT >= 1) {
+            const j = CHK.jump;
+            CHK.jump = null;
+            if (j.willCrash) {
+              // Spawn feathers
+              const fx = laneCenter(j.to), fy = H * 0.56;
+              for (let i = 0; i < 20; i++) {
+                const a = Math.random() * Math.PI * 2, sp = 1.5 + Math.random() * 4.5;
+                CHK.feathers.push({ x: fx, y: fy, vx: Math.cos(a) * sp, vy: Math.sin(a) * sp - 1.5, rot: Math.random() * 6, life: 1 });
+              }
+              chkEnd(false);
+            } else {
+              CHK.step = j.to;
+              SFX.gem(CHK.step);
+              if (CHK.step >= 10) chkEnd(true);
+              else {
+                const m = CHK_DIFFS[CHK.diff].mults[CHK.step - 1];
+                $('chkMsg').textContent = `Полоса #${CHK.step} пройдена (x${m})! Прыгаем дальше или забираем?`;
+                chkUpdateBtns();
+              }
+            }
+          }
+        }
+        const desiredCam = Math.max(0, Math.min(totalW - W, laneCenter(focusStep) - W * 0.34));
+        CHK.camX += (desiredCam - CHK.camX) * 0.14;
+
+        ctx.clearRect(0, 0, W, H);
+        ctx.save();
+        ctx.translate(-CHK.camX, 0);
+
+        // 1. Start sidewalk (grass + curb)
+        ctx.fillStyle = '#143322';
+        ctx.fillRect(0, 0, startW - 10, H);
+        ctx.fillStyle = '#334155';
+        ctx.fillRect(startW - 10, 0, 10, H);
+        ctx.fillStyle = 'rgba(34,197,94,0.85)';
+        ctx.font = '700 11px "Space Grotesk", sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText('START', (startW - 10) / 2, 24);
+
+        // 2. Asphalt highway
+        const roadGrad = ctx.createLinearGradient(0, 0, 0, H);
+        roadGrad.addColorStop(0, '#131722');
+        roadGrad.addColorStop(0.5, '#191f2e');
+        roadGrad.addColorStop(1, '#111520');
+        ctx.fillStyle = roadGrad;
+        ctx.fillRect(startW, 0, 10 * laneW, H);
+
+        // Finish grass
+        const finX = startW + 10 * laneW;
+        ctx.fillStyle = '#334155';
+        ctx.fillRect(finX, 0, 10, H);
+        ctx.fillStyle = '#163d28';
+        ctx.fillRect(finX + 10, 0, 90, H);
+        ctx.fillStyle = '#d4f833';
+        ctx.fillText('FINISH', finX + 50, 24);
+
+        // 3. Lanes, dashed lines & multiplier medallions
+        const cfg = CHK_DIFFS[CHK.diff];
+        for (let i = 1; i <= 10; i++) {
+          const lx = startW + (i - 1) * laneW;
+          const cx = lx + laneW / 2;
+          const isPassed = CHK.step >= i && CHK.crashStep !== i;
+          const isNext = CHK.on && !CHK.jump && CHK.step + 1 === i;
+          const isCrash = !CHK.on && CHK.crashStep === i;
+
+          if (isPassed) {
+            ctx.fillStyle = 'rgba(34,197,94,0.08)';
+            ctx.fillRect(lx, 0, laneW, H);
+          } else if (isNext) {
+            ctx.fillStyle = 'rgba(212,248,51,0.09)';
+            ctx.fillRect(lx, 0, laneW, H);
+          } else if (isCrash) {
+            ctx.fillStyle = 'rgba(244,63,94,0.16)';
+            ctx.fillRect(lx, 0, laneW, H);
+          }
+
+          // Dashed divider
+          if (i < 10) {
+            ctx.strokeStyle = 'rgba(255,255,255,0.16)';
+            ctx.lineWidth = 2;
+            ctx.setLineDash([14, 14]);
+            ctx.beginPath();
+            ctx.moveTo(lx + laneW, 0);
+            ctx.lineTo(lx + laneW, H);
+            ctx.stroke();
+            ctx.setLineDash([]);
+          }
+
+          // Multiplier badge painted on road
+          const m = cfg.mults[i - 1];
+          const my = H * 0.56;
+          ctx.save();
+          ctx.beginPath();
+          ctx.roundRect(cx - 30, my - 15, 60, 30, 9);
+          ctx.fillStyle = isCrash ? 'rgba(244,63,94,0.3)' : isPassed ? 'rgba(34,197,94,0.22)' : isNext ? 'rgba(212,248,51,0.2)' : 'rgba(12,14,20,0.75)';
+          ctx.fill();
+          ctx.strokeStyle = isCrash ? '#f43f5e' : isPassed ? '#22c55e' : isNext ? '#d4f833' : 'rgba(255,255,255,0.14)';
+          ctx.lineWidth = isNext ? 2 : 1.2;
+          ctx.stroke();
+          ctx.fillStyle = isCrash ? '#fda4af' : isPassed ? '#86efac' : isNext ? '#d4f833' : '#cbd5e1';
+          ctx.font = '700 12px "Space Grotesk", sans-serif';
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          ctx.fillText('x' + (m >= 100 ? m.toFixed(0) : m.toFixed(2)), cx, my);
+          ctx.restore();
+
+          // Safe cone on passed lane
+          if (isPassed) {
+            ctx.fillStyle = '#22c55e';
+            ctx.beginPath();
+            ctx.moveTo(cx, 26); ctx.lineTo(cx - 10, 46); ctx.lineTo(cx + 10, 46); ctx.closePath();
+            ctx.fill();
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(cx - 6, 36, 12, 3);
+          }
+        }
+
+        // 4. Update & draw traffic cars
+        const dt = 0.016;
+        CHK.cars.forEach(car => {
+          const isPassed = CHK.step >= car.lane && CHK.crashStep !== car.lane;
+          if (isPassed) return; // Lane blocked & safe
+          if (car.killer) {
+            car.y += 560 * dt;
+            if (car.y > H + 120) car.killer = false;
+          } else {
+            car.y += car.speed * dt;
+            if (car.y > H + 90) car.y = -90;
+          }
+          chkDrawCar(ctx, laneCenter(car.lane), car.y, car.color);
+        });
+
+        // 5. Draw Chicken
+        const chickX = laneCenter(focusStep);
+        const dead = !CHK.on && CHK.crashStep > 0 && !CHK.jump;
+        chkDrawChicken(ctx, chickX, H * 0.56, jumpT, dead);
+
+        // 6. Feathers on crash
+        for (let i = CHK.feathers.length - 1; i >= 0; i--) {
+          const f = CHK.feathers[i];
+          f.x += f.vx; f.y += f.vy; f.vy += 0.08; f.rot += 0.12; f.life -= 0.018;
+          if (f.life <= 0) { CHK.feathers.splice(i, 1); continue; }
+          ctx.save();
+          ctx.globalAlpha = f.life;
+          ctx.translate(f.x, f.y);
+          ctx.rotate(f.rot);
+          ctx.fillStyle = '#ffffff';
+          ctx.beginPath();
+          ctx.ellipse(0, 0, 7, 3, 0, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.restore();
+        }
+
+        ctx.restore();
+        CHK.raf = requestAnimationFrame(chkFrame);
+      }
+
+      function chkUpdateBtns() {
+        const cfg = CHK_DIFFS[CHK.diff];
+        const curM = CHK.step > 0 ? cfg.mults[CHK.step - 1] : 1;
+        $('chkStepLbl').textContent = CHK.step;
+        $('chkMultLbl').textContent = 'x' + curM.toFixed(curM >= 100 ? 0 : 2);
+        $('chkMultLbl').className = `font-display font-bold text-2xl sm:text-3xl tabular-nums ${CHK.step > 0 ? 'text-sulfur' : 'text-white'}`;
+
+        if (CHK.on) {
+          const nextM = cfg.mults[CHK.step] || cfg.mults[9];
+          $('chkPlayBtn').textContent = `Прыгнуть вперёд (x${nextM >= 100 ? nextM.toFixed(0) : nextM.toFixed(2)})`;
+          $('chkPlayBtn').disabled = Boolean(CHK.jump);
+          $('chkDiff').disabled = true;
+          $('chkBet').disabled = true;
+          if (CHK.step > 0) {
+            const win = +(CHK.bet * curM).toFixed(2);
+            $('chkCashBtn').hidden = false;
+            $('chkCashBtn').disabled = Boolean(CHK.jump);
+            $('chkCashBtn').textContent = `Забрать ${fmt(win)} ₽`;
+          } else {
+            $('chkCashBtn').hidden = true;
+            $('chkCashBtn').disabled = true;
+          }
+        } else {
+          $('chkPlayBtn').textContent = 'Начать переход';
+          $('chkPlayBtn').disabled = false;
+          $('chkDiff').disabled = false;
+          $('chkBet').disabled = false;
+          $('chkCashBtn').hidden = true;
+          $('chkCashBtn').disabled = true;
+        }
+      }
+
+      function chkReset() {
+        if (!CHK.cars.length) chkInitCars();
+        if (!CHK.running) {
+          CHK.running = true;
+          CHK.raf = requestAnimationFrame(chkFrame);
+        }
+        if (CHK.on) return;
+        CHK.diff = $('chkDiff').value;
+        CHK.step = 0;
+        CHK.crashStep = 0;
+        CHK.jump = null;
+        chkUpdateBtns();
+      }
+
+      function chkEnd(win) {
+        const cfg = CHK_DIFFS[CHK.diff];
+        const mult = win && CHK.step > 0 ? cfg.mults[CHK.step - 1] : 0;
+        const payout = +(CHK.bet * mult).toFixed(2);
+        CHK.on = false;
+        if (win && payout > 0) {
+          bal += payout; updateBalanceUI();
+          SFX.cash();
+          $('chkMsg').textContent = `Курочка перешла дорогу! Забрано +${fmt(payout)} ₽ (x${mult})`;
+        } else {
+          SFX.boom();
+          $('chkMsg').textContent = `Авария на полосе #${CHK.crashStep}!`;
+        }
+        CHK.hist.unshift({ mult, win: payout > 0 });
+        CHK.hist = CHK.hist.slice(0, 8);
+        $('chkHist').innerHTML = CHK.hist.map(h => `<span class="px-2 py-0.5 rounded-md text-[11px] font-bold ${h.win ? 'bg-emerald/15 text-emerald' : 'bg-rose/15 text-rose'}">${h.win ? 'x' + (h.mult >= 100 ? h.mult.toFixed(0) : h.mult.toFixed(2)) : '0x'}</span>`).join('');
+        pushFeed('Chicken Road', 'Вы', CHK.bet, mult, payout, true);
+        chkUpdateBtns();
+      }
+
+      function chkSettleInstant() {
+        if (!CHK.on) return;
+        CHK.jump = null;
+        if (CHK.step > 0) chkEnd(true);
+        else { bal += CHK.bet; updateBalanceUI(); CHK.on = false; chkUpdateBtns(); }
+      }
+
+      function chkDoStep() {
+        if (!CHK.on || CHK.jump) return;
+        const nextLane = CHK.step + 1;
+        const willCrash = nextLane === CHK.crashStep;
+        if (willCrash) {
+          const car = CHK.cars.find(c => c.lane === nextLane);
+          if (car) { car.y = -45; car.killer = true; }
+        }
+        SFX.flip();
+        CHK.jump = { from: CHK.step, to: nextLane, t0: performance.now(), dur: 330, willCrash };
+        chkUpdateBtns();
+      }
+
+      $('chkDiff').addEventListener('change', chkReset);
+      $('chkCanvas').addEventListener('click', () => {
+        if (CHK.on && !CHK.jump) chkDoStep();
+      });
+      $('chkCashBtn').addEventListener('click', () => { if (CHK.on && !CHK.jump && CHK.step > 0) chkEnd(true); });
+      $('chkPlayBtn').addEventListener('click', async () => {
+        if (CHK.on) { chkDoStep(); return; }
+        const bet = Math.floor(+$('chkBet').value);
+        if (!(bet >= 1)) return ($('chkMsg').textContent = 'Ставка от 1 ₽');
+        if (bet > bal) return ($('chkMsg').textContent = 'Недостаточно демо-баланса');
+        bal -= bet; addWager(bet); updateBalanceUI();
+        SFX.start();
+
+        const diff = $('chkDiff').value;
+        const cfg = CHK_DIFFS[diff];
+        const pf = await PF.roll('Chicken Road', 10, () => diff);
+        let crashStep = 0;
+        for (let i = 0; i < 10; i++) {
+          if (pf.floats[i] >= cfg.p) { crashStep = i + 1; break; }
+        }
+        CHK = { ...CHK, on: true, bet, step: 0, diff, crashStep, jump: null };
+        $('chkMsg').textContent = 'Трасса открыта! Прыгайте на первую полосу.';
+        chkUpdateBtns();
+      });
+
+      /* ================= 16. SULFUR REACTOR (EXCLUSIVE CANVAS ENGINE) ================= */
+      const RX_MODES = {
+        pulse: { name: 'Импульс',    p: 0.86, mul: 1.14, heat: 0.11, col: '#d4f833' },
+        boost: { name: 'Форсаж',     p: 0.62, mul: 1.58, heat: 0.23, col: '#a78bfa' },
+        over:  { name: 'Сверхзаряд', p: 0.34, mul: 2.88, heat: 0.38, col: '#f43f5e' }
+      };
+      let RX = {
+        on: false, busy: false, bet: 0, mult: 1, steps: 0, floats: [],
+        heat: 0, targetHeat: 0,
+        state: 'idle', // idle | active | charging | meltdown | cashed
+        chargeAnim: null, // { t0, dur, mode, willBlow }
+        shake: 0, flash: 0, flashCol: '#d4f833',
+        bubbles: [], particles: [], shocks: [], cracks: [], popups: [],
+        hist: [], raf: 0, running: false
+      };
+
+      function rxLerp(a, b, t) { return a + (b - a) * t; }
+      function rxPalette(heat, state) {
+        if (state === 'meltdown') return { main: '#f43f5e', glow: 'rgba(244,63,94,', core: '#fff1f2', liq: '#e11d48' };
+        if (state === 'cashed')   return { main: '#22c55e', glow: 'rgba(34,197,94,', core: '#dcfce7', liq: '#16a34a' };
+        if (heat < 0.36)          return { main: '#d4f833', glow: 'rgba(212,248,51,', core: '#f7fee7', liq: '#bef222' };
+        if (heat < 0.68)          return { main: '#a78bfa', glow: 'rgba(167,139,250,', core: '#f5f3ff', liq: '#8b5cf6' };
+        if (heat < 0.90)          return { main: '#f59e0b', glow: 'rgba(245,158,11,', core: '#fef3c7', liq: '#ea580c' };
+        return                           { main: '#f43f5e', glow: 'rgba(244,63,94,', core: '#ffe4e6', liq: '#e11d48' };
+      }
+
+      function rxSpawnParticles(x, y, count, col, speed = 4, up = 0) {
+        for (let i = 0; i < count; i++) {
+          const a = Math.random() * Math.PI * 2;
+          const sp = (0.35 + Math.random() * 0.95) * speed;
+          RX.particles.push({
+            x, y,
+            vx: Math.cos(a) * sp,
+            vy: Math.sin(a) * sp - up,
+            r: 1.5 + Math.random() * 3.5,
+            col,
+            life: 1,
+            decay: 0.015 + Math.random() * 0.02
+          });
+        }
+      }
+
+      function rxGenCracks(cx, cy, vw, vh) {
+        RX.cracks = [];
+        for (let k = 0; k < 7; k++) {
+          const pts = [[cx + (Math.random() - 0.5) * 26, cy + (Math.random() - 0.5) * 26]];
+          let ang = (k / 7) * Math.PI * 2 + (Math.random() - 0.5) * 0.5;
+          for (let s = 0; s < 5; s++) {
+            const prev = pts[pts.length - 1];
+            const len = 18 + Math.random() * 24;
+            ang += (Math.random() - 0.5) * 0.7;
+            const nx = Math.max(cx - vw / 2 + 4, Math.min(cx + vw / 2 - 4, prev[0] + Math.cos(ang) * len));
+            const ny = Math.max(cy - vh / 2 + 4, Math.min(cy + vh / 2 - 4, prev[1] + Math.sin(ang) * len));
+            pts.push([nx, ny]);
+          }
+          RX.cracks.push(pts);
+        }
+      }
+
+      function rxDrawBolt(ctx, x1, y1, x2, y2, col, width = 2, jag = 14) {
+        ctx.save();
+        ctx.strokeStyle = col;
+        ctx.lineWidth = width;
+        ctx.shadowColor = col;
+        ctx.shadowBlur = 12;
+        ctx.beginPath();
+        ctx.moveTo(x1, y1);
+        const segs = 7;
+        for (let i = 1; i < segs; i++) {
+          const t = i / segs;
+          const ox = (Math.random() - 0.5) * jag;
+          const oy = (Math.random() - 0.5) * jag;
+          ctx.lineTo(x1 + (x2 - x1) * t + ox, y1 + (y2 - y1) * t + oy);
+        }
+        ctx.lineTo(x2, y2);
+        ctx.stroke();
+        ctx.restore();
+      }
+
+      function rxDrawGauge(ctx, x, y, w, h, val, label, unit, col, alignLeft) {
+        ctx.save();
+        // Frame
+        ctx.fillStyle = 'rgba(14,17,28,0.82)';
+        ctx.strokeStyle = 'rgba(255,255,255,0.09)';
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.roundRect(x, y, w, h, 8);
+        ctx.fill();
+        ctx.stroke();
+
+        // Segmented bars
+        const segs = 14;
+        const pad = 6;
+        const innerH = h - pad * 2;
+        const segH = (innerH - (segs - 1) * 3) / segs;
+        const activeCount = Math.round(Math.min(1, Math.max(0, val)) * segs);
+        for (let i = 0; i < segs; i++) {
+          const sy = y + h - pad - (i + 1) * segH - i * 3;
+          const on = i < activeCount;
+          let sc = col;
+          if (i >= 11) sc = '#f43f5e';
+          else if (i >= 8) sc = '#f59e0b';
+          ctx.fillStyle = on ? sc : 'rgba(255,255,255,0.06)';
+          if (on) { ctx.shadowColor = sc; ctx.shadowBlur = 6; } else { ctx.shadowBlur = 0; }
+          ctx.beginPath();
+          ctx.roundRect(x + 5, sy, w - 10, segH, 2.5);
+          ctx.fill();
+        }
+        ctx.shadowBlur = 0;
+
+        // Labels
+        ctx.fillStyle = '#8b93a7';
+        ctx.font = '700 9px Inter, sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText(label, x + w / 2, y - 8);
+        ctx.fillStyle = '#f1f5f9';
+        ctx.font = '700 10px "Space Grotesk", sans-serif';
+        ctx.fillText(unit, x + w / 2, y + h + 15);
+        ctx.restore();
+      }
+
+      function rxFrame(now) {
+        if (!RX.running) return;
+        const cv = $('rxCanvas'), st = $('rxStage');
+        if (!cv || !st) return;
+        const dpr = window.devicePixelRatio || 1;
+        const W = st.clientWidth || 600, H = st.clientHeight || 360;
+        if (cv.width !== Math.round(W * dpr) || cv.height !== Math.round(H * dpr)) {
+          cv.width = Math.round(W * dpr);
+          cv.height = Math.round(H * dpr);
+        }
+        const ctx = cv.getContext('2d');
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+        // Charge animation progression
+        let chargeProg = 0;
+        if (RX.chargeAnim) {
+          chargeProg = Math.min(1, (now - RX.chargeAnim.t0) / RX.chargeAnim.dur);
+          if (chargeProg >= 1) {
+            const ca = RX.chargeAnim;
+            RX.chargeAnim = null;
+            rxResolveCharge(ca);
+          }
+        }
+
+        // Smooth heat & shake decay
+        RX.heat += (RX.targetHeat - RX.heat) * 0.08;
+        if (RX.shake > 0.1) RX.shake *= 0.88; else RX.shake = 0;
+        if (RX.flash > 0.01) RX.flash *= 0.9; else RX.flash = 0;
+
+        const pal = rxPalette(RX.heat, RX.state);
+        const cx = W / 2, cy = H / 2 + 4;
+        const vw = Math.min(200, W * 0.42);
+        const vh = Math.min(238, H * 0.68);
+        const vx = cx - vw / 2, vy = cy - vh / 2;
+
+        ctx.clearRect(0, 0, W, H);
+        ctx.save();
+        if (RX.shake > 0) {
+          ctx.translate((Math.random() - 0.5) * RX.shake, (Math.random() - 0.5) * RX.shake);
+        }
+
+        // 1. Tech Lab Grid + Ambient Core Glow
+        const bg = ctx.createRadialGradient(cx, cy, 12, cx, cy, Math.max(W, H) * 0.62);
+        bg.addColorStop(0, pal.glow + (RX.on ? '0.22)' : '0.10)'));
+        bg.addColorStop(0.55, 'rgba(14,18,30,0.92)');
+        bg.addColorStop(1, '#07090f');
+        ctx.fillStyle = bg;
+        ctx.fillRect(0, 0, W, H);
+
+        ctx.strokeStyle = 'rgba(255,255,255,0.032)';
+        ctx.lineWidth = 1;
+        const stepG = 32;
+        for (let gx = 0; gx < W; gx += stepG) { ctx.beginPath(); ctx.moveTo(gx, 0); ctx.lineTo(gx, H); ctx.stroke(); }
+        for (let gy = 0; gy < H; gy += stepG) { ctx.beginPath(); ctx.moveTo(0, gy); ctx.lineTo(W, gy); ctx.stroke(); }
+
+        // 2. Side Power Conduits (Pipes into reactor)
+        const pipeY1 = cy - vh * 0.24, pipeY2 = cy + vh * 0.24;
+        const leftEdge = Math.max(24, vx - 72), rightEdge = Math.min(W - 24, vx + vw + 72);
+        ctx.lineCap = 'round';
+        [[leftEdge, pipeY1, vx, pipeY1], [leftEdge, pipeY2, vx, pipeY2],
+         [vx + vw, pipeY1, rightEdge, pipeY1], [vx + vw, pipeY2, rightEdge, pipeY2]].forEach(([x1, y1, x2, y2]) => {
+          ctx.strokeStyle = '#1b2133';
+          ctx.lineWidth = 10;
+          ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke();
+          ctx.strokeStyle = 'rgba(255,255,255,0.08)';
+          ctx.lineWidth = 2;
+          ctx.beginPath(); ctx.moveTo(x1, y1 - 3); ctx.lineTo(x2, y2 - 3); ctx.stroke();
+
+          // Energy pulse traveling along conduit
+          const pulseSpeed = RX.chargeAnim ? 0.0045 : 0.0011;
+          const pt = (now * pulseSpeed) % 1;
+          const px = x1 < cx ? rxLerp(x1, x2, pt) : rxLerp(x2, x1, pt);
+          ctx.save();
+          ctx.fillStyle = RX.chargeAnim ? RX_MODES[RX.chargeAnim.mode].col : pal.main;
+          ctx.shadowColor = ctx.fillStyle;
+          ctx.shadowBlur = 10;
+          ctx.beginPath();
+          ctx.arc(px, y1, RX.chargeAnim ? 4 : 2.4, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.restore();
+        });
+
+        // 3. Glass Vessel Interior (clipped)
+        ctx.save();
+        ctx.beginPath();
+        ctx.roundRect(vx, vy, vw, vh, 18);
+        ctx.fillStyle = 'rgba(10,13,22,0.86)';
+        ctx.fill();
+        ctx.clip();
+
+        // Boiling Liquid Sulfur at bottom
+        const liqLvl = 0.22 + RX.heat * 0.36;
+        const liqY = vy + vh * (1 - liqLvl);
+        const waveAmp = 3.5 + RX.heat * 7 + (RX.chargeAnim ? 5 : 0);
+        const waveFreq = 0.045;
+        const waveSpd = now * (0.004 + RX.heat * 0.006);
+
+        const liqGrad = ctx.createLinearGradient(0, liqY - 10, 0, vy + vh);
+        liqGrad.addColorStop(0, pal.main);
+        liqGrad.addColorStop(0.55, pal.liq);
+        liqGrad.addColorStop(1, '#0c0e14');
+        ctx.fillStyle = liqGrad;
+        ctx.globalAlpha = RX.state === 'meltdown' ? 0.55 : 0.85;
+        ctx.beginPath();
+        ctx.moveTo(vx, vy + vh);
+        for (let lx = vx; lx <= vx + vw; lx += 6) {
+          const wy = liqY + Math.sin(lx * waveFreq + waveSpd) * waveAmp + Math.cos(lx * 0.09 - waveSpd * 1.3) * (waveAmp * 0.4);
+          ctx.lineTo(lx, wy);
+        }
+        ctx.lineTo(vx + vw, vy + vh);
+        ctx.closePath();
+        ctx.fill();
+        ctx.globalAlpha = 1;
+
+        // Rising bubbles inside liquid
+        if (RX.bubbles.length < 18 && Math.random() < (0.25 + RX.heat * 0.45)) {
+          RX.bubbles.push({
+            x: vx + 14 + Math.random() * (vw - 28),
+            y: vy + vh - 4,
+            r: 2 + Math.random() * 4.5,
+            vy: 0.7 + Math.random() * (1.2 + RX.heat * 2.2),
+            wob: Math.random() * 6
+          });
+        }
+        for (let i = RX.bubbles.length - 1; i >= 0; i--) {
+          const b = RX.bubbles[i];
+          b.y -= b.vy;
+          b.x += Math.sin(now * 0.005 + b.wob) * 0.4;
+          if (b.y < liqY - 4) { RX.bubbles.splice(i, 1); continue; }
+          ctx.strokeStyle = 'rgba(255,255,255,0.55)';
+          ctx.lineWidth = 1.2;
+          ctx.beginPath();
+          ctx.arc(b.x, b.y, b.r, 0, Math.PI * 2);
+          ctx.stroke();
+        }
+
+        // Top & Bottom Electrodes inside vessel
+        ctx.fillStyle = '#252c42';
+        ctx.beginPath();
+        ctx.moveTo(cx - 20, vy); ctx.lineTo(cx + 20, vy); ctx.lineTo(cx + 10, vy + 22); ctx.lineTo(cx - 10, vy + 22);
+        ctx.closePath(); ctx.fill();
+        ctx.fillStyle = pal.main;
+        ctx.fillRect(cx - 8, vy + 20, 16, 3);
+
+        // Levitating Plasma Core
+        if (RX.state !== 'meltdown') {
+          const coreY = cy - 10 + Math.sin(now * 0.0035) * 4;
+          const pulse = Math.sin(now * (0.006 + RX.heat * 0.016)) * (3 + RX.heat * 4);
+          const chargeBoost = RX.chargeAnim ? Math.sin(chargeProg * Math.PI) * 14 : 0;
+          const baseR = 26 + RX.heat * 16 + pulse + chargeBoost;
+
+          // Outer aura
+          const aura = ctx.createRadialGradient(cx, coreY, 4, cx, coreY, baseR * 2.1);
+          aura.addColorStop(0, pal.core);
+          aura.addColorStop(0.32, pal.main);
+          aura.addColorStop(0.68, pal.glow + '0.28)');
+          aura.addColorStop(1, pal.glow + '0)');
+          ctx.fillStyle = aura;
+          ctx.beginPath();
+          ctx.arc(cx, coreY, baseR * 2.1, 0, Math.PI * 2);
+          ctx.fill();
+
+          // Rotating orbital plasma rings
+          const rotSpd = 0.0014 + RX.heat * 0.0055 + (RX.chargeAnim ? 0.006 : 0);
+          for (let r = 0; r < 2; r++) {
+            ctx.save();
+            ctx.translate(cx, coreY);
+            ctx.rotate(now * rotSpd * (r ? -1.2 : 1) + r * 1.1);
+            ctx.strokeStyle = r ? 'rgba(255,255,255,0.55)' : pal.main;
+            ctx.lineWidth = r ? 1.4 : 2.2;
+            ctx.shadowColor = pal.main;
+            ctx.shadowBlur = 10;
+            ctx.beginPath();
+            ctx.ellipse(0, 0, baseR * 1.45, baseR * 0.48, 0, 0, Math.PI * 2);
+            ctx.stroke();
+            ctx.restore();
+          }
+
+          // Bright center sphere
+          ctx.save();
+          ctx.fillStyle = pal.core;
+          ctx.shadowColor = pal.main;
+          ctx.shadowBlur = 24;
+          ctx.beginPath();
+          ctx.arc(cx, coreY, baseR * 0.55, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.restore();
+
+          // Procedural lightning arcs from top electrode & walls
+          const arcChance = RX.chargeAnim ? 0.95 : (RX.on ? 0.25 + RX.heat * 0.45 : 0.08);
+          if (Math.random() < arcChance) {
+            const boltCol = RX.chargeAnim ? RX_MODES[RX.chargeAnim.mode].col : pal.main;
+            rxDrawBolt(ctx, cx, vy + 22, cx + (Math.random() - 0.5) * 14, coreY - baseR * 0.4, boltCol, 2, 12 + RX.heat * 10);
+          }
+          if (RX.chargeAnim || (RX.on && Math.random() < 0.18 + RX.heat * 0.35)) {
+            const side = Math.random() < 0.5 ? vx : vx + vw;
+            rxDrawBolt(ctx, side, cy + (Math.random() - 0.5) * 70, cx, coreY, '#ffffff', 1.3, 14);
+          }
+        }
+
+        // Glass cracks on meltdown
+        if (RX.state === 'meltdown' && RX.cracks.length) {
+          ctx.strokeStyle = 'rgba(255,255,255,0.72)';
+          ctx.lineWidth = 1.5;
+          RX.cracks.forEach(pts => {
+            ctx.beginPath();
+            pts.forEach(([px, py], i) => i ? ctx.lineTo(px, py) : ctx.moveTo(px, py));
+            ctx.stroke();
+          });
+        }
+
+        // Glass specular reflections
+        const glassRef = ctx.createLinearGradient(vx, 0, vx + vw, 0);
+        glassRef.addColorStop(0, 'rgba(255,255,255,0.16)');
+        glassRef.addColorStop(0.12, 'rgba(255,255,255,0.03)');
+        glassRef.addColorStop(0.85, 'rgba(255,255,255,0)');
+        glassRef.addColorStop(1, 'rgba(255,255,255,0.12)');
+        ctx.fillStyle = glassRef;
+        ctx.fillRect(vx, vy, vw, vh);
+        ctx.restore(); // end vessel clip
+
+        // 4. Glass Outer Rim + Top/Bottom Heavy Metallic Caps
+        ctx.strokeStyle = pal.glow + '0.55)';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.roundRect(vx, vy, vw, vh, 18);
+        ctx.stroke();
+
+        // Top Cap & Bottom Base
+        [vy - 14, vy + vh - 4].forEach((capY, idx) => {
+          const capGrad = ctx.createLinearGradient(vx - 12, capY, vx + vw + 12, capY);
+          capGrad.addColorStop(0, '#141826');
+          capGrad.addColorStop(0.5, '#2b334e');
+          capGrad.addColorStop(1, '#141826');
+          ctx.fillStyle = capGrad;
+          ctx.strokeStyle = 'rgba(255,255,255,0.15)';
+          ctx.lineWidth = 1.2;
+          ctx.beginPath();
+          ctx.roundRect(vx - 12, capY, vw + 24, 18, 6);
+          ctx.fill();
+          ctx.stroke();
+
+          // Status LEDs on caps
+          for (let l = -1; l <= 1; l++) {
+            const lx = cx + l * 26;
+            ctx.fillStyle = RX.state === 'meltdown' ? '#f43f5e' : (RX.on ? pal.main : '#475569');
+            ctx.beginPath();
+            ctx.arc(lx, capY + 9, 2.8, 0, Math.PI * 2);
+            ctx.fill();
+          }
+        });
+
+        // 5. Left & Right HUD Gauges (only if wide enough)
+        if (W >= 360) {
+          const gw = 26, gh = Math.min(180, vh * 0.78), gy = cy - gh / 2;
+          const barVal = Math.min(1, RX.heat * 0.92 + (RX.on ? 0.08 : 0));
+          const pressBar = (barVal * 240).toFixed(0) + ' BAR';
+          const tempK = (300 + barVal * 4200).toFixed(0) + ' K';
+          rxDrawGauge(ctx, Math.max(14, vx - 56), gy, gw, gh, barVal, 'ДАВЛ.', pressBar, pal.main, true);
+          rxDrawGauge(ctx, Math.min(W - gw - 14, vx + vw + 30), gy, gw, gh, Math.min(1, barVal * 1.08), 'НАГРЕВ', tempK, pal.main, false);
+        }
+
+        // 6. Shockwaves
+        for (let i = RX.shocks.length - 1; i >= 0; i--) {
+          const s = RX.shocks[i];
+          s.r += s.vr;
+          s.a -= 0.032;
+          if (s.a <= 0) { RX.shocks.splice(i, 1); continue; }
+          ctx.save();
+          ctx.strokeStyle = s.col;
+          ctx.globalAlpha = s.a;
+          ctx.lineWidth = 3;
+          ctx.beginPath();
+          ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+          ctx.stroke();
+          ctx.restore();
+        }
+
+        // 7. Sparks & Acid Droplets
+        for (let i = RX.particles.length - 1; i >= 0; i--) {
+          const p = RX.particles[i];
+          p.x += p.vx; p.y += p.vy; p.vy += 0.11; p.life -= p.decay;
+          if (p.life <= 0) { RX.particles.splice(i, 1); continue; }
+          ctx.save();
+          ctx.globalAlpha = p.life;
+          ctx.fillStyle = p.col;
+          ctx.shadowColor = p.col;
+          ctx.shadowBlur = 8;
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.restore();
+        }
+
+        // 8. Center Multiplier Overlay Badge
+        ctx.save();
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        const multTxt = RX.state === 'meltdown' ? 'ПЕРЕГРУЗКА' : 'x' + RX.mult.toFixed(2);
+        ctx.font = RX.state === 'meltdown' ? '700 28px "Space Grotesk", sans-serif' : '700 44px "Space Grotesk", sans-serif';
+        ctx.fillStyle = 'rgba(0,0,0,0.55)';
+        ctx.fillText(multTxt, cx + 2, cy - 8 + 2);
+        ctx.fillStyle = RX.state === 'meltdown' ? '#fda4af' : '#ffffff';
+        ctx.shadowColor = pal.main;
+        ctx.shadowBlur = 18;
+        ctx.fillText(multTxt, cx, cy - 8);
+        ctx.shadowBlur = 0;
+
+        if (RX.on && RX.steps > 0) {
+          const liveWin = +(RX.bet * RX.mult).toFixed(2);
+          ctx.font = '700 13px "Space Grotesk", sans-serif';
+          ctx.fillStyle = '#d4f833';
+          ctx.fillText(`+${fmt(liveWin)} ₽`, cx, cy + 26);
+        } else if (RX.state === 'cashed') {
+          ctx.font = '700 13px Inter, sans-serif';
+          ctx.fillStyle = '#4ade80';
+          ctx.fillText('Энергия успешно выведена', cx, cy + 26);
+        }
+        ctx.restore();
+
+        // 9. Floating step popups
+        for (let i = RX.popups.length - 1; i >= 0; i--) {
+          const pp = RX.popups[i];
+          pp.y -= 0.9; pp.life -= 0.022;
+          if (pp.life <= 0) { RX.popups.splice(i, 1); continue; }
+          ctx.save();
+          ctx.globalAlpha = pp.life;
+          ctx.font = '700 14px "Space Grotesk", sans-serif';
+          ctx.textAlign = 'center';
+          ctx.fillStyle = pp.col;
+          ctx.fillText(pp.txt, pp.x, pp.y);
+          ctx.restore();
+        }
+
+        // 10. Screen flash overlay
+        if (RX.flash > 0.01) {
+          ctx.fillStyle = RX.flashCol;
+          ctx.globalAlpha = RX.flash * 0.28;
+          ctx.fillRect(0, 0, W, H);
+          ctx.globalAlpha = 1;
+        }
+
+        ctx.restore();
+        RX.raf = requestAnimationFrame(rxFrame);
+      }
+
+      function rxUpdateUI() {
+        $('rxStepsLbl').textContent = RX.steps;
+        const canAct = RX.on && !RX.busy;
+        $('rxPulseBtn').disabled = !canAct;
+        $('rxBoostBtn').disabled = !canAct;
+        $('rxOverBtn').disabled = !canAct;
+        $('rxStartBtn').disabled = RX.on;
+        $('rxStartBtn').hidden = RX.on;
+        $('rxBet').disabled = RX.on;
+
+        $('rxNextP').textContent = 'x' + (RX.mult * RX_MODES.pulse.mul).toFixed(2);
+        $('rxNextB').textContent = 'x' + (RX.mult * RX_MODES.boost.mul).toFixed(2);
+        $('rxNextO').textContent = 'x' + (RX.mult * RX_MODES.over.mul).toFixed(2);
+
+        if (RX.on && RX.steps > 0) {
+          const win = +(RX.bet * RX.mult).toFixed(2);
+          $('rxCashBtn').hidden = false;
+          $('rxCashBtn').disabled = RX.busy;
+          $('rxCashBtn').textContent = `Вывести энергию · ${fmt(win)} ₽`;
+        } else {
+          $('rxCashBtn').hidden = true;
+          $('rxCashBtn').disabled = true;
+        }
+
+        if (RX.state === 'meltdown') {
+          $('rxStatusDot').className = 'w-2 h-2 rounded-full bg-rose animate-ping';
+          $('rxStatusLbl').textContent = 'Критическая перегрузка';
+          $('rxStatusLbl').className = 'text-xs font-semibold text-rose uppercase tracking-wider';
+        } else if (RX.state === 'cashed') {
+          $('rxStatusDot').className = 'w-2 h-2 rounded-full bg-emerald';
+          $('rxStatusLbl').textContent = 'Энергия выведена';
+          $('rxStatusLbl').className = 'text-xs font-semibold text-emerald uppercase tracking-wider';
+        } else if (RX.on) {
+          $('rxStatusDot').className = 'w-2 h-2 rounded-full bg-sulfur animate-pulse';
+          $('rxStatusLbl').textContent = RX.heat > 0.72 ? 'Опасный нагрев' : 'Реактор активен';
+          $('rxStatusLbl').className = `text-xs font-semibold uppercase tracking-wider ${RX.heat > 0.72 ? 'text-amber-300' : 'text-sulfur'}`;
+        } else {
+          $('rxStatusDot').className = 'w-2 h-2 rounded-full bg-slate-500';
+          $('rxStatusLbl').textContent = 'Режим ожидания';
+          $('rxStatusLbl').className = 'text-xs font-semibold text-muted uppercase tracking-wider';
+        }
+      }
+
+      function rxReset() {
+        if (!RX.running) {
+          RX.running = true;
+          RX.raf = requestAnimationFrame(rxFrame);
+        }
+        if (RX.on) return;
+        rxUpdateUI();
+      }
+
+      function rxEnd(win) {
+        const mult = win && RX.steps > 0 ? +RX.mult.toFixed(2) : 0;
+        const payout = +(RX.bet * mult).toFixed(2);
+        RX.on = false;
+        RX.busy = false;
+        if (win && payout > 0) {
+          RX.state = 'cashed';
+          RX.targetHeat = 0.08;
+          bal += payout; updateBalanceUI();
+          SFX.cash();
+          const st = $('rxStage');
+          rxSpawnParticles((st.clientWidth || 600) / 2, (st.clientHeight || 360) / 2, 26, '#22c55e', 4.5, 1.5);
+          $('rxMsg').textContent = `Энергия выведена! Забрано +${fmt(payout)} ₽ (x${mult.toFixed(2)}).`;
+        } else {
+          RX.state = 'meltdown';
+          RX.targetHeat = 1;
+          RX.shake = 16;
+          RX.flash = 1;
+          RX.flashCol = '#f43f5e';
+          SFX.boom();
+          const st = $('rxStage');
+          const W = st.clientWidth || 600, H = st.clientHeight || 360;
+          const vw = Math.min(200, W * 0.42), vh = Math.min(238, H * 0.68);
+          rxGenCracks(W / 2, H / 2 + 4, vw, vh);
+          RX.shocks.push({ x: W / 2, y: H / 2, r: 16, vr: 9, a: 1, col: '#f43f5e' });
+          rxSpawnParticles(W / 2, H / 2, 46, '#f43f5e', 6.5, 1);
+          rxSpawnParticles(W / 2, H / 2, 24, '#d4f833', 5.5, 2);
+          $('rxMsg').textContent = 'Реактор взорвался от перегрузки! Попробуйте запустить снова.';
+        }
+        RX.hist.unshift({ mult, win: payout > 0 });
+        RX.hist = RX.hist.slice(0, 7);
+        $('rxHist').innerHTML = RX.hist.map(h => `<span class="px-2 py-0.5 rounded-md text-[11px] font-bold ${h.win ? 'bg-emerald/15 text-emerald' : 'bg-rose/15 text-rose'}">${h.win ? 'x' + h.mult.toFixed(2) : '0x'}</span>`).join('');
+        pushFeed('Sulfur Reactor', 'Вы', RX.bet, mult, payout, true);
+        rxUpdateUI();
+      }
+
+      function rxSettleInstant() {
+        if (!RX.on) return;
+        RX.chargeAnim = null;
+        if (RX.steps > 0) rxEnd(true);
+        else { bal += RX.bet; updateBalanceUI(); RX.on = false; RX.busy = false; RX.state = 'idle'; RX.targetHeat = 0; rxUpdateUI(); }
+      }
+
+      function rxResolveCharge(ca) {
+        const cfg = RX_MODES[ca.mode];
+        if (ca.willBlow) {
+          rxEnd(false);
+          return;
+        }
+        RX.steps += 1;
+        RX.mult = +(RX.mult * cfg.mul).toFixed(2);
+        RX.targetHeat = Math.min(0.98, RX.targetHeat + cfg.heat);
+        RX.busy = false;
+        RX.state = 'active';
+        RX.shake = ca.mode === 'over' ? 9 : ca.mode === 'boost' ? 5 : 2.5;
+        RX.flash = 0.7;
+        RX.flashCol = cfg.col;
+        const st = $('rxStage');
+        const cx = (st.clientWidth || 600) / 2, cy = (st.clientHeight || 360) / 2;
+        RX.shocks.push({ x: cx, y: cy - 8, r: 18, vr: 6.5, a: 0.95, col: cfg.col });
+        rxSpawnParticles(cx, cy - 8, ca.mode === 'over' ? 28 : 16, cfg.col, 4.2, 0.8);
+        RX.popups.push({ x: cx, y: cy - 42, txt: `${cfg.name} ×${cfg.mul}`, col: cfg.col, life: 1 });
+        SFX.gem(RX.steps);
+        $('rxMsg').textContent = `${cfg.name} принят! Текущий множитель x${RX.mult.toFixed(2)}.`;
+        rxUpdateUI();
+      }
+
+      async function rxTrigger(mode) {
+        if (!RX.on || RX.busy) return;
+        const cfg = RX_MODES[mode];
+        RX.busy = true;
+        RX.state = 'charging';
+        if (!RX.floats.length) {
+          const pf = await PF.roll('Sulfur Reactor', 20, () => mode);
+          RX.floats = pf.floats.slice();
+        }
+        const u = RX.floats.shift();
+        const willBlow = u >= cfg.p;
+        SFX.sweep(260);
+        RX.chargeAnim = { t0: performance.now(), dur: 290, mode, willBlow };
+        rxUpdateUI();
+      }
+
+      $('rxStartBtn').addEventListener('click', async () => {
+        if (RX.on) return;
+        const bet = Math.floor(+$('rxBet').value);
+        if (!(bet >= 1)) return ($('rxMsg').textContent = 'Ставка от 1 ₽');
+        if (bet > bal) return ($('rxMsg').textContent = 'Недостаточно демо-баланса');
+        bal -= bet; addWager(bet); updateBalanceUI();
+        SFX.start();
+
+        const pf = await PF.roll('Sulfur Reactor', 25, () => 'start');
+        RX.on = true;
+        RX.busy = false;
+        RX.bet = bet;
+        RX.mult = 1;
+        RX.steps = 0;
+        RX.floats = pf.floats.slice();
+        RX.targetHeat = 0.14;
+        RX.state = 'active';
+        RX.cracks = [];
+        RX.chargeAnim = null;
+        $('rxMsg').textContent = 'Ядро запущено! Выберите мощность заряда.';
+        rxUpdateUI();
+      });
+      $('rxPulseBtn').addEventListener('click', () => rxTrigger('pulse'));
+      $('rxBoostBtn').addEventListener('click', () => rxTrigger('boost'));
+      $('rxOverBtn').addEventListener('click', () => rxTrigger('over'));
+      $('rxCashBtn').addEventListener('click', () => { if (RX.on && !RX.busy && RX.steps > 0) rxEnd(true); });
 
       function settleActive() {
         Object.keys(autoRuns).forEach(id => autoUiOff(id));
-        if (cr.state === 'run') $('crBtn').click();
+        if (cr.phase === 'run' && cr.bet > 0 && !cr.cashed) crCashout(Math.pow(1.045, (performance.now() - cr.t0) / 100));
+        if (cr.queuedBet > 0) { bal += cr.queuedBet; cr.queuedBet = 0; updateBalanceUI(); }
         if (M.on) {
           if (M.k > 0) minesEnd(true);
           else { bal += M.bet; updateBalanceUI(); M.on = false; }
@@ -3955,6 +6103,9 @@
           if (TW.floor > 0) towerEnd(true);
           else { bal += TW.bet; updateBalanceUI(); TW.on = false; }
         }
+        if (typeof scSettleInstant === 'function') scSettleInstant();
+        if (typeof chkSettleInstant === 'function') chkSettleInstant();
+        if (typeof rxSettleInstant === 'function') rxSettleInstant();
       }
 
       /* ================= АВТОИГРА ================= */
@@ -4151,6 +6302,64 @@
       }, 3600);
 
       /* ================= INIT ================= */
+      // Provably Fair Modal Events
+      function openPfModal() {
+        PF.renderUI();
+        if (!$('pfModal').open) $('pfModal').showModal();
+      }
+      $('sidePfBtn').addEventListener('click', () => { closeMobileSidebar(); openPfModal(); });
+      $('openPfGameBtn').addEventListener('click', openPfModal);
+      $('pfSaveClientBtn').addEventListener('click', () => {
+        if (PF.setClientSeed($('pfClientInput').value)) showToast('Клиентский сид обновлён (Nonce сброшен)');
+      });
+      $('pfRotateBtn').addEventListener('click', async () => {
+        const old = await PF.rotateServerSeed();
+        $('pfVerServer').value = old;
+        $('pfVerClient').value = PF.state.clientSeed;
+        showToast('Сид сервера сменён! Прошлый сид раскрыт для проверки.');
+      });
+      $('pfHistList').addEventListener('click', e => {
+        const b = e.target.closest('button[data-pf-fill]');
+        if (!b) return;
+        const h = PF.state.history[+b.dataset.pfFill];
+        if (!h) return;
+        $('pfVerServer').value = h.serverSeed || '';
+        $('pfVerClient').value = h.clientSeed;
+        $('pfVerNonce').value = h.nonce;
+        const gMap = { 'Crash': 'crash', 'Dice': 'dice', 'Limbo': 'limbo', 'Coin Flip': 'coin', 'Roulette': 'roulette', 'Cases': 'cases' };
+        if (gMap[h.game]) $('pfVerGame').value = gMap[h.game];
+        if (!h.serverSeed) showToast('Сначала нажмите «Сменить сид сервера», чтобы раскрыть сид этого раунда');
+        else $('pfVerifyBtn').click();
+      });
+      $('pfVerifyBtn').addEventListener('click', async () => {
+        const s = $('pfVerServer').value.trim();
+        const c = $('pfVerClient').value.trim();
+        const n = Math.max(0, Math.floor(+$('pfVerNonce').value || 0));
+        const g = $('pfVerGame').value;
+        const out = $('pfVerOut');
+        if (!s || !c) {
+          out.hidden = false;
+          out.innerHTML = '<span class="text-rose">Введите раскрытый Server Seed и Client Seed.</span>';
+          return;
+        }
+        const sHash = await PF.sha256(s);
+        const { float: u, hash } = await PF.hmacFloat(s, c, n, 0);
+        let res = '';
+        if (g === 'crash') res = `Crash: <b>${PF.crashFromFloat(u).toFixed(2)}x</b>`;
+        else if (g === 'dice') res = `Dice: <b>${(u * 100).toFixed(2)}</b>`;
+        else if (g === 'limbo') res = `Limbo: <b>${Math.max(1, Math.floor(98 / (1 - u)) / 100).toFixed(2)}x</b>`;
+        else if (g === 'coin') res = `Coin Flip: <b>${u < 0.5 ? '⚡ Молния' : '◆ Алмаз'}</b>`;
+        else if (g === 'roulette') { const it = RL_ORDER[Math.floor(u * RL_ORDER.length)]; res = `Roulette: <b>#${it.n} (${it.c})</b>`; }
+        else if (g === 'cases') res = `Cases (Starter): <b>${csPickDrop(CASES_DATA[0], u).name}</b>`;
+        out.hidden = false;
+        out.innerHTML = `
+          <div class="text-emerald font-semibold">✓ Проверено через HMAC-SHA256</div>
+          <div class="text-white">${res} <span class="text-muted">(float: ${u.toFixed(8)})</span></div>
+          <div class="text-[10px] font-mono text-muted break-all">SHA-256(serverSeed): ${sHash}</div>
+          <div class="text-[10px] font-mono text-muted break-all">HMAC-SHA256: ${hash}</div>`;
+      });
+
+      PF.init();
       loadInitialState();
       renderSidebarOriginals();
       updateBalanceUI();
