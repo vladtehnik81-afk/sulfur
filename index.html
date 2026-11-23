@@ -123,10 +123,19 @@
     }
 
     /* Модальные окна */
+    dialog:not([open]) {
+      display: none !important;
+    }
+    dialog[open] {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
     dialog {
       background: transparent;
       border: none;
       padding: 0;
+      margin: auto;
       max-width: 96vw;
       max-height: 94vh;
       color: #f1f5f9;
@@ -317,6 +326,22 @@
     /* Toast */
     #toast {
       transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.3s ease;
+    }
+
+    /* Выпадающее меню профиля в шапке с плавной анимацией */
+    .prof-dd {
+      transform-origin: top right;
+      transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.16s ease;
+    }
+    .prof-dd.dd-closed {
+      opacity: 0;
+      transform: translateY(-6px) scale(0.96);
+      pointer-events: none;
+    }
+    .prof-dd.dd-open {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+      pointer-events: auto;
     }
 
     /* ===== v2: стекло и свечение ===== */
@@ -796,13 +821,43 @@
           Регистрация
         </button>
       </div>
-      <button id="userProfileBtn" hidden class="flex items-center gap-2.5 pl-1.5 pr-3 py-1.5 rounded-xl bg-panel hover:bg-panel2 b-subtle transition active:scale-95">
-        <span id="hdrAvatar" class="w-7 h-7 rounded-lg bg-violet flex items-center justify-center font-display font-bold text-xs text-white shrink-0">P</span>
-        <div class="hidden sm:flex flex-col items-start leading-tight">
-          <span id="hdrNick" class="text-xs font-bold text-white max-w-[110px] truncate">Player</span>
-          <span id="hdrVipBadge" class="text-[10px] font-semibold text-amber-300">Bronze VIP</span>
+      <div id="userProfileWrap" hidden class="relative">
+        <button id="userProfileBtn" type="button" class="flex items-center gap-2.5 pl-1.5 pr-3 py-1.5 rounded-xl bg-panel hover:bg-panel2 b-subtle transition active:scale-95">
+          <span id="hdrAvatar" class="w-7 h-7 rounded-lg bg-violet flex items-center justify-center font-display font-bold text-xs text-white shrink-0">P</span>
+          <div class="hidden sm:flex flex-col items-start leading-tight">
+            <span id="hdrNick" class="text-xs font-bold text-white max-w-[110px] truncate">Player</span>
+            <span id="hdrVipBadge" class="text-[10px] font-semibold text-amber-300">Bronze VIP</span>
+          </div>
+          <svg id="hdrChev" class="w-3.5 h-3.5 text-muted transition-transform duration-200 hidden sm:block" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+        </button>
+
+        <div id="profileDropdown" hidden class="prof-dd dd-closed absolute right-0 mt-2 w-60 rounded-2xl bg-surface/95 backdrop-blur-xl border border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.75)] p-1.5 z-50 space-y-0.5">
+          <button type="button" data-dd-tab="overview" class="w-full flex items-center justify-between px-3 py-2.5 rounded-xl hover:bg-panel2 text-xs font-semibold text-white transition">
+            <span class="flex items-center gap-2.5"><span>👤</span><span>Профиль</span></span>
+            <span class="text-[10px] text-muted">→</span>
+          </button>
+          <button type="button" data-dd-tab="vault" class="w-full flex items-center justify-between px-3 py-2.5 rounded-xl hover:bg-panel2 text-xs font-semibold text-sulfur transition">
+            <span class="flex items-center gap-2.5"><span>🔒</span><span>Сейф</span></span>
+            <span id="ddVaultVal" class="px-2 py-0.5 rounded-md bg-sulfur/15 text-[10px] font-bold tabular-nums">0 ₽</span>
+          </button>
+          <button type="button" data-dd-tab="tx" class="w-full flex items-center justify-between px-3 py-2.5 rounded-xl hover:bg-panel2 text-xs font-semibold text-slate-200 hover:text-white transition">
+            <span class="flex items-center gap-2.5"><span>🧾</span><span>Транзакции</span></span>
+            <span class="text-[10px] text-muted">→</span>
+          </button>
+          <button type="button" data-dd-tab="ref" class="w-full flex items-center justify-between px-3 py-2.5 rounded-xl hover:bg-panel2 text-xs font-semibold text-[#c4b5fd] hover:text-white transition">
+            <span class="flex items-center gap-2.5"><span>🤝</span><span>Рефералы</span></span>
+            <span id="ddRefVal" class="px-2 py-0.5 rounded-md bg-violet/20 text-[10px] font-bold tabular-nums">0</span>
+          </button>
+          <button type="button" data-dd-tab="settings" class="w-full flex items-center justify-between px-3 py-2.5 rounded-xl hover:bg-panel2 text-xs font-semibold text-slate-200 hover:text-white transition">
+            <span class="flex items-center gap-2.5"><span>⚙️</span><span>Настройки</span></span>
+            <span class="text-[10px] text-muted">→</span>
+          </button>
+          <div class="my-1 border-t border-white/[0.07]"></div>
+          <button type="button" id="ddLogoutBtn" class="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl hover:bg-rose/15 text-xs font-semibold text-rose transition">
+            <span>⏏</span><span>Выйти</span>
+          </button>
         </div>
-      </button>
+      </div>
     </header>
 
     <!-- CONTENT CONTAINER -->
@@ -1018,63 +1073,250 @@
     </div>
   </dialog>
 
-  <!-- PROFILE MODAL -->
+  <!-- PROFILE MODAL (Личный кабинет: Профиль, Сейф, Транзакции, Настройки) -->
   <dialog id="profileModal">
-    <div class="w-[480px] max-w-[94vw] max-h-[90dvh] rounded-2xl bg-surface b-subtle shadow-2xl flex flex-col overflow-hidden">
-      <div class="px-6 py-4 bg-panel/70 border-b border-white/[0.07] flex items-center justify-between">
-        <h3 class="font-display font-bold text-lg text-white">Профиль игрока</h3>
+    <div class="w-[640px] max-w-[95vw] max-h-[90dvh] rounded-2xl bg-surface b-subtle shadow-2xl flex flex-col overflow-hidden">
+      <div class="px-5 sm:px-6 py-4 bg-panel/80 border-b border-white/[0.07] flex items-center justify-between shrink-0">
+        <h3 class="font-display font-bold text-lg text-white">Личный кабинет</h3>
         <button data-close class="w-8 h-8 rounded-lg bg-base hover:bg-panel2 text-muted hover:text-white flex items-center justify-center">✕</button>
       </div>
-      <div class="p-6 overflow-y-auto space-y-5">
-        <div class="flex items-center gap-4">
-          <div id="profAvatar" class="w-16 h-16 rounded-2xl bg-violet flex items-center justify-center font-display font-bold text-2xl text-white shrink-0 shadow-lg">P</div>
-          <div class="min-w-0 flex-1">
-            <div class="flex items-center gap-2 flex-wrap">
-              <span id="profNickDisp" class="font-display font-bold text-xl text-white truncate">Player</span>
-              <span id="profVipPill" class="px-2.5 py-0.5 rounded-md bg-amber-500/20 text-amber-300 text-[11px] font-bold">Bronze</span>
+
+      <!-- Tabs inside Cabinet -->
+      <div class="px-5 sm:px-6 pt-3 bg-panel/40 border-b border-white/[0.07] flex items-center gap-1.5 shrink-0 overflow-x-auto no-scrollbar">
+        <button type="button" data-cab-tab="overview" class="cab-tab px-3.5 py-2 rounded-t-xl text-xs font-bold bg-surface text-white border-t border-x border-white/[0.08] transition whitespace-nowrap">Профиль</button>
+        <button type="button" data-cab-tab="vault" class="cab-tab px-3.5 py-2 rounded-t-xl text-xs font-bold text-sulfur hover:text-white transition flex items-center gap-1.5 whitespace-nowrap">
+          <span>🔒 Сейф</span>
+          <span id="cabVaultBadge" class="px-1.5 py-0.2 rounded bg-sulfur/15 text-[10px] tabular-nums">0 ₽</span>
+        </button>
+        <button type="button" data-cab-tab="tx" class="cab-tab px-3.5 py-2 rounded-t-xl text-xs font-bold text-muted hover:text-white transition whitespace-nowrap">Транзакции</button>
+        <button type="button" data-cab-tab="ref" class="cab-tab px-3.5 py-2 rounded-t-xl text-xs font-bold text-muted hover:text-white transition flex items-center gap-1.5 whitespace-nowrap">
+          <span>🤝 Рефералы</span>
+          <span id="cabRefBadge" class="px-1.5 py-0.2 rounded bg-violet/20 text-[#c4b5fd] text-[10px] tabular-nums">0</span>
+        </button>
+        <button type="button" data-cab-tab="settings" class="cab-tab px-3.5 py-2 rounded-t-xl text-xs font-bold text-muted hover:text-white transition whitespace-nowrap">⚙️ Настройки</button>
+      </div>
+
+      <div class="p-5 sm:p-6 overflow-y-auto space-y-5 flex-1">
+        <!-- TAB 1: OVERVIEW -->
+        <div id="cabPaneOverview" class="cab-pane space-y-5">
+          <div class="flex items-center gap-4">
+            <div id="profAvatar" class="w-16 h-16 rounded-2xl bg-violet flex items-center justify-center font-display font-bold text-2xl text-white shrink-0 shadow-lg overflow-hidden">P</div>
+            <div class="min-w-0 flex-1">
+              <div class="flex items-center gap-2 flex-wrap">
+                <span id="profNickDisp" class="font-display font-bold text-xl text-white truncate">Player</span>
+                <span id="profVipPill" class="px-2.5 py-0.5 rounded-md bg-amber-500/20 text-amber-300 text-[11px] font-bold">Bronze</span>
+                <span id="profGhostPill" hidden class="px-2 py-0.5 rounded-md bg-white/10 text-slate-300 text-[10px] font-semibold">👻 Скрыт в ленте</span>
+              </div>
+              <div id="profEmailDisp" class="text-xs text-muted mt-0.5 truncate">player@sulfur.demo</div>
+              <div class="flex items-center gap-1.5 mt-2.5" id="avatarColors">
+                <button type="button" data-avcol="#7c5cff" class="w-5 h-5 rounded-full bg-[#7c5cff] transition hover:scale-110" aria-label="Фиолетовый"></button>
+                <button type="button" data-avcol="#22c55e" class="w-5 h-5 rounded-full bg-[#22c55e] transition hover:scale-110" aria-label="Зелёный"></button>
+                <button type="button" data-avcol="#38bdf8" class="w-5 h-5 rounded-full bg-[#38bdf8] transition hover:scale-110" aria-label="Голубой"></button>
+                <button type="button" data-avcol="#f43f5e" class="w-5 h-5 rounded-full bg-[#f43f5e] transition hover:scale-110" aria-label="Розовый"></button>
+                <button type="button" data-avcol="#f59e0b" class="w-5 h-5 rounded-full bg-[#f59e0b] transition hover:scale-110" aria-label="Янтарный"></button>
+                <button type="button" data-avcol="#d4f833" class="w-5 h-5 rounded-full bg-[#d4f833] transition hover:scale-110" aria-label="Лаймовый"></button>
+              </div>
             </div>
-            <div id="profEmailDisp" class="text-xs text-muted mt-0.5 truncate">player@sulfur.demo</div>
-            <div class="flex items-center gap-1.5 mt-2.5" id="avatarColors">
-              <button type="button" data-avcol="#7c5cff" class="w-5 h-5 rounded-full bg-[#7c5cff] transition hover:scale-110" aria-label="Фиолетовый"></button>
-              <button type="button" data-avcol="#22c55e" class="w-5 h-5 rounded-full bg-[#22c55e] transition hover:scale-110" aria-label="Зелёный"></button>
-              <button type="button" data-avcol="#38bdf8" class="w-5 h-5 rounded-full bg-[#38bdf8] transition hover:scale-110" aria-label="Голубой"></button>
-              <button type="button" data-avcol="#f43f5e" class="w-5 h-5 rounded-full bg-[#f43f5e] transition hover:scale-110" aria-label="Розовый"></button>
-              <button type="button" data-avcol="#f59e0b" class="w-5 h-5 rounded-full bg-[#f59e0b] transition hover:scale-110" aria-label="Янтарный"></button>
-              <button type="button" data-avcol="#d4f833" class="w-5 h-5 rounded-full bg-[#d4f833] transition hover:scale-110" aria-label="Лаймовый"></button>
+          </div>
+
+          <!-- Edit Nickname -->
+          <form id="profNickForm" class="flex gap-2">
+            <input id="profNickInput" type="text" minlength="2" maxlength="18" required placeholder="Новый никнейм" class="flex-1 px-3.5 py-2 rounded-xl bg-base b-subtle text-sm text-white focus:outline-none focus:border-sulfur">
+            <button type="submit" class="px-4 py-2 rounded-xl bg-panel2 hover:bg-white/10 text-xs font-bold text-white transition">Сохранить</button>
+          </form>
+
+          <!-- Stats Grid -->
+          <div class="grid grid-cols-2 gap-3">
+            <div class="rounded-xl bg-base b-subtle p-3.5">
+              <div class="text-[11px] text-muted">Всего ставок</div>
+              <div id="stBets" class="font-display font-bold text-lg text-white mt-0.5 tabular-nums">0</div>
             </div>
+            <div class="rounded-xl bg-base b-subtle p-3.5">
+              <div class="text-[11px] text-muted">Взвешенный оборот</div>
+              <div id="stWager" class="font-display font-bold text-lg text-white mt-0.5 tabular-nums">0 ₽</div>
+            </div>
+            <div class="rounded-xl bg-base b-subtle p-3.5">
+              <div class="text-[11px] text-muted">Макс. множитель</div>
+              <div id="stMaxX" class="font-display font-bold text-lg text-sulfur mt-0.5 tabular-nums">0.00x</div>
+            </div>
+            <div class="rounded-xl bg-base b-subtle p-3.5">
+              <div class="text-[11px] text-muted">Чистый профит</div>
+              <div id="stProfit" class="font-display font-bold text-lg text-emerald mt-0.5 tabular-nums">0 ₽</div>
+            </div>
+          </div>
+
+          <!-- Actions -->
+          <div class="grid grid-cols-2 gap-2.5 pt-1">
+            <button id="profToVipBtn" class="py-2.5 rounded-xl bg-violet hover:bg-[#8c6eff] text-white font-bold text-xs sm:text-sm transition">VIP-клуб</button>
+            <button id="profLogoutBtn" class="py-2.5 rounded-xl bg-rose/15 hover:bg-rose/25 text-rose font-bold text-xs sm:text-sm transition">Выйти</button>
           </div>
         </div>
 
-        <!-- Edit Nickname -->
-        <form id="profNickForm" class="flex gap-2">
-          <input id="profNickInput" type="text" minlength="2" maxlength="18" required placeholder="Новый никнейм" class="flex-1 px-3.5 py-2 rounded-xl bg-base b-subtle text-sm text-white focus:outline-none focus:border-sulfur">
-          <button type="submit" class="px-4 py-2 rounded-xl bg-panel2 hover:bg-white/10 text-xs font-bold text-white transition">Сохранить</button>
-        </form>
+        <!-- TAB 2: VAULT (СЕЙФ) -->
+        <div id="cabPaneVault" hidden class="cab-pane space-y-4">
+          <div class="rounded-2xl bg-gradient-to-br from-panel via-panel to-[#1b2218] border border-sulfur/25 p-4 sm:p-5">
+            <div class="flex items-center justify-between gap-2">
+              <span class="text-xs font-semibold text-muted">Хранилище капитала (Vault)</span>
+              <span class="px-2 py-0.5 rounded-md bg-sulfur/15 text-sulfur text-[10px] font-bold uppercase">Защищено от слива</span>
+            </div>
+            <div id="vaultBalDisp" class="font-display font-bold text-3xl sm:text-4xl text-sulfur mt-1.5 tabular-nums">0 ₽</div>
+            <p class="text-[11px] text-muted mt-1">Переводите часть демо-баланса в сейф и возвращайте на игровой счёт в любой момент.</p>
+          </div>
 
-        <!-- Stats Grid -->
-        <div class="grid grid-cols-2 gap-3">
-          <div class="rounded-xl bg-base b-subtle p-3.5">
-            <div class="text-[11px] text-muted">Всего ставок</div>
-            <div id="stBets" class="font-display font-bold text-lg text-white mt-0.5 tabular-nums">0</div>
-          </div>
-          <div class="rounded-xl bg-base b-subtle p-3.5">
-            <div class="text-[11px] text-muted">Общий оборот</div>
-            <div id="stWager" class="font-display font-bold text-lg text-white mt-0.5 tabular-nums">0 ₽</div>
-          </div>
-          <div class="rounded-xl bg-base b-subtle p-3.5">
-            <div class="text-[11px] text-muted">Макс. множитель</div>
-            <div id="stMaxX" class="font-display font-bold text-lg text-sulfur mt-0.5 tabular-nums">0.00x</div>
-          </div>
-          <div class="rounded-xl bg-base b-subtle p-3.5">
-            <div class="text-[11px] text-muted">Чистый профит</div>
-            <div id="stProfit" class="font-display font-bold text-lg text-emerald mt-0.5 tabular-nums">0 ₽</div>
+          <div class="rounded-2xl bg-panel b-subtle p-4 space-y-3">
+            <label class="block text-xs font-medium text-muted">Сумма перевода, ₽ (доступно на балансе: <b id="vaultAvailBal" class="text-white">0 ₽</b>)</label>
+            <div class="flex gap-1.5">
+              <input id="vaultAmtInput" type="number" min="1" step="1" value="100" class="flex-1 min-w-0 px-3.5 py-2.5 rounded-xl bg-base b-subtle text-sm font-semibold text-white focus:outline-none focus:border-sulfur">
+              <button type="button" data-vault-pct="0.25" class="px-2.5 rounded-xl bg-panel2 hover:bg-white/10 text-xs font-bold text-slate-200">25%</button>
+              <button type="button" data-vault-pct="0.5" class="px-2.5 rounded-xl bg-panel2 hover:bg-white/10 text-xs font-bold text-slate-200">50%</button>
+              <button type="button" data-vault-pct="1" class="px-2.5 rounded-xl bg-panel2 hover:bg-white/10 text-xs font-bold text-sulfur">MAX</button>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-1">
+              <button id="vaultDepositBtn" type="button" class="py-3 rounded-xl bg-sulfur hover:bg-[#e1ff57] text-base font-bold text-xs sm:text-sm transition active:scale-95">
+                ↓ Положить в сейф
+              </button>
+              <button id="vaultWithdrawBtn" type="button" class="py-3 rounded-xl bg-violet hover:bg-[#8c6eff] text-white font-bold text-xs sm:text-sm transition active:scale-95">
+                ↑ Забрать на баланс
+              </button>
+            </div>
+            <p id="vaultMsg" class="text-xs text-muted min-h-[16px]"></p>
           </div>
         </div>
 
-        <!-- Actions -->
-        <div class="grid grid-cols-2 gap-2.5 pt-1">
-          <button id="profToVipBtn" class="py-2.5 rounded-xl bg-violet hover:bg-[#8c6eff] text-white font-bold text-xs sm:text-sm transition">VIP-клуб</button>
-          <button id="profLogoutBtn" class="py-2.5 rounded-xl bg-rose/15 hover:bg-rose/25 text-rose font-bold text-xs sm:text-sm transition">Выйти</button>
+        <!-- TAB 3: TRANSACTIONS -->
+        <div id="cabPaneTx" hidden class="cab-pane space-y-3">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold text-white">История операций и бонусов</span>
+            <span class="text-[11px] text-muted">Последние 40 записей</span>
+          </div>
+          <div id="txList" class="space-y-2 max-h-[340px] overflow-y-auto pr-1"></div>
+        </div>
+
+        <!-- TAB 4: REFERRALS (РЕФЕРАЛЫ) -->
+        <div id="cabPaneRef" hidden class="cab-pane space-y-4">
+          <div class="rounded-2xl bg-gradient-to-br from-panel via-panel to-[#1c1733] border border-violet/30 p-4 sm:p-5 space-y-3">
+            <div class="flex items-center justify-between gap-2">
+              <span class="text-xs font-semibold text-muted">Реферальная программа</span>
+              <span class="px-2 py-0.5 rounded-md bg-sulfur/15 text-sulfur text-[10px] font-bold">Комиссия 2% с оборота</span>
+            </div>
+            <div class="text-xs text-muted">Ваша реферальная ссылка / код приглашения</div>
+            <div class="flex gap-2">
+              <input id="refLinkInput" type="text" readonly class="flex-1 min-w-0 px-3.5 py-2.5 rounded-xl bg-base b-subtle text-xs font-mono text-white select-all">
+              <button id="refCopyLinkBtn" type="button" class="px-3.5 py-2.5 rounded-xl bg-panel2 hover:bg-white/10 text-xs font-bold text-white transition shrink-0">Копировать</button>
+            </div>
+            <div class="flex flex-wrap items-center justify-between gap-2 pt-1">
+              <span class="text-[11px] text-muted">Приглашённый получает <b class="text-sulfur">+250 ₽</b>, а вы — <b class="text-emerald">2%</b> от его оборота</span>
+              <button id="refSimInviteBtn" type="button" class="px-3 py-1.5 rounded-lg bg-violet/25 hover:bg-violet/40 text-[#c4b5fd] text-[11px] font-bold transition">+ Тест: пригласить друга</button>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-3 gap-2.5">
+            <div class="rounded-xl bg-base b-subtle p-3">
+              <div class="text-[10px] text-muted">Рефералов</div>
+              <div id="refCountDisp" class="font-display font-bold text-lg text-white mt-0.5 tabular-nums">0</div>
+            </div>
+            <div class="rounded-xl bg-base b-subtle p-3">
+              <div class="text-[10px] text-muted">Оборот друзей</div>
+              <div id="refWagerDisp" class="font-display font-bold text-lg text-white mt-0.5 tabular-nums">0 ₽</div>
+            </div>
+            <div class="rounded-xl bg-base b-subtle p-3">
+              <div class="text-[10px] text-muted">Доступно к сбору</div>
+              <div id="refClaimDisp" class="font-display font-bold text-lg text-emerald mt-0.5 tabular-nums">0 ₽</div>
+            </div>
+          </div>
+
+          <div class="rounded-2xl bg-panel b-subtle p-4 flex flex-wrap items-center justify-between gap-3">
+            <div>
+              <div class="text-xs font-bold text-white">Реферальный баланс</div>
+              <div class="text-[11px] text-muted">Всего заработано: <b id="refEarnedTotal" class="text-sulfur">0 ₽</b></div>
+            </div>
+            <button id="refClaimBtn" type="button" disabled class="px-4 py-2.5 rounded-xl bg-emerald hover:bg-emerald/90 disabled:opacity-40 text-base font-bold text-xs transition active:scale-95">
+              Забрать на баланс
+            </button>
+          </div>
+
+          <div class="space-y-2">
+            <div class="text-xs font-bold text-white">Приглашённые игроки</div>
+            <div id="refList" class="space-y-2 max-h-[190px] overflow-y-auto pr-1"></div>
+          </div>
+        </div>
+
+        <!-- TAB 5: SETTINGS (НАСТРОЙКИ) -->
+        <div id="cabPaneSettings" hidden class="cab-pane space-y-4">
+          <!-- Avatar Picker & Upload -->
+          <div class="rounded-2xl bg-panel b-subtle p-4 space-y-3">
+            <div class="flex items-center justify-between gap-2">
+              <span class="text-xs font-bold text-white">Аватар профиля</span>
+              <div class="flex items-center gap-2">
+                <label class="cursor-pointer px-3 py-1.5 rounded-lg bg-violet hover:bg-[#8c6eff] text-[11px] font-bold text-white transition">
+                  Загрузить фото
+                  <input id="setAvatarFile" type="file" accept="image/*" hidden>
+                </label>
+                <button id="setAvatarClear" type="button" class="px-2.5 py-1.5 rounded-lg bg-base hover:bg-panel2 b-subtle text-[11px] font-semibold text-muted hover:text-white transition">Сброс</button>
+              </div>
+            </div>
+            <div id="avatarPresets" class="grid grid-cols-6 sm:grid-cols-8 gap-2">
+              <button type="button" data-avicon="" class="h-10 rounded-xl bg-base b-subtle hover:border-sulfur text-xs font-bold text-white flex items-center justify-center transition" title="Буква ника">Aa</button>
+              <button type="button" data-avicon="⚡" class="h-10 rounded-xl bg-base b-subtle hover:border-sulfur text-lg flex items-center justify-center transition">⚡</button>
+              <button type="button" data-avicon="👑" class="h-10 rounded-xl bg-base b-subtle hover:border-sulfur text-lg flex items-center justify-center transition">👑</button>
+              <button type="button" data-avicon="💎" class="h-10 rounded-xl bg-base b-subtle hover:border-sulfur text-lg flex items-center justify-center transition">💎</button>
+              <button type="button" data-avicon="☢️" class="h-10 rounded-xl bg-base b-subtle hover:border-sulfur text-lg flex items-center justify-center transition">☢️</button>
+              <button type="button" data-avicon="🔥" class="h-10 rounded-xl bg-base b-subtle hover:border-sulfur text-lg flex items-center justify-center transition">🔥</button>
+              <button type="button" data-avicon="🐺" class="h-10 rounded-xl bg-base b-subtle hover:border-sulfur text-lg flex items-center justify-center transition">🐺</button>
+              <button type="button" data-avicon="👾" class="h-10 rounded-xl bg-base b-subtle hover:border-sulfur text-lg flex items-center justify-center transition">👾</button>
+            </div>
+          </div>
+
+          <!-- Privacy & Interface Toggles -->
+          <div class="rounded-2xl bg-panel b-subtle p-4 space-y-3">
+            <div class="text-xs font-bold text-white">Приватность и интерфейс</div>
+
+            <label class="flex items-center justify-between gap-3 cursor-pointer py-1">
+              <div>
+                <div class="text-xs font-semibold text-white">Скрытый режим (Ghost Mode)</div>
+                <div class="text-[11px] text-muted">В ленте Live-ставок отображать «Скрыто» вместо никнейма</div>
+              </div>
+              <input id="setGhost" type="checkbox" class="w-4 h-4 accent-sulfur rounded cursor-pointer">
+            </label>
+
+            <label class="flex items-center justify-between gap-3 cursor-pointer py-1 border-t border-white/[0.06] pt-3">
+              <div>
+                <div class="text-xs font-semibold text-white">Звуковые эффекты</div>
+                <div class="text-[11px] text-muted">Синтезатор звуков карт, рулетки, кристаллов и выигрышей</div>
+              </div>
+              <input id="setSound" type="checkbox" checked class="w-4 h-4 accent-sulfur rounded cursor-pointer">
+            </label>
+
+            <label class="flex items-center justify-between gap-3 cursor-pointer py-1 border-t border-white/[0.06] pt-3">
+              <div>
+                <div class="text-xs font-semibold text-white">Конфетти при крупных заносах</div>
+                <div class="text-[11px] text-muted">Праздничная анимация при множителе от x5 и выше</div>
+              </div>
+              <input id="setConfetti" type="checkbox" checked class="w-4 h-4 accent-sulfur rounded cursor-pointer">
+            </label>
+          </div>
+
+          <!-- Change Password -->
+          <form id="setPassForm" class="rounded-2xl bg-panel b-subtle p-4 space-y-3">
+            <div class="text-xs font-bold text-white">Смена пароля</div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+              <input id="setOldPass" type="password" required placeholder="Текущий пароль" class="px-3 py-2 rounded-xl bg-base b-subtle text-xs text-white focus:outline-none focus:border-sulfur">
+              <input id="setNewPass" type="password" required minlength="6" placeholder="Новый пароль (от 6 симв.)" class="px-3 py-2 rounded-xl bg-base b-subtle text-xs text-white focus:outline-none focus:border-sulfur">
+            </div>
+            <div class="flex items-center justify-between gap-2">
+              <span id="setPassMsg" class="text-[11px] text-muted"></span>
+              <button type="submit" class="px-4 py-2 rounded-xl bg-panel2 hover:bg-white/10 text-xs font-bold text-white transition">Обновить пароль</button>
+            </div>
+          </form>
+
+          <!-- Danger Zone: Reset Stats -->
+          <div class="rounded-2xl bg-rose/10 border border-rose/25 p-4 flex flex-wrap items-center justify-between gap-3">
+            <div>
+              <div class="text-xs font-bold text-rose">Сброс игровой статистики</div>
+              <div class="text-[11px] text-muted">Обнулит счётчик ставок, макс. множитель и чистый профит</div>
+            </div>
+            <button id="setResetStatsBtn" type="button" class="px-3.5 py-2 rounded-xl bg-rose/20 hover:bg-rose/30 text-rose font-bold text-xs transition">Сбросить статистику</button>
+          </div>
         </div>
       </div>
     </div>
@@ -1749,7 +1991,7 @@
               <div class="flex items-center justify-between gap-2 pb-3 mb-3 border-b border-dashed border-white/15">
                 <div>
                   <div class="text-[10px] font-bold uppercase tracking-widest text-muted">SULFUR TICKET</div>
-                  <div id="scTicketTitle" class="font-display font-bold text-base text-white">Starter · 100 ₽</div>
+                  <div id="scTicketTitle" class="font-display font-bold text-base !text-white">Starter · 100 ₽</div>
                 </div>
                 <div class="text-right">
                   <div class="text-[10px] text-muted">Открыто слотов</div>
@@ -1881,6 +2123,89 @@
             </div>
           </div>
         </div>
+
+        <!-- 17. TEXAS HOLD'EM (CASINO HOLD'EM 1v1 VS DEALER + AA BONUS) -->
+        <div class="game-pane" data-game="holdem">
+          <div class="p-5 bg-panel/50 border-b md:border-b-0 md:border-r border-white/[0.07] flex flex-col gap-3">
+            <div>
+              <label class="block text-xs font-medium text-muted mb-1.5">Ставка Ante, ₽</label>
+              <div class="flex gap-1.5">
+                <input id="thBet" type="number" min="1" value="50" class="flex-1 min-w-0 px-3 py-2 rounded-xl bg-base b-subtle text-sm font-semibold text-white focus:outline-none focus:border-sulfur">
+                <button type="button" data-half="thBet" class="px-3 rounded-xl bg-panel2 hover:bg-white/10 text-xs font-bold text-slate-200">½</button>
+                <button type="button" data-dbl="thBet" class="px-3 rounded-xl bg-panel2 hover:bg-white/10 text-xs font-bold text-slate-200">2×</button>
+              </div>
+            </div>
+
+            <div>
+              <div class="flex items-center justify-between mb-1">
+                <label class="text-xs font-medium text-[#c4b5fd]">AA Bonus (побочная), ₽</label>
+                <span class="text-[10px] text-muted">от пары тузов на флопе</span>
+              </div>
+              <div class="flex gap-1.5">
+                <input id="thAaBet" type="number" min="0" value="0" class="flex-1 min-w-0 px-3 py-2 rounded-xl bg-base b-subtle text-sm font-semibold text-white focus:outline-none focus:border-violet">
+                <button type="button" id="thAaClearBtn" class="px-2.5 rounded-xl bg-panel2 hover:bg-white/10 text-xs font-bold text-muted hover:text-white">0</button>
+                <button type="button" id="thAaSameBtn" class="px-2.5 rounded-xl bg-violet/25 hover:bg-violet/40 text-xs font-bold text-[#c4b5fd]">=Ante</button>
+              </div>
+            </div>
+
+            <button id="thDealBtn" class="w-full py-3 rounded-xl bg-sulfur hover:bg-[#e1ff57] disabled:opacity-40 text-base font-bold text-sm transition active:scale-95">Раздать (Ante)</button>
+
+            <div class="grid grid-cols-2 gap-2">
+              <button id="thCallBtn" disabled class="py-2.5 rounded-xl bg-emerald hover:bg-emerald/90 disabled:opacity-40 text-base font-bold text-xs sm:text-sm transition active:scale-95">Колл (2×)</button>
+              <button id="thFoldBtn" disabled class="py-2.5 rounded-xl bg-rose/20 hover:bg-rose/30 disabled:opacity-40 text-rose font-bold text-xs sm:text-sm transition active:scale-95">Фолд</button>
+            </div>
+
+            <div class="grid grid-cols-2 gap-2 text-[10px]">
+              <div class="rounded-xl bg-base b-subtle p-2.5 space-y-0.5">
+                <div class="font-bold text-white mb-0.5">Ante (выплата):</div>
+                <div class="flex justify-between text-muted"><span>Рояль</span><span class="text-sulfur font-bold">100:1</span></div>
+                <div class="flex justify-between text-muted"><span>Стрит-флеш</span><span class="text-sulfur font-bold">20:1</span></div>
+                <div class="flex justify-between text-muted"><span>Каре</span><span class="text-emerald font-bold">10:1</span></div>
+                <div class="flex justify-between text-muted"><span>Фулл / Флеш</span><span class="text-white">3:1 / 2:1</span></div>
+                <div class="flex justify-between text-muted"><span>Стрит и ниже</span><span class="text-white">1:1</span></div>
+              </div>
+              <div class="rounded-xl bg-base border border-violet/25 p-2.5 space-y-0.5">
+                <div class="font-bold text-[#c4b5fd] mb-0.5">AA Bonus (флоп):</div>
+                <div class="flex justify-between text-muted"><span>Рояль</span><span class="text-sulfur font-bold">100:1</span></div>
+                <div class="flex justify-between text-muted"><span>Стрит-флеш</span><span class="text-sulfur font-bold">50:1</span></div>
+                <div class="flex justify-between text-muted"><span>Каре</span><span class="text-emerald font-bold">40:1</span></div>
+                <div class="flex justify-between text-muted"><span>Фулл / Флеш</span><span class="text-white">30:1 / 20:1</span></div>
+                <div class="flex justify-between text-muted"><span>АА – Стрит</span><span class="text-white">7:1</span></div>
+              </div>
+            </div>
+
+            <p id="thMsg" class="text-xs text-muted leading-relaxed">Дилер квалифицируется от пары четвёрок (44+). Колл = 2× Ante.</p>
+          </div>
+
+          <div class="p-3.5 sm:p-5 flex flex-col justify-between gap-3.5 min-h-[300px] md:min-h-[420px]">
+            <!-- Dealer Hand -->
+            <div class="flex flex-col items-center gap-1.5">
+              <div class="flex items-center gap-2 text-xs">
+                <span class="font-semibold text-muted">Дилер</span>
+                <span id="thDealerRank" class="px-2 py-0.5 rounded-md bg-panel b-subtle text-[11px] font-bold text-slate-300">Скрыто</span>
+              </div>
+              <div id="thDealerCards" class="flex justify-center gap-2 min-h-[78px] sm:min-h-[96px]"></div>
+            </div>
+
+            <!-- Community Board (Flop + Turn + River) -->
+            <div class="rounded-2xl bg-gradient-to-b from-[#12261e]/80 to-[#0e1816]/90 border border-emerald/25 p-3 sm:p-4 flex flex-col items-center gap-2 shadow-inner">
+              <div class="flex items-center justify-between w-full px-1 text-[10px] font-bold uppercase tracking-wider text-emerald/80">
+                <span>Борд (Общие карты)</span>
+                <span id="thPotLbl" class="text-sulfur tabular-nums">Банк: 0 ₽</span>
+              </div>
+              <div id="thBoardCards" class="flex flex-wrap justify-center gap-1.5 sm:gap-2.5 min-h-[78px] sm:min-h-[96px]"></div>
+            </div>
+
+            <!-- Player Hand -->
+            <div class="flex flex-col items-center gap-1.5">
+              <div id="thPlayerCards" class="flex justify-center gap-2 min-h-[78px] sm:min-h-[96px]"></div>
+              <div class="flex items-center gap-2 text-xs">
+                <span class="font-semibold text-white">Ваша рука</span>
+                <span id="thPlayerRank" class="px-2 py-0.5 rounded-md bg-violet/25 text-[#c4b5fd] text-[11px] font-bold">—</span>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </dialog>
@@ -1894,7 +2219,7 @@
             <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3l7 4v5c0 5-3.5 8.5-7 9-3.5-.5-7-4-7-9V7l7-4z"/><path stroke-linecap="round" stroke-linejoin="round" d="M9.5 12.5l1.8 1.8 3.7-4"/></svg>
           </span>
           <div>
-            <h3 class="font-display font-bold text-base sm:text-lg text-white leading-tight">Проверить честность (Provably Fair)</h3>
+            <h3 class="font-display font-bold text-base sm:text-lg !text-white leading-tight">Проверить честность (Provably Fair)</h3>
             <p class="text-[11px] text-muted">HMAC-SHA256 · Web Crypto API (crypto.subtle)</p>
           </div>
         </div>
@@ -2194,7 +2519,7 @@
         pop.hidden = false;
         const inner = pop.firstElementChild; inner.classList.remove('win-pop-in'); void inner.offsetWidth; inner.classList.add('win-pop-in');
         clearTimeout(winTimer); winTimer = setTimeout(() => { pop.hidden = true; }, 1550);
-        if (mult >= 5) confetti();
+        if (mult >= 5 && userSettings.confetti) confetti();
       }
       function confetti() {
         const L = $('fxLayer'); if (!L) return;
@@ -2219,12 +2544,12 @@
 
       /* ================= VIP TIERS & PROMOS ================= */
       const VIP_TIERS = [
-        { id: 'none',     name: 'Без статуса', min: 0,       bonus: 0,     rake: 0,     daily: 50,   color: 'text-slate-400',   pill: 'bg-white/10 text-slate-300',       icon: 'from-slate-600/20 to-slate-800/10 border-white/15 text-slate-400' },
-        { id: 'bronze',   name: 'Bronze',      min: 1000,    bonus: 150,   rake: 0.01,  daily: 100,  color: 'text-amber-300',   pill: 'bg-amber-500/20 text-amber-300',   icon: 'from-amber-500/20 to-amber-700/10 border-amber-400/30 text-amber-300' },
-        { id: 'silver',   name: 'Silver',      min: 10000,   bonus: 1000,  rake: 0.02,  daily: 250,  color: 'text-slate-200',   pill: 'bg-slate-400/20 text-slate-200',   icon: 'from-slate-300/20 to-slate-500/10 border-slate-300/35 text-slate-200' },
-        { id: 'gold',     name: 'Gold',        min: 50000,   bonus: 3500,  rake: 0.035, daily: 600,  color: 'text-yellow-300',  pill: 'bg-yellow-500/20 text-yellow-300', icon: 'from-yellow-400/25 to-amber-600/10 border-yellow-400/40 text-yellow-300' },
-        { id: 'platinum', name: 'Platinum',    min: 250000,  bonus: 15000, rake: 0.05,  daily: 2000, color: 'text-sky-300',     pill: 'bg-sky-400/20 text-sky-300',       icon: 'from-sky-400/25 to-cyan-700/10 border-sky-400/40 text-sky-300' },
-        { id: 'diamond',  name: 'Diamond',     min: 1000000, bonus: 50000, rake: 0.08,  daily: 5000, color: 'text-violet-300',  pill: 'bg-violet/25 text-[#c4b5fd]',      icon: 'from-violet/30 to-fuchsia-600/15 border-violet/50 text-[#d8b4fe]' }
+        { id: 'none',     name: 'Без статуса', min: 0,       bonus: 0,     rake: 0.005, daily: 50,   color: 'text-slate-400',   pill: 'bg-white/10 text-slate-300',       icon: 'from-slate-600/20 to-slate-800/10 border-white/15 text-slate-400' },
+        { id: 'bronze',   name: 'Bronze',      min: 100000,  bonus: 500,   rake: 0.005, daily: 100,  color: 'text-amber-300',   pill: 'bg-amber-500/20 text-amber-300',   icon: 'from-amber-500/20 to-amber-700/10 border-amber-400/30 text-amber-300' },
+        { id: 'silver',   name: 'Silver',      min: 350000,  bonus: 1500,  rake: 0.005, daily: 250,  color: 'text-slate-200',   pill: 'bg-slate-400/20 text-slate-200',   icon: 'from-slate-300/20 to-slate-500/10 border-slate-300/35 text-slate-200' },
+        { id: 'gold',     name: 'Gold',        min: 1000000, bonus: 4000,  rake: 0.005, daily: 600,  color: 'text-yellow-300',  pill: 'bg-yellow-500/20 text-yellow-300', icon: 'from-yellow-400/25 to-amber-600/10 border-yellow-400/40 text-yellow-300' },
+        { id: 'platinum', name: 'Platinum',    min: 3000000, bonus: 12000, rake: 0.005, daily: 2000, color: 'text-sky-300',     pill: 'bg-sky-400/20 text-sky-300',       icon: 'from-sky-400/25 to-cyan-700/10 border-sky-400/40 text-sky-300' },
+        { id: 'diamond',  name: 'Diamond',     min: 8000000, bonus: 35000, rake: 0.01,  daily: 5000, color: 'text-violet-300',  pill: 'bg-violet/25 text-[#c4b5fd]',      icon: 'from-violet/30 to-fuchsia-600/15 border-violet/50 text-[#d8b4fe]' }
       ];
       const PROMO_CODES = {
         SULFUR200: { amount: 500,  label: '+500 ₽ к балансу' },
@@ -2238,13 +2563,19 @@
 
       /* ================= STATE ================= */
       let bal = 1000;
+      let vault = 0;
+      let txHistory = [];
       let wagered = 0;
       let rakeback = 0;
       let claimedTiers = ['none'];
       let usedPromos = [];
       let lastDailyAt = 0;
       let stats = { bets: 0, maxMult: 0, netProfit: 0 };
-      let currentUser = null; // { email, nick, pass, avatarColor }
+      let userSettings = { ghost: false, confetti: true };
+      const REF_RATE = 0.02;
+      const REF_FRIEND_BONUS = 250;
+      let refState = { code: '', invitedBy: '', pending: 0, earned: 0, referrals: [] };
+      let currentUser = null; // { email, nick, pass, avatarColor, avatarIcon, avatarImg }
 
       let currentCat = 'all';
       let origExpanded = false;
@@ -2270,20 +2601,48 @@
         try { localStorage.setItem(key, JSON.stringify(val)); } catch (e) {}
       }
 
+      function logTx(kind, title, amount, sign = '+') {
+        const now = new Date();
+        const time = now.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
+        txHistory.unshift({
+          id: Date.now() + '_' + Math.random().toString(36).slice(2, 6),
+          kind,
+          title,
+          amount: +Number(amount).toFixed(2),
+          sign,
+          time
+        });
+        if (txHistory.length > 40) txHistory.pop();
+        saveProgress();
+        renderTxUI();
+      }
+
       function packState() {
         return {
           bal: +bal.toFixed(2),
+          vault: +vault.toFixed(2),
+          txHistory: [...txHistory],
           wagered: +wagered.toFixed(2),
           rakeback: +rakeback.toFixed(2),
           claimedTiers: [...claimedTiers],
           usedPromos: [...usedPromos],
           lastDailyAt,
-          stats: { ...stats }
+          stats: { ...stats },
+          userSettings: { ...userSettings },
+          refState: {
+            code: refState.code || '',
+            invitedBy: refState.invitedBy || '',
+            pending: +(Number(refState.pending) || 0).toFixed(2),
+            earned: +(Number(refState.earned) || 0).toFixed(2),
+            referrals: Array.isArray(refState.referrals) ? refState.referrals.map(r => ({ ...r })) : []
+          }
         };
       }
       function applyState(st) {
         if (!st) return;
         bal = typeof st.bal === 'number' ? st.bal : 1000;
+        vault = typeof st.vault === 'number' ? st.vault : 0;
+        txHistory = Array.isArray(st.txHistory) ? st.txHistory : [];
         wagered = typeof st.wagered === 'number' ? st.wagered : 0;
         rakeback = typeof st.rakeback === 'number' ? st.rakeback : 0;
         claimedTiers = Array.isArray(st.claimedTiers) ? st.claimedTiers : ['none'];
@@ -2292,6 +2651,17 @@
         stats = st.stats && typeof st.stats === 'object'
           ? { bets: st.stats.bets || 0, maxMult: st.stats.maxMult || 0, netProfit: st.stats.netProfit || 0 }
           : { bets: 0, maxMult: 0, netProfit: 0 };
+        userSettings = st.userSettings && typeof st.userSettings === 'object'
+          ? { ghost: Boolean(st.userSettings.ghost), confetti: st.userSettings.confetti !== false }
+          : { ghost: false, confetti: true };
+        const rs = st.refState && typeof st.refState === 'object' ? st.refState : {};
+        refState = {
+          code: typeof rs.code === 'string' && rs.code ? rs.code : makeRefCode(currentUser ? currentUser.nick : 'GUEST'),
+          invitedBy: typeof rs.invitedBy === 'string' ? rs.invitedBy : '',
+          pending: typeof rs.pending === 'number' ? rs.pending : 0,
+          earned: typeof rs.earned === 'number' ? rs.earned : 0,
+          referrals: Array.isArray(rs.referrals) ? rs.referrals : []
+        };
       }
 
       function saveProgress() {
@@ -2310,7 +2680,14 @@
         const accs = readJSON(STORE_ACC, {});
         if (savedEmail && accs[savedEmail]) {
           const rec = accs[savedEmail];
-          currentUser = { email: rec.email, nick: rec.nick, pass: rec.pass, avatarColor: rec.avatarColor || '#7c5cff' };
+          currentUser = {
+            email: rec.email,
+            nick: rec.nick,
+            pass: rec.pass,
+            avatarColor: rec.avatarColor || '#7c5cff',
+            avatarIcon: rec.avatarIcon || '',
+            avatarImg: rec.avatarImg || ''
+          };
           applyState(rec.data);
         } else {
           currentUser = null;
@@ -2338,38 +2715,66 @@
         return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
       }
 
+      function paintAvatarEl(el, user) {
+        const letter = (user.nick || 'P')[0].toUpperCase();
+        const col = user.avatarColor || '#7c5cff';
+        const textDark = col === '#d4f833' || col === '#f59e0b';
+        el.style.backgroundColor = col;
+        el.style.color = textDark ? '#0c0e14' : '#ffffff';
+        if (user.avatarImg) {
+          el.innerHTML = `<img src="${user.avatarImg}" alt="" class="w-full h-full object-cover">`;
+        } else if (user.avatarIcon) {
+          el.textContent = user.avatarIcon;
+        } else {
+          el.textContent = letter;
+        }
+      }
+
       function updateAccountUI() {
         const tier = VIP_TIERS[getTierIndex()];
         if (currentUser) {
           $('authBtns').hidden = true;
+          if ($('userProfileWrap')) $('userProfileWrap').hidden = false;
           $('userProfileBtn').hidden = false;
-          const letter = (currentUser.nick || 'P')[0].toUpperCase();
+          if ($('ddVaultVal')) $('ddVaultVal').textContent = fmt(vault) + ' ₽';
+          if ($('ddRefVal')) $('ddRefVal').textContent = String((refState.referrals || []).length);
           const col = currentUser.avatarColor || '#7c5cff';
-          const textDark = col === '#d4f833' || col === '#f59e0b';
-          $('hdrAvatar').textContent = letter;
-          $('hdrAvatar').style.backgroundColor = col;
-          $('hdrAvatar').style.color = textDark ? '#0c0e14' : '#ffffff';
+          paintAvatarEl($('hdrAvatar'), currentUser);
+          $('hdrAvatar').classList.add('overflow-hidden');
           $('hdrNick').textContent = currentUser.nick;
           $('hdrVipBadge').textContent = tier.id === 'none' ? 'Без статуса' : `${tier.name} VIP`;
           $('hdrVipBadge').className = `text-[10px] font-semibold ${tier.color}`;
 
-          $('profAvatar').textContent = letter;
-          $('profAvatar').style.backgroundColor = col;
-          $('profAvatar').style.color = textDark ? '#0c0e14' : '#ffffff';
+          paintAvatarEl($('profAvatar'), currentUser);
           $('profNickDisp').textContent = currentUser.nick;
           $('profEmailDisp').textContent = currentUser.email;
           $('profNickInput').value = currentUser.nick;
           $('profVipPill').textContent = tier.id === 'none' ? 'Без статуса' : `${tier.name} VIP`;
           $('profVipPill').className = `px-2.5 py-0.5 rounded-md text-[11px] font-bold ${tier.pill}`;
+          if ($('profGhostPill')) $('profGhostPill').hidden = !userSettings.ghost;
 
           $('avatarColors').querySelectorAll('button').forEach(b => {
             b.classList.toggle('ring-2', b.dataset.avcol === col);
             b.classList.toggle('ring-white', b.dataset.avcol === col);
           });
+          if ($('avatarPresets')) {
+            const curIc = currentUser.avatarImg ? '__img__' : (currentUser.avatarIcon || '');
+            $('avatarPresets').querySelectorAll('button').forEach(b => {
+              const on = b.dataset.avicon === curIc;
+              b.classList.toggle('border-sulfur', on);
+              b.classList.toggle('bg-panel2', on);
+            });
+          }
         } else {
           $('authBtns').hidden = false;
+          if ($('userProfileWrap')) $('userProfileWrap').hidden = true;
           $('userProfileBtn').hidden = true;
+          closeProfileDropdown(true);
         }
+
+        if ($('setGhost')) $('setGhost').checked = Boolean(userSettings.ghost);
+        if ($('setSound')) $('setSound').checked = !SFX.muted;
+        if ($('setConfetti')) $('setConfetti').checked = userSettings.confetti !== false;
 
         $('stBets').textContent = fmtInt(stats.bets);
         $('stWager').textContent = fmtInt(wagered) + ' ₽';
@@ -2392,7 +2797,7 @@
         $('vipRank').textContent = cur.name;
         $('vipRank').className = cur.color;
         $('vipNextRank').textContent = next ? `→ ${next.name}` : '· MAX';
-        $('vipRateLbl').textContent = (cur.rake * 100).toFixed(cur.rake * 100 % 1 === 0 ? 0 : 1) + '%';
+        $('vipRateLbl').textContent = (+(cur.rake * 100).toFixed(2)) + '%';
         $('vipWager').textContent = fmtInt(wagered);
         $('vipTarget').textContent = next ? fmtInt(next.min) : fmtInt(cur.min);
         $('vipPct').textContent = pct.toFixed(2) + '%';
@@ -2409,7 +2814,7 @@
         $('vmWager').textContent = fmtInt(wagered);
         $('vmTarget').textContent = next ? fmtInt(next.min) : fmtInt(cur.min);
 
-        $('vmRakeRate').textContent = (cur.rake * 100).toFixed(cur.rake * 100 % 1 === 0 ? 0 : 1) + '%';
+        $('vmRakeRate').textContent = (+(cur.rake * 100).toFixed(2)) + '%';
         $('vmRakeVal').textContent = fmt(rakeback) + ' ₽';
         $('claimRakeBtn').disabled = rakeback < 0.01;
 
@@ -2444,7 +2849,7 @@
                 <span class="px-2.5 py-1 rounded-lg text-xs font-display font-bold ${t.pill}">${t.name}</span>
                 <div class="text-xs">
                   <div class="text-white font-semibold">Оборот от ${fmtInt(t.min)} ₽</div>
-                  <div class="text-[11px] text-muted">Рейкбек ${(t.rake * 100).toFixed(t.rake * 100 % 1 === 0 ? 0 : 1)}% · Релоад ${fmtInt(t.daily)} ₽</div>
+                  <div class="text-[11px] text-muted">Рейкбек ${+(t.rake * 100).toFixed(2)}% · Релоад ${fmtInt(t.daily)} ₽</div>
                 </div>
               </div>
               <div>${actionHTML}</div>
@@ -2454,11 +2859,36 @@
         updateAccountUI();
       }
 
-      function addWager(amount) {
+      function calcWagerWeight(meta = {}) {
+        const mult = typeof meta.mult === 'number' && meta.mult > 0 ? meta.mult : 2;
+        if (meta.game === 'dice' && typeof meta.chance === 'number') {
+          if (meta.chance >= 90) return 0.1;
+          if (meta.chance >= 80) return 0.25;
+          if (meta.chance >= 65) return 0.5;
+          if (meta.chance >= 45) return 0.85;
+          return 1.15;
+        }
+        if (mult < 1.2) return 0.2;
+        if (mult < 1.5) return 0.45;
+        if (mult < 2.0) return 0.75;
+        if (mult < 4.0) return 1.0;
+        return 1.25;
+      }
+
+      function addWager(amount, meta = {}) {
         const prevIdx = getTierIndex();
-        wagered += amount;
+        const weight = calcWagerWeight(meta);
+        wagered = +(wagered + amount * weight).toFixed(2);
         const curTier = VIP_TIERS[getTierIndex()];
         rakeback = +(rakeback + amount * curTier.rake).toFixed(2);
+        const weightedAmt = amount * weight;
+        if (Array.isArray(refState.referrals) && refState.referrals.length) {
+          const share = weightedAmt / refState.referrals.length;
+          refState.referrals.forEach(r => {
+            r.wagered = +((Number(r.wagered) || 0) + share).toFixed(2);
+          });
+          refState.pending = +((Number(refState.pending) || 0) + weightedAmt * REF_RATE).toFixed(2);
+        }
         const newIdx = getTierIndex();
         if (newIdx > prevIdx) {
           const nt = VIP_TIERS[newIdx];
@@ -2479,6 +2909,7 @@
         bal += promo.amount;
         updateBalanceUI();
         updateVipUI();
+        logTx('promo', `Промокод ${code}`, promo.amount, '+');
         SFX.cash();
         return { ok: true, msg: `Промокод ${code} активирован: ${promo.label}` };
       }
@@ -2499,7 +2930,7 @@
       /* ================= LIVE FEED ================= */
       function pushFeed(game, player, bet, mult, payout, isUser = false) {
         if (isUser) {
-          player = currentUser ? currentUser.nick : 'Вы';
+          player = userSettings.ghost ? '👻 Скрыто' : (currentUser ? currentUser.nick : 'Вы');
           stats.bets += 1;
           if (mult > stats.maxMult) stats.maxMult = +mult;
           stats.netProfit = +(stats.netProfit + (payout - bet)).toFixed(2);
@@ -2653,9 +3084,21 @@
           </svg>`
         },
         {
+          id: 'holdem', name: 'Texas Hold’em', cat: 'table', online: 1645, color: 'text-emerald',
+          icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" class="w-full h-full"><path d="M12 3C9.5 6.5 5 9.5 5 13.5a3.5 3.5 0 0 0 6 2.4V20h2v-4.1a3.5 3.5 0 0 0 6-2.4C19 9.5 14.5 6.5 12 3Z" fill="currentColor" fill-opacity="0.2"/></svg>`,
+          img: '',
+          svg: `<svg viewBox="0 0 130 120" class="w-[82%] h-auto">
+            <rect x="20" y="28" width="42" height="58" rx="8" fill="#1c2030" stroke="#d4f833" stroke-width="2.5" transform="rotate(-14 41 57)"/>
+            <rect x="44" y="24" width="42" height="58" rx="8" fill="#ffffff" transform="rotate(6 65 53)"/>
+            <text x="65" y="58" text-anchor="middle" fill="#0f172a" font-family="Space Grotesk" font-weight="700" font-size="20">A♠</text>
+            <circle cx="88" cy="78" r="16" fill="#22c55e" stroke="#ffffff" stroke-width="3"/>
+            <text x="88" y="83" text-anchor="middle" fill="#0c0e14" font-family="Space Grotesk" font-weight="700" font-size="13">★</text>
+          </svg>`
+        },
+        {
           id: 'reactor', name: 'Sulfur Reactor', cat: 'orig', online: 2340, color: 'text-sulfur',
           icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" class="w-full h-full"><circle cx="12" cy="12" r="3" fill="currentColor"/><ellipse cx="12" cy="12" rx="9" ry="4" transform="rotate(35 12 12)"/><ellipse cx="12" cy="12" rx="9" ry="4" transform="rotate(-35 12 12)"/></svg>`,
-          img: '',
+          img: 'Gemini_Generated_Image_e9a4ace9a4ace9a4_3.jpg',
           svg: `<svg viewBox="0 0 130 120" class="w-[84%] h-auto drop-shadow-[0_6px_22px_rgba(212,248,51,0.45)]">
             <rect x="34" y="14" width="62" height="92" rx="16" fill="#101524" stroke="#d4f833" stroke-width="3"/>
             <rect x="44" y="24" width="42" height="72" rx="10" fill="#182233" stroke="#7c5cff" stroke-width="2"/>
@@ -2831,12 +3274,14 @@
         const amt = +b.dataset.topup;
         bal += amt;
         updateBalanceUI();
+        logTx('topup', 'Пополнение демо-кошелька', amt, '+');
         $('walletModal').close();
         showToast(`Демо-баланс пополнен на +${fmt(amt)} ₽`);
       }));
       $('resetBalBtn').addEventListener('click', () => {
         bal = 1000;
         updateBalanceUI();
+        logTx('reset', 'Сброс баланса до 1 000 ₽', 1000, '=');
         $('walletModal').close();
         showToast('Баланс сброшен до 1 000 ₽');
       });
@@ -2861,15 +3306,286 @@
         updateVipUI();
         if (!$('vipModal').open) $('vipModal').showModal();
       }
-      function openProfileModal() {
+
+      // Settings Tab Events
+      $('avatarPresets').addEventListener('click', e => {
+        const b = e.target.closest('button[data-avicon]');
+        if (!b || !currentUser) return;
+        currentUser.avatarIcon = b.dataset.avicon;
+        currentUser.avatarImg = '';
+        saveProgress();
+        updateAccountUI();
+        SFX.click();
+      });
+
+      $('setAvatarFile').addEventListener('change', e => {
+        const file = e.target.files && e.target.files[0];
+        if (!file || !currentUser) return;
+        const reader = new FileReader();
+        reader.onload = () => {
+          const img = new Image();
+          img.onload = () => {
+            const c = document.createElement('canvas');
+            c.width = 128; c.height = 128;
+            const ctx = c.getContext('2d');
+            const s = Math.min(img.width, img.height);
+            const sx = (img.width - s) / 2, sy = (img.height - s) / 2;
+            ctx.drawImage(img, sx, sy, s, s, 0, 0, 128, 128);
+            currentUser.avatarImg = c.toDataURL('image/webp', 0.82);
+            currentUser.avatarIcon = '';
+            saveProgress();
+            updateAccountUI();
+            showToast('Аватар загружен');
+          };
+          img.src = reader.result;
+        };
+        reader.readAsDataURL(file);
+        e.target.value = '';
+      });
+
+      $('setAvatarClear').addEventListener('click', () => {
+        if (!currentUser) return;
+        currentUser.avatarImg = '';
+        currentUser.avatarIcon = '';
+        saveProgress();
+        updateAccountUI();
+        SFX.click();
+        showToast('Аватар сброшен');
+      });
+
+      $('setGhost').addEventListener('change', e => {
+        userSettings.ghost = e.target.checked;
+        saveProgress();
+        updateAccountUI();
+        SFX.click();
+        showToast(userSettings.ghost ? 'Скрытый режим включён' : 'Скрытый режим выключен');
+      });
+
+      $('setSound').addEventListener('change', e => {
+        const muted = !e.target.checked;
+        SFX.setMuted(muted);
+        $('sfxBtn').textContent = muted ? '🔇' : '🔊';
+        if (!muted) SFX.click();
+      });
+
+      $('setConfetti').addEventListener('change', e => {
+        userSettings.confetti = e.target.checked;
+        saveProgress();
+        SFX.click();
+      });
+
+      $('setPassForm').addEventListener('submit', e => {
+        e.preventDefault();
+        if (!currentUser) return;
+        const oldP = $('setOldPass').value;
+        const newP = $('setNewPass').value;
+        if (oldP !== currentUser.pass) {
+          $('setPassMsg').className = 'text-[11px] text-rose font-semibold';
+          $('setPassMsg').textContent = 'Неверный текущий пароль';
+          return;
+        }
+        if (newP.length < 6) {
+          $('setPassMsg').className = 'text-[11px] text-rose font-semibold';
+          $('setPassMsg').textContent = 'Минимум 6 символов';
+          return;
+        }
+        currentUser.pass = newP;
+        saveProgress();
+        $('setPassForm').reset();
+        $('setPassMsg').className = 'text-[11px] text-emerald font-semibold';
+        $('setPassMsg').textContent = 'Пароль успешно изменён ✓';
+        SFX.cash();
+        showToast('Пароль обновлён');
+      });
+
+      $('setResetStatsBtn').addEventListener('click', () => {
+        stats = { bets: 0, maxMult: 0, netProfit: 0 };
+        saveProgress();
+        updateAccountUI();
+        SFX.click();
+        showToast('Игровая статистика обнулена');
+      });
+
+
+      // Referral System Helpers & Events
+      function makeRefCode(seedStr = 'SULFUR') {
+        const clean = (seedStr || 'SULFUR').toUpperCase().replace(/[^A-Z0-9А-Я]/g, '').slice(0, 6) || 'PLAYER';
+        let h = 0;
+        for (let i = 0; i < clean.length; i++) h = (h * 31 + clean.charCodeAt(i)) % 9000;
+        return `SUL-${clean}-${1000 + h}`;
+      }
+
+      function ensureRefCode() {
+        if (!refState.code) {
+          refState.code = makeRefCode(currentUser ? currentUser.nick : 'GUEST');
+        }
+        return refState.code;
+      }
+
+      function getRefLink() {
+        const code = ensureRefCode();
+        try {
+          const u = new URL(window.location.href);
+          u.searchParams.set('ref', code);
+          return u.toString();
+        } catch (e) {
+          return `?ref=${code}`;
+        }
+      }
+
+      function applyIncomingRefCode(rawCode) {
+        const code = (rawCode || '').trim().toUpperCase();
+        if (!code || refState.invitedBy) return;
+        refState.invitedBy = code;
+        bal = +(bal + REF_FRIEND_BONUS).toFixed(2);
+        updateBalanceUI();
+        logTx('ref_bonus', `Бонус за приглашение (${code})`, REF_FRIEND_BONUS, '+');
+        showToast(`Реферал ${code}: начислено +${fmtInt(REF_FRIEND_BONUS)} ₽!`);
+      }
+
+      function renderRefUI() {
+        ensureRefCode();
+        const refs = Array.isArray(refState.referrals) ? refState.referrals : [];
+        const totalRefWager = refs.reduce((acc, r) => acc + (Number(r.wagered) || 0), 0);
+        const pending = +(Number(refState.pending) || 0).toFixed(2);
+        const earned = +(Number(refState.earned) || 0).toFixed(2);
+
+        if ($('cabRefBadge')) $('cabRefBadge').textContent = String(refs.length);
+        if ($('ddRefVal')) $('ddRefVal').textContent = String(refs.length);
+        if ($('refLinkInput')) $('refLinkInput').value = getRefLink();
+        if ($('refCountDisp')) $('refCountDisp').textContent = fmtInt(refs.length);
+        if ($('refWagerDisp')) $('refWagerDisp').textContent = fmtInt(totalRefWager) + ' ₽';
+        if ($('refClaimDisp')) $('refClaimDisp').textContent = fmt(pending) + ' ₽';
+        if ($('refEarnedTotal')) $('refEarnedTotal').textContent = fmt(earned) + ' ₽';
+        if ($('refClaimBtn')) $('refClaimBtn').disabled = pending < 0.01;
+
+        const list = $('refList');
+        if (!list) return;
+        if (!refs.length) {
+          list.innerHTML = '<div class="rounded-xl bg-base b-subtle p-5 text-center text-xs text-muted">Пока нет приглашённых игроков. Поделитесь ссылкой или нажмите «+ Тест: пригласить друга».</div>';
+          return;
+        }
+        list.innerHTML = refs.map(r => `
+          <div class="rounded-xl bg-base b-subtle px-3.5 py-2.5 flex items-center justify-between gap-3 text-xs">
+            <div class="min-w-0">
+              <div class="font-semibold text-white truncate">${r.nick}</div>
+              <div class="text-[10px] text-muted">${r.joined || 'Сегодня'}</div>
+            </div>
+            <div class="text-right shrink-0 tabular-nums">
+              <div class="font-display font-bold text-white">Оборот ${fmtInt(r.wagered || 0)} ₽</div>
+              <div class="text-[10px] text-emerald">+${fmt((Number(r.wagered) || 0) * REF_RATE)} ₽</div>
+            </div>
+          </div>`).join('');
+      }
+
+      $('refCopyLinkBtn').addEventListener('click', () => {
+        const link = getRefLink();
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(link).catch(() => {});
+        }
+        if ($('refLinkInput')) {
+          $('refLinkInput').focus();
+          $('refLinkInput').select();
+        }
+        SFX.click();
+        showToast('Реферальная ссылка скопирована');
+      });
+
+      $('refSimInviteBtn').addEventListener('click', () => {
+        const names = ['NeonFox', 'Vortex99', 'Krypton', 'NightOwl', 'TurboCat', 'ZeroCool'];
+        const pick = names[refState.referrals.length % names.length] + '_' + Math.floor(10 + Math.random() * 89);
+        const nowTime = new Date().toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
+        refState.referrals.unshift({ nick: pick, wagered: 0, joined: `Сегодня, ${nowTime}` });
+        saveProgress();
+        renderRefUI();
+        SFX.win(2);
+        showToast(`Приглашён реферал ${pick}`);
+      });
+
+      $('refClaimBtn').addEventListener('click', () => {
+        const amt = +(Number(refState.pending) || 0).toFixed(2);
+        if (amt < 0.01) return;
+        refState.pending = 0;
+        refState.earned = +((Number(refState.earned) || 0) + amt).toFixed(2);
+        bal = +(bal + amt).toFixed(2);
+        updateBalanceUI();
+        renderRefUI();
+        logTx('ref_claim', 'Выплата реферальной комиссии', amt, '+');
+        SFX.cash();
+        showToast(`Зачислено +${fmt(amt)} ₽ реферальных`);
+      });
+
+      function openProfileModal(defaultTab = 'overview') {
         if (!currentUser) return openAuth('up');
         updateAccountUI();
+        renderVaultUI();
+        renderTxUI();
+        renderRefUI();
+        setCabTab(defaultTab);
         if (!$('profileModal').open) $('profileModal').showModal();
       }
 
       $('btnLogin').addEventListener('click', () => openAuth('in'));
       $('btnReg').addEventListener('click', () => openAuth('up'));
-      $('userProfileBtn').addEventListener('click', openProfileModal);
+      let ddOpen = false;
+      let ddCloseTimer = null;
+      function syncDropdownMeta() {
+        if ($('ddVaultVal')) $('ddVaultVal').textContent = fmt(vault) + ' ₽';
+        if ($('ddRefVal')) $('ddRefVal').textContent = String((refState.referrals || []).length);
+      }
+      function openProfileDropdown() {
+        if (!currentUser) return openAuth('up');
+        syncDropdownMeta();
+        const dd = $('profileDropdown');
+        if (!dd) return;
+        clearTimeout(ddCloseTimer);
+        dd.hidden = false;
+        void dd.offsetWidth;
+        dd.classList.remove('dd-closed');
+        dd.classList.add('dd-open');
+        if ($('hdrChev')) $('hdrChev').classList.add('rotate-180');
+        ddOpen = true;
+        SFX.click();
+      }
+      function closeProfileDropdown(instant = false) {
+        const dd = $('profileDropdown');
+        if (!dd) return;
+        ddOpen = false;
+        if ($('hdrChev')) $('hdrChev').classList.remove('rotate-180');
+        dd.classList.remove('dd-open');
+        dd.classList.add('dd-closed');
+        clearTimeout(ddCloseTimer);
+        if (instant) {
+          dd.hidden = true;
+        } else {
+          ddCloseTimer = setTimeout(() => { if (!ddOpen) dd.hidden = true; }, 170);
+        }
+      }
+      $('userProfileBtn').addEventListener('click', e => {
+        e.stopPropagation();
+        if (ddOpen) closeProfileDropdown();
+        else openProfileDropdown();
+      });
+      $('profileDropdown').addEventListener('click', e => {
+        e.stopPropagation();
+        const tabBtn = e.target.closest('button[data-dd-tab]');
+        if (tabBtn) {
+          const tab = tabBtn.dataset.ddTab;
+          closeProfileDropdown(true);
+          openProfileModal(tab);
+        }
+      });
+      $('ddLogoutBtn').addEventListener('click', e => {
+        e.stopPropagation();
+        closeProfileDropdown(true);
+        $('profLogoutBtn').click();
+      });
+      document.addEventListener('click', e => {
+        if (ddOpen && !e.target.closest('#userProfileWrap')) closeProfileDropdown();
+      });
+      document.addEventListener('keydown', e => {
+        if (e.key === 'Escape' && ddOpen) closeProfileDropdown();
+      });
       $('openVipBtn').addEventListener('click', openVipModal);
       $('sideVipBtn').addEventListener('click', () => { closeMobileSidebar(); openVipModal(); });
       $('sideProfileBtn').addEventListener('click', () => { closeMobileSidebar(); openProfileModal(); });
@@ -2892,7 +3608,7 @@
             return;
           }
           const finalNick = nick || email.split('@')[0].slice(0, 14) || 'Player';
-          currentUser = { email, nick: finalNick, pass, avatarColor: '#7c5cff' };
+          currentUser = { email, nick: finalNick, pass, avatarColor: '#7c5cff', avatarIcon: '', avatarImg: '' };
           bal += 500;
           let bonusMsg = `Добро пожаловать, ${finalNick}! +500 ₽ за регистрацию`;
           if (promoRaw) {
@@ -2919,7 +3635,7 @@
             $('authErr').hidden = false;
             return;
           }
-          currentUser = { email: rec.email, nick: rec.nick, pass: rec.pass, avatarColor: rec.avatarColor || '#7c5cff' };
+          currentUser = { email: rec.email, nick: rec.nick, pass: rec.pass, avatarColor: rec.avatarColor || '#7c5cff', avatarIcon: rec.avatarIcon || '', avatarImg: rec.avatarImg || '' };
           applyState(rec.data);
           localStorage.setItem(STORE_CUR, email);
           updateBalanceUI();
@@ -2957,12 +3673,134 @@
         saveProgress();
         currentUser = null;
         localStorage.removeItem(STORE_CUR);
-        applyState(readJSON(STORE_GUEST, { bal: 1000, wagered: 0, rakeback: 0, claimedTiers: ['none'], usedPromos: [], lastDailyAt: 0, stats: { bets: 0, maxMult: 0, netProfit: 0 } }));
+        applyState(readJSON(STORE_GUEST, { bal: 1000, vault: 0, txHistory: [], wagered: 0, rakeback: 0, claimedTiers: ['none'], usedPromos: [], lastDailyAt: 0, stats: { bets: 0, maxMult: 0, netProfit: 0 } }));
         $('profileModal').close();
         updateBalanceUI();
         updateVipUI();
+        renderVaultUI();
+        renderTxUI();
         showToast('Вы вышли из аккаунта');
       });
+
+      // Cabinet Tabs, Vault & Transactions
+      let cabTab = 'overview';
+      function setCabTab(tab) {
+        cabTab = tab;
+        document.querySelectorAll('.cab-tab').forEach(b => {
+          const on = b.dataset.cabTab === tab;
+          b.className = `cab-tab px-3.5 py-2 rounded-t-xl text-xs font-bold transition flex items-center gap-1.5 ${
+            on
+              ? 'bg-surface text-white border-t border-x border-white/[0.08]'
+              : 'text-muted hover:text-white'
+          }`;
+        });
+        $('cabPaneOverview').hidden = tab !== 'overview';
+        $('cabPaneVault').hidden = tab !== 'vault';
+        $('cabPaneTx').hidden = tab !== 'tx';
+        $('cabPaneRef').hidden = tab !== 'ref';
+        $('cabPaneSettings').hidden = tab !== 'settings';
+        if (tab === 'vault') renderVaultUI();
+        if (tab === 'tx') renderTxUI();
+        if (tab === 'ref') renderRefUI();
+        if (tab === 'settings') {
+          if ($('setPassMsg')) $('setPassMsg').textContent = '';
+          updateAccountUI();
+        }
+      }
+      document.querySelectorAll('.cab-tab').forEach(b => b.addEventListener('click', () => {
+        SFX.click();
+        setCabTab(b.dataset.cabTab);
+      }));
+
+      function renderVaultUI() {
+        if (!$('vaultBalDisp')) return;
+        $('vaultBalDisp').textContent = fmt(vault) + ' ₽';
+        $('cabVaultBadge').textContent = fmt(vault) + ' ₽';
+        if ($('ddVaultVal')) $('ddVaultVal').textContent = fmt(vault) + ' ₽';
+        $('vaultAvailBal').textContent = fmt(bal) + ' ₽';
+      }
+
+      document.querySelectorAll('[data-vault-pct]').forEach(b => b.addEventListener('click', () => {
+        const pct = +b.dataset.vaultPct;
+        const baseAmt = Math.floor(bal * pct);
+        $('vaultAmtInput').value = Math.max(1, baseAmt);
+        SFX.click();
+      }));
+
+      $('vaultDepositBtn').addEventListener('click', () => {
+        const amt = Math.floor(+$('vaultAmtInput').value);
+        if (!(amt >= 1)) {
+          $('vaultMsg').className = 'text-xs text-rose font-medium';
+          $('vaultMsg').textContent = 'Введите сумму от 1 ₽';
+          return;
+        }
+        if (amt > bal) {
+          $('vaultMsg').className = 'text-xs text-rose font-medium';
+          $('vaultMsg').textContent = 'Недостаточно средств на основном балансе';
+          return;
+        }
+        bal = +(bal - amt).toFixed(2);
+        vault = +(vault + amt).toFixed(2);
+        updateBalanceUI();
+        renderVaultUI();
+        logTx('vault_in', 'Перевод в сейф', amt, '→');
+        SFX.cash();
+        $('vaultMsg').className = 'text-xs text-emerald font-medium';
+        $('vaultMsg').textContent = `Переведено в сейф: ${fmt(amt)} ₽`;
+        showToast(`+${fmt(amt)} ₽ переведено в сейф`);
+      });
+
+      $('vaultWithdrawBtn').addEventListener('click', () => {
+        const amt = Math.floor(+$('vaultAmtInput').value);
+        if (!(amt >= 1)) {
+          $('vaultMsg').className = 'text-xs text-rose font-medium';
+          $('vaultMsg').textContent = 'Введите сумму от 1 ₽';
+          return;
+        }
+        if (amt > vault) {
+          $('vaultMsg').className = 'text-xs text-rose font-medium';
+          $('vaultMsg').textContent = 'Недостаточно средств в сейфе';
+          return;
+        }
+        vault = +(vault - amt).toFixed(2);
+        bal = +(bal + amt).toFixed(2);
+        updateBalanceUI();
+        renderVaultUI();
+        logTx('vault_out', 'Снятие из сейфа на баланс', amt, '←');
+        SFX.cash();
+        $('vaultMsg').className = 'text-xs text-emerald font-medium';
+        $('vaultMsg').textContent = `Забрано на баланс: ${fmt(amt)} ₽`;
+        showToast(`+${fmt(amt)} ₽ возвращено на баланс`);
+      });
+
+      function renderTxUI() {
+        const el = $('txList');
+        if (!el) return;
+        if ($('cabVaultBadge')) $('cabVaultBadge').textContent = fmt(vault) + ' ₽';
+        if (!txHistory.length) {
+          el.innerHTML = '<div class="rounded-xl bg-base b-subtle p-6 text-center text-xs text-muted">Операций пока не было. Пополните кошелёк, активируйте промокод или воспользуйтесь сейфом.</div>';
+          return;
+        }
+        el.innerHTML = txHistory.map(t => {
+          const isPlus = t.sign === '+';
+          const isVault = t.sign === '→' || t.sign === '←';
+          const badgeCls = isPlus
+            ? 'bg-emerald/15 text-emerald'
+            : isVault
+              ? 'bg-sulfur/15 text-sulfur'
+              : 'bg-panel2 text-slate-300';
+          const amtPrefix = isPlus ? '+' : isVault ? t.sign + ' ' : '';
+          return `
+            <div class="rounded-xl bg-base b-subtle px-3.5 py-2.5 flex items-center justify-between gap-3 text-xs">
+              <div class="min-w-0">
+                <div class="font-semibold text-white truncate">${t.title}</div>
+                <div class="text-[10px] text-muted">${t.time}</div>
+              </div>
+              <span class="px-2.5 py-1 rounded-lg font-display font-bold tabular-nums shrink-0 ${badgeCls}">${amtPrefix}${fmt(t.amount)} ₽</span>
+            </div>`;
+        }).join('');
+      }
+
 
       // VIP modal events
       $('claimRakeBtn').addEventListener('click', () => {
@@ -2972,6 +3810,7 @@
         bal = +(bal + amt).toFixed(2);
         updateBalanceUI();
         updateVipUI();
+        logTx('rakeback', 'Мгновенный рейкбек', amt, '+');
         SFX.cash();
         showToast(`Рейкбек +${fmt(amt)} ₽ зачислен на баланс`);
       });
@@ -2983,6 +3822,7 @@
         bal = +(bal + tier.daily).toFixed(2);
         updateBalanceUI();
         updateVipUI();
+        logTx('reload', `Релоад-бонус (${tier.name})`, tier.daily, '+');
         SFX.win(3);
         showToast(`Релоад-бонус +${fmtInt(tier.daily)} ₽ зачислен!`);
       });
@@ -3003,6 +3843,7 @@
         bal = +(bal + t.bonus).toFixed(2);
         updateBalanceUI();
         updateVipUI();
+        logTx('vip_bonus', `Награда за уровень ${t.name} VIP`, t.bonus, '+');
         SFX.win(10);
         showToast(`Награда за ${t.name} VIP: +${fmtInt(t.bonus)} ₽!`);
       });
@@ -3235,7 +4076,8 @@
         const bet = Math.floor(+$('crBet').value);
         if (!(bet >= 1)) return ($('crMsg').textContent = 'Ставка от 1 ₽');
         if (bet > bal) return ($('crMsg').textContent = 'Недостаточно демо-баланса');
-        bal -= bet; addWager(bet); updateBalanceUI();
+        const crAutoVal = Math.max(0, +$('crAuto').value || 0);
+        bal -= bet; addWager(bet, { game: 'crash', mult: crAutoVal > 1 ? crAutoVal : 2.0 }); updateBalanceUI();
         SFX.click();
         if (cr.phase === 'wait') {
           cr.bet = bet;
@@ -3263,7 +4105,7 @@
         const bet = Math.floor(+$('dcBet').value), c = +$('dcRange').value;
         if (!(bet >= 1)) return ($('dcMsg').textContent = 'Ставка от 1 ₽');
         if (bet > bal) return ($('dcMsg').textContent = 'Недостаточно демо-баланса');
-        bal -= bet; addWager(bet); updateBalanceUI();
+        bal -= bet; addWager(bet, { game: 'dice', chance: c, mult: +(98 / c).toFixed(2) }); updateBalanceUI();
         dcBusy = true; SFX.rattle();
         const pf = await PF.roll('Dice', 1, u => (u * 100).toFixed(2));
         const r = pf.floats[0] * 100, win = r < c, t0 = performance.now();
@@ -3754,7 +4596,7 @@
         const bet = Math.floor(+$('lmBet').value), t = lmTarget();
         if (!(bet >= 1)) return ($('lmMsg').textContent = 'Ставка от 1 ₽');
         if (bet > bal) return ($('lmMsg').textContent = 'Недостаточно демо-баланса');
-        bal -= bet; addWager(bet); updateBalanceUI();
+        bal -= bet; addWager(bet, { game: 'limbo', mult: t }); updateBalanceUI();
         lmBusy = true; $('lmBtn').disabled = true; SFX.sweep(650);
         $('lmVal').className = 'font-display font-bold text-6xl sm:text-7xl text-white tabular-nums';
         const pf = await PF.roll('Limbo', 1, u => Math.max(1, Math.floor(98 / (1 - u)) / 100).toFixed(2) + 'x');
@@ -6280,7 +7122,7 @@
       function initSfxUi() {
         const b = $('sfxBtn'), paint = () => { b.textContent = SFX.muted ? '🔇' : '🔊'; };
         paint();
-        b.addEventListener('click', () => { SFX.setMuted(!SFX.muted); paint(); SFX.click(); });
+        b.addEventListener('click', () => { SFX.setMuted(!SFX.muted); paint(); if ($('setSound')) $('setSound').checked = !SFX.muted; SFX.click(); });
         document.addEventListener('pointerdown', () => SFX.unlock(), { once: true });
       }
 
@@ -6331,6 +7173,351 @@
         if (!h.serverSeed) showToast('Сначала нажмите «Сменить сид сервера», чтобы раскрыть сид этого раунда');
         else $('pfVerifyBtn').click();
       });
+
+      /* ================= 17. TEXAS HOLD'EM (CASINO HOLD'EM 1v1) ================= */
+      (() => {
+        const TH_SUITS = ['♠', '♥', '♦', '♣'];
+        const TH_RANKS = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'];
+        const TH_NAMES = [
+          'Старшая карта',
+          'Пара',
+          'Две пары',
+          'Сет (Тройка)',
+          'Стрит',
+          'Флеш',
+          'Фулл-хаус',
+          'Каре',
+          'Стрит-флеш',
+          'Флеш-рояль'
+        ];
+        // Ante payout multiplier (profit part) on dealer showdown win
+        const TH_ANTE_PAY = [1, 1, 1, 1, 1, 2, 3, 10, 20, 100];
+        // AA Bonus payout multiplier (profit part) evaluated on Player 2 + Flop 3 (Pair of Aces or better)
+        const TH_AA_PAY = [0, 7, 7, 7, 7, 20, 30, 40, 50, 100];
+
+        function evalAaBonus(ev) {
+          if (!ev) return 0;
+          if (ev.cat > 1) return TH_AA_PAY[ev.cat] || 7;
+          if (ev.cat === 1 && ev.kickers[0] === 12) return 7;
+          return 0;
+        }
+
+        let th = { on: false, busy: false, ante: 0, aaBet: 0, aaPayout: 0, deck: [], player: [], dealer: [], board: [] };
+
+        function thCardEl(card, down = false) {
+          const [r, s] = card;
+          const red = s === 1 || s === 2;
+          const wrap = document.createElement('div');
+          wrap.className = 'pcard';
+          wrap.innerHTML = `
+            <div class="pcard-inner ${down ? 'down' : ''}">
+              <div class="pcard-face pcard-front ${red ? 'red' : ''}">
+                <div>${TH_RANKS[r]}<div class="text-xs sm:text-sm">${TH_SUITS[s]}</div></div>
+                <div class="self-end text-base sm:text-xl">${TH_SUITS[s]}</div>
+              </div>
+              <div class="pcard-face pcard-back"></div>
+            </div>`;
+          return wrap;
+        }
+
+        function thEmptySlot() {
+          const d = document.createElement('div');
+          d.className = 'w-[54px] h-[78px] sm:w-[66px] sm:h-[96px] rounded-[10px] border border-dashed border-white/15 bg-black/20';
+          return d;
+        }
+
+        function eval5(cards) {
+          // cards: array of 5 [r, s], r in 0..12 (2..A)
+          const rs = cards.map(c => c[0]).sort((a, b) => b - a);
+          const ss = cards.map(c => c[1]);
+          const isFlush = ss.every(s => s === ss[0]);
+
+          let isStraight = false;
+          let straightHigh = -1;
+          const uniq = [...new Set(rs)];
+          if (uniq.length === 5) {
+            if (uniq[0] - uniq[4] === 4) {
+              isStraight = true;
+              straightHigh = uniq[0];
+            } else if (uniq[0] === 12 && uniq[1] === 3 && uniq[2] === 2 && uniq[3] === 1 && uniq[4] === 0) {
+              // A-2-3-4-5 wheel
+              isStraight = true;
+              straightHigh = 3;
+            }
+          }
+
+          const freq = new Map();
+          rs.forEach(r => freq.set(r, (freq.get(r) || 0) + 1));
+          const groups = [...freq.entries()].sort((a, b) => (b[1] - a[1]) || (b[0] - a[0]));
+
+          let cat = 0;
+          let kickers = [];
+          if (isFlush && isStraight) {
+            cat = straightHigh === 12 ? 9 : 8;
+            kickers = [straightHigh];
+          } else if (groups[0][1] === 4) {
+            cat = 7;
+            kickers = [groups[0][0], groups[1][0]];
+          } else if (groups[0][1] === 3 && groups[1][1] === 2) {
+            cat = 6;
+            kickers = [groups[0][0], groups[1][0]];
+          } else if (isFlush) {
+            cat = 5;
+            kickers = rs;
+          } else if (isStraight) {
+            cat = 4;
+            kickers = [straightHigh];
+          } else if (groups[0][1] === 3) {
+            cat = 3;
+            kickers = [groups[0][0], ...groups.slice(1).map(g => g[0])];
+          } else if (groups[0][1] === 2 && groups[1][1] === 2) {
+            cat = 2;
+            kickers = [groups[0][0], groups[1][0], groups[2][0]];
+          } else if (groups[0][1] === 2) {
+            cat = 1;
+            kickers = [groups[0][0], ...groups.slice(1).map(g => g[0])];
+          } else {
+            cat = 0;
+            kickers = rs;
+          }
+
+          let scoreVal = cat * 1e10;
+          for (let i = 0; i < kickers.length; i++) {
+            scoreVal += kickers[i] * Math.pow(15, 4 - i);
+          }
+          return { cat, kickers, score: scoreVal, name: TH_NAMES[cat] };
+        }
+
+        function evalBest(cards) {
+          if (cards.length < 5) return null;
+          let best = null;
+          const n = cards.length;
+          for (let a = 0; a < n - 4; a++) {
+            for (let b = a + 1; b < n - 3; b++) {
+              for (let c = b + 1; c < n - 2; c++) {
+                for (let d = c + 1; d < n - 1; d++) {
+                  for (let e = d + 1; e < n; e++) {
+                    const res = eval5([cards[a], cards[b], cards[c], cards[d], cards[e]]);
+                    if (!best || res.score > best.score) best = res;
+                  }
+                }
+              }
+            }
+          }
+          return best;
+        }
+
+        function dealerQualifies(ev) {
+          // Dealer qualifies with Pair of 4s (rank index 2) or better
+          if (ev.cat > 1) return true;
+          if (ev.cat === 1 && ev.kickers[0] >= 2) return true;
+          return false;
+        }
+
+        function setThBtns(inHand) {
+          $('thDealBtn').disabled = inHand;
+          $('thBet').disabled = inHand;
+          $('thAaBet').disabled = inHand;
+          $('thAaClearBtn').disabled = inHand;
+          $('thAaSameBtn').disabled = inHand;
+          $('thCallBtn').disabled = !inHand;
+          $('thFoldBtn').disabled = !inHand;
+        }
+
+        $('thAaClearBtn').addEventListener('click', () => { $('thAaBet').value = 0; SFX.click(); });
+        $('thAaSameBtn').addEventListener('click', () => {
+          $('thAaBet').value = Math.max(1, Math.floor(Number($('thBet').value) || 50));
+          SFX.click();
+        });
+
+        function renderThIdle() {
+          $('thDealerCards').innerHTML = '';
+          $('thDealerCards').append(thEmptySlot(), thEmptySlot());
+          $('thBoardCards').innerHTML = '';
+          for (let i = 0; i < 5; i++) $('thBoardCards').append(thEmptySlot());
+          $('thPlayerCards').innerHTML = '';
+          $('thPlayerCards').append(thEmptySlot(), thEmptySlot());
+          $('thDealerRank').textContent = 'Скрыто';
+          $('thPlayerRank').textContent = '—';
+          $('thPotLbl').textContent = 'Банк: 0 ₽';
+        }
+
+        renderThIdle();
+
+        $('thDealBtn').addEventListener('click', async () => {
+          if (th.on || th.busy) return;
+          const ante = Math.max(1, Math.floor(Number($('thBet').value) || 0));
+          const aaBet = Math.max(0, Math.floor(Number($('thAaBet').value) || 0));
+          if (ante * 3 + aaBet > bal) {
+            showToast('Для раздачи и Колла (2×) нужно минимум ' + fmtInt(ante * 3 + aaBet) + ' ₽ на балансе');
+            return;
+          }
+          th.busy = true;
+          bal = +(bal - (ante + aaBet)).toFixed(2);
+          updateBalanceUI();
+
+          await PF.roll('Texas Hold’em', 52);
+          const deck = [];
+          for (let s = 0; s < 4; s++) for (let r = 0; r < 13; r++) deck.push([r, s]);
+          for (let i = deck.length - 1; i > 0; i--) {
+            const j = Math.floor(rng() * (i + 1));
+            [deck[i], deck[j]] = [deck[j], deck[i]];
+          }
+
+          th = {
+            on: true,
+            busy: true,
+            ante,
+            aaBet,
+            aaPayout: 0,
+            deck,
+            player: [deck.pop(), deck.pop()],
+            dealer: [deck.pop(), deck.pop()],
+            board: [deck.pop(), deck.pop(), deck.pop()]
+          };
+
+          $('thCallBtn').textContent = `Колл (${fmtInt(ante * 2)} ₽)`;
+          $('thPotLbl').textContent = aaBet > 0 ? `Ante: ${fmtInt(ante)} ₽ · AA: ${fmtInt(aaBet)} ₽` : `Ante: ${fmtInt(ante)} ₽`;
+          $('thDealerRank').textContent = '2 карты';
+          $('thMsg').textContent = 'Флоп открыт! Нажмите «Колл», чтобы открыть Тёрн и Ривер, или «Фолд».';
+
+          $('thPlayerCards').innerHTML = '';
+          $('thDealerCards').innerHTML = '';
+          $('thBoardCards').innerHTML = '';
+
+          SFX.deal();
+          $('thPlayerCards').appendChild(thCardEl(th.player[0]));
+          await sleep(110);
+          SFX.deal();
+          $('thPlayerCards').appendChild(thCardEl(th.player[1]));
+          await sleep(110);
+          SFX.deal();
+          $('thDealerCards').append(thCardEl(th.dealer[0], true), thCardEl(th.dealer[1], true));
+          await sleep(120);
+
+          for (let i = 0; i < 3; i++) {
+            SFX.deal();
+            $('thBoardCards').appendChild(thCardEl(th.board[i]));
+            await sleep(110);
+          }
+          $('thBoardCards').append(thEmptySlot(), thEmptySlot());
+
+          const curEval = evalBest([...th.player, ...th.board]);
+          $('thPlayerRank').textContent = curEval ? curEval.name : '—';
+
+          if (th.aaBet > 0) {
+            const aaMult = evalAaBonus(curEval);
+            if (aaMult > 0) {
+              th.aaPayout = +(th.aaBet + th.aaBet * aaMult).toFixed(2);
+              bal = +(bal + th.aaPayout).toFixed(2);
+              updateBalanceUI();
+              SFX.cash();
+              $('thMsg').textContent = `AA Bonus сыграл (${curEval.name}, ${aaMult}:1): +${fmt(th.aaPayout)} ₽! Теперь выберите Колл или Фолд.`;
+            } else {
+              $('thMsg').textContent = `Флоп открыт (AA Bonus не сыграл). Нажмите «Колл» или «Фолд».`;
+            }
+          }
+
+          th.busy = false;
+          setThBtns(true);
+        });
+
+        $('thFoldBtn').addEventListener('click', () => {
+          if (!th.on || th.busy) return;
+          const totalLostStake = th.ante + th.aaBet;
+          const aaWon = th.aaPayout;
+          th.on = false;
+          setThBtns(false);
+          $('thCallBtn').textContent = 'Колл (2×)';
+          $('thMsg').textContent = aaWon > 0
+            ? `Фолд (Ante −${fmt(th.ante)} ₽), но AA Bonus принёс +${fmt(aaWon)} ₽!`
+            : `Фолд. Ставка −${fmt(totalLostStake)} ₽ ушла дилеру.`;
+          const effMult = aaWon > 0 ? +(aaWon / totalLostStake).toFixed(2) : 0;
+          addWager(totalLostStake, { game: 'holdem', mult: Math.max(2, effMult) });
+          pushFeed('Texas Hold’em', 'Вы', totalLostStake, effMult, aaWon, true);
+        });
+
+        $('thCallBtn').addEventListener('click', async () => {
+          if (!th.on || th.busy) return;
+          const callAmt = th.ante * 2;
+          if (callAmt > bal) {
+            showToast('Недостаточно средств для Колла');
+            return;
+          }
+          th.busy = true;
+          setThBtns(false);
+          bal = +(bal - callAmt).toFixed(2);
+          updateBalanceUI();
+
+          const totalBet = th.ante + callAmt;
+          $('thPotLbl').textContent = `В игре: ${fmtInt(totalBet)} ₽`;
+
+          // Deal Turn & River
+          const turnCard = th.deck.pop();
+          const riverCard = th.deck.pop();
+          th.board.push(turnCard, riverCard);
+
+          $('thBoardCards').innerHTML = '';
+          for (const c of th.board) {
+            SFX.deal();
+            $('thBoardCards').appendChild(thCardEl(c));
+            await sleep(140);
+          }
+
+          // Reveal Dealer cards
+          $('thDealerCards').innerHTML = '';
+          SFX.flip();
+          $('thDealerCards').append(thCardEl(th.dealer[0], false), thCardEl(th.dealer[1], false));
+          await sleep(250);
+
+          const pBest = evalBest([...th.player, ...th.board]);
+          const dBest = evalBest([...th.dealer, ...th.board]);
+          $('thPlayerRank').textContent = pBest.name;
+          $('thDealerRank').textContent = dBest.name;
+
+          const qual = dealerQualifies(dBest);
+          const anteMult = TH_ANTE_PAY[pBest.cat] || 1;
+          let payout = 0;
+          let summary = '';
+
+          if (!qual) {
+            // Dealer does not qualify: Ante pays by paytable, Call pushes (returned)
+            const anteWin = th.ante + th.ante * anteMult;
+            payout = +(anteWin + callAmt).toFixed(2);
+            summary = `Дилер не прошёл квалификацию (${dBest.name}). Ante ${anteMult}:1, Колл возвращён! Выплата +${fmt(payout)} ₽`;
+          } else if (pBest.score > dBest.score) {
+            // Player wins both Ante (paytable) and Call (1:1)
+            const anteWin = th.ante + th.ante * anteMult;
+            const callWin = callAmt * 2;
+            payout = +(anteWin + callWin).toFixed(2);
+            summary = `Победа! ${pBest.name} старше ${dBest.name}. Выплата +${fmt(payout)} ₽`;
+          } else if (pBest.score === dBest.score) {
+            payout = totalBet;
+            summary = `Ничья (${pBest.name}). Возврат ${fmt(payout)} ₽`;
+          } else {
+            payout = 0;
+            summary = `Дилер победил (${dBest.name} против ${pBest.name}). −${fmt(totalBet)} ₽`;
+          }
+
+          if (payout > 0) {
+            bal = +(bal + payout).toFixed(2);
+            updateBalanceUI();
+          }
+
+          const grandBet = totalBet + th.aaBet;
+          const grandPayout = +(payout + th.aaPayout).toFixed(2);
+          const effMult = grandPayout > 0 ? +(grandPayout / grandBet).toFixed(2) : 0;
+          $('thMsg').textContent = th.aaPayout > 0 ? `${summary} (AA Bonus: +${fmt(th.aaPayout)} ₽)` : summary;
+          $('thCallBtn').textContent = 'Колл (2×)';
+          th.on = false;
+          th.busy = false;
+          setThBtns(false);
+
+          addWager(grandBet, { game: 'holdem', mult: Math.max(2, effMult) });
+          pushFeed('Texas Hold’em', 'Вы', grandBet, effMult, grandPayout, true);
+        });
+      })();
+
       $('pfVerifyBtn').addEventListener('click', async () => {
         const s = $('pfVerServer').value.trim();
         const c = $('pfVerClient').value.trim();
@@ -6361,9 +7548,17 @@
 
       PF.init();
       loadInitialState();
+      try {
+        const qRef = new URLSearchParams(window.location.search).get('ref');
+        if (qRef) applyIncomingRefCode(qRef);
+      } catch (e) {}
+      ensureRefCode();
       renderSidebarOriginals();
       updateBalanceUI();
       updateVipUI();
+      renderVaultUI();
+      renderTxUI();
+      renderRefUI();
       renderCatalog();
       renderFeed();
       initAutoPanels();
